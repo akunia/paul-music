@@ -1,0 +1,1823 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Paul Bednarczyk - Jeune violoniste, pianiste et chef d'orchestre franco-polonais. Étudiant au CPES du CRR de Paris.">
+  <meta property="og:title" content="Paul Bednarczyk - Violoniste & Pianiste">
+  <meta property="og:description" content="Jeune musicien franco-polonais - Violon, Piano, Direction d'orchestre">
+  <meta property="og:type" content="website">
+  <title>Paul Bednarczyk | Violoniste • Pianiste • Chef d'orchestre</title>
+
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+
+  <style>
+    /* ===== CSS TOKENS ===== */
+    :root {
+      /* Colors - Elegant Dark Theme */
+      --color-bg: #0a0a0f;
+      --color-bg-alt: #12121a;
+      --color-surface: #1a1a24;
+      --color-surface-hover: #22222e;
+      --color-border: rgba(255, 255, 255, 0.1);
+      --color-text: #ffffff;
+      --color-text-muted: rgba(255, 255, 255, 0.6);
+      --color-text-subtle: rgba(255, 255, 255, 0.4);
+      --color-accent: #c9a962;
+      --color-accent-hover: #dfc07a;
+      --color-accent-subtle: rgba(201, 169, 98, 0.15);
+
+      /* Typography */
+      --font-display: 'Playfair Display', Georgia, serif;
+      --font-body: 'Inter', system-ui, sans-serif;
+      --line-height: 1.6;
+
+      /* Spacing */
+      --space-xs: 0.25rem;
+      --space-sm: 0.5rem;
+      --space-md: 1rem;
+      --space-lg: 1.5rem;
+      --space-xl: 2rem;
+      --space-2xl: 3rem;
+      --space-3xl: 4rem;
+      --space-4xl: 6rem;
+
+      /* Layout */
+      --max-width: 1200px;
+      --header-height: 80px;
+
+      /* Borders & Effects */
+      --radius-sm: 0.375rem;
+      --radius-md: 0.75rem;
+      --radius-lg: 1rem;
+      --shadow-sm: 0 2px 4px rgba(0, 0, 0, 0.3);
+      --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.4);
+      --shadow-lg: 0 8px 24px rgba(0, 0, 0, 0.5);
+
+      /* Transitions */
+      --transition-fast: 150ms ease;
+      --transition-base: 300ms ease;
+      --transition-slow: 500ms ease;
+    }
+
+    /* ===== RESET & BASE ===== */
+    *, *::before, *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    html {
+      scroll-behavior: smooth;
+      scroll-padding-top: var(--header-height);
+    }
+
+    body {
+      font-family: var(--font-body);
+      font-size: 1rem;
+      line-height: var(--line-height);
+      color: var(--color-text);
+      background-color: var(--color-bg);
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+    }
+
+    img {
+      max-width: 100%;
+      height: auto;
+      display: block;
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    button {
+      font: inherit;
+      cursor: pointer;
+      border: none;
+      background: none;
+    }
+
+    /* Focus styles */
+    :focus-visible {
+      outline: 2px solid var(--color-accent);
+      outline-offset: 2px;
+    }
+
+    /* Reduced motion */
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after {
+        animation-duration: 0.01ms !important;
+        transition-duration: 0.01ms !important;
+        scroll-behavior: auto !important;
+      }
+    }
+
+    /* ===== SKIP LINK ===== */
+    .skip-link {
+      position: absolute;
+      top: -100%;
+      left: var(--space-md);
+      padding: var(--space-sm) var(--space-md);
+      background: var(--color-accent);
+      color: var(--color-bg);
+      font-weight: 500;
+      border-radius: var(--radius-sm);
+      z-index: 1000;
+      transition: top var(--transition-fast);
+    }
+
+    .skip-link:focus {
+      top: var(--space-md);
+    }
+
+    /* ===== LAYOUT ===== */
+    .container {
+      width: 100%;
+      max-width: var(--max-width);
+      margin: 0 auto;
+      padding: 0 var(--space-lg);
+    }
+
+    section {
+      padding: var(--space-4xl) 0;
+    }
+
+    /* ===== HEADER ===== */
+    .header {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: var(--header-height);
+      background: rgba(10, 10, 15, 0.95);
+      backdrop-filter: blur(10px);
+      border-bottom: 1px solid var(--color-border);
+      z-index: 100;
+      overflow: visible;
+    }
+
+    .header .container {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      height: 100%;
+      overflow: visible;
+    }
+
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: var(--space-sm);
+      font-family: var(--font-display);
+      font-size: 1.5rem;
+      font-weight: 600;
+      color: var(--color-text);
+      letter-spacing: 0.02em;
+      text-decoration: none;
+    }
+
+    .logo:hover,
+    .logo:focus {
+      text-decoration: none;
+    }
+
+    .logo-img {
+      height: 55px;
+      width: auto;
+      filter: invert(1);
+    }
+
+    .logo span {
+      color: var(--color-accent);
+    }
+
+    .nav {
+      display: flex;
+      align-items: center;
+      gap: var(--space-xl);
+      overflow: visible;
+    }
+
+    .nav-links {
+      display: flex;
+      list-style: none;
+      gap: var(--space-lg);
+    }
+
+    .nav-link {
+      font-size: 0.9rem;
+      font-weight: 500;
+      color: var(--color-text-muted);
+      transition: color var(--transition-fast);
+      position: relative;
+    }
+
+    .nav-link::after {
+      content: '';
+      position: absolute;
+      bottom: -4px;
+      left: 0;
+      width: 0;
+      height: 2px;
+      background: var(--color-accent);
+      transition: width var(--transition-base);
+    }
+
+    .nav-link:hover,
+    .nav-link:focus {
+      color: var(--color-text);
+    }
+
+    .nav-link:hover::after,
+    .nav-link:focus::after {
+      width: 100%;
+    }
+
+    /* Language Switcher - Dropdown */
+    .lang-switcher {
+      position: relative;
+    }
+
+    .lang-current {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      padding: 8px 12px;
+      font-size: 0.8rem;
+      font-weight: 600;
+      color: var(--color-text);
+      background: var(--color-surface);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-sm);
+      cursor: pointer;
+      transition: all var(--transition-fast);
+    }
+
+    .lang-current::after {
+      content: '▼';
+      font-size: 0.6rem;
+      opacity: 0.6;
+    }
+
+    .lang-current:hover {
+      border-color: var(--color-accent);
+    }
+
+    .lang-dropdown {
+      position: absolute;
+      top: 100%;
+      right: 0;
+      margin-top: 4px;
+      min-width: 120px;
+      background: var(--color-surface);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-sm);
+      box-shadow: var(--shadow-md);
+      display: none;
+      z-index: 1000;
+    }
+
+    .lang-switcher.open .lang-dropdown {
+      display: block;
+    }
+
+    .lang-btn {
+      display: block;
+      width: 100%;
+      padding: 10px 14px;
+      font-size: 0.85rem;
+      font-weight: 500;
+      color: var(--color-text-muted);
+      background: transparent;
+      border: none;
+      text-align: left;
+      cursor: pointer;
+      transition: all var(--transition-fast);
+    }
+
+    .lang-btn:hover {
+      color: var(--color-text);
+      background: rgba(255,255,255,0.1);
+    }
+
+    .lang-btn.active {
+      color: var(--color-accent);
+      background: var(--color-accent-subtle);
+    }
+
+    /* Mobile Menu Button */
+    .menu-toggle {
+      display: none;
+      flex-direction: column;
+      gap: 5px;
+      padding: var(--space-sm);
+    }
+
+    .menu-toggle span {
+      display: block;
+      width: 24px;
+      height: 2px;
+      background: var(--color-text);
+      transition: all var(--transition-fast);
+    }
+
+    /* ===== HERO SECTION ===== */
+    .hero {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      padding-top: var(--header-height);
+      background:
+        radial-gradient(ellipse at 20% 80%, rgba(201, 169, 98, 0.08) 0%, transparent 50%),
+        radial-gradient(ellipse at 80% 20%, rgba(201, 169, 98, 0.05) 0%, transparent 50%),
+        var(--color-bg);
+    }
+
+    .hero .container {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: var(--space-3xl);
+      align-items: center;
+    }
+
+    .hero-content {
+      animation: fadeInUp 0.8s ease forwards;
+    }
+
+    .hero-subtitle {
+      display: inline-block;
+      font-size: 0.875rem;
+      font-weight: 500;
+      color: var(--color-accent);
+      text-transform: uppercase;
+      letter-spacing: 0.15em;
+      margin-bottom: var(--space-md);
+    }
+
+    .hero-title {
+      font-family: var(--font-display);
+      font-size: clamp(2.5rem, 5vw, 4rem);
+      font-weight: 600;
+      line-height: 1.1;
+      margin-bottom: var(--space-lg);
+    }
+
+    .hero-description {
+      font-size: 1.125rem;
+      color: var(--color-text-muted);
+      margin-bottom: var(--space-xl);
+      max-width: 500px;
+    }
+
+    .hero-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: var(--space-sm);
+      margin-bottom: var(--space-xl);
+    }
+
+    .hero-tag {
+      display: inline-block;
+      padding: var(--space-sm) var(--space-md);
+      background: var(--color-accent-subtle);
+      border: 1px solid rgba(201, 169, 98, 0.3);
+      border-radius: var(--radius-sm);
+      font-size: 0.875rem;
+      color: var(--color-accent);
+      text-decoration: none;
+      transition: all var(--transition-fast);
+      cursor: pointer;
+    }
+
+    .hero-tag:hover {
+      background: rgba(201, 169, 98, 0.25);
+      border-color: var(--color-accent);
+      transform: translateY(-1px);
+    }
+
+    .hero-cta {
+      display: flex;
+      gap: var(--space-md);
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: var(--space-sm);
+      padding: var(--space-md) var(--space-xl);
+      font-weight: 500;
+      border-radius: var(--radius-md);
+      transition: all var(--transition-fast);
+    }
+
+    .btn-primary {
+      background: var(--color-accent);
+      color: var(--color-bg);
+    }
+
+    .btn-primary:hover {
+      background: var(--color-accent-hover);
+      transform: translateY(-2px);
+      box-shadow: var(--shadow-md);
+    }
+
+    .btn-secondary {
+      background: transparent;
+      color: var(--color-text);
+      border: 1px solid var(--color-border);
+    }
+
+    .btn-secondary:hover {
+      border-color: var(--color-accent);
+      color: var(--color-accent);
+    }
+
+    .hero-image {
+      position: relative;
+      animation: fadeIn 1s ease forwards;
+      animation-delay: 0.3s;
+      opacity: 0;
+    }
+
+    .hero-image-wrapper {
+      position: relative;
+      aspect-ratio: 3/4;
+      border-radius: var(--radius-lg);
+      overflow: hidden;
+      background: var(--color-surface);
+    }
+
+    .hero-image-wrapper::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-lg);
+      z-index: 1;
+    }
+
+    .hero-image-wrapper > img:first-child {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .hero-logo-overlay {
+      position: absolute;
+      bottom: 10px;
+      right: 10px;
+      width: 288px;
+      height: auto;
+      opacity: 0.7;
+      z-index: 2;
+    }
+
+    .hero-image-placeholder {
+      width: 100%;
+      height: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--color-text-subtle);
+      font-size: 0.875rem;
+    }
+
+    .hero-decoration {
+      position: absolute;
+      width: 200px;
+      height: 200px;
+      border: 1px solid var(--color-accent);
+      border-radius: var(--radius-lg);
+      opacity: 0.3;
+    }
+
+    .hero-decoration-1 {
+      top: -20px;
+      right: -20px;
+    }
+
+    .hero-decoration-2 {
+      bottom: -20px;
+      left: -20px;
+    }
+
+    /* ===== SECTION HEADERS ===== */
+    .section-header {
+      text-align: center;
+      margin-bottom: var(--space-3xl);
+    }
+
+    .section-label {
+      display: inline-block;
+      font-size: 0.75rem;
+      font-weight: 600;
+      color: var(--color-accent);
+      text-transform: uppercase;
+      letter-spacing: 0.2em;
+      margin-bottom: var(--space-sm);
+    }
+
+    .section-title {
+      font-family: var(--font-display);
+      font-size: clamp(2rem, 4vw, 2.75rem);
+      font-weight: 600;
+    }
+
+    /* ===== BIOGRAPHY SECTION ===== */
+    .biography {
+      background: var(--color-bg-alt);
+    }
+
+    .bio-content {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: var(--space-3xl);
+      align-items: start;
+    }
+
+    .bio-text p {
+      color: var(--color-text-muted);
+      margin-bottom: var(--space-lg);
+      font-size: 1.0625rem;
+    }
+
+    .bio-text p:first-of-type::first-letter {
+      font-family: var(--font-display);
+      font-size: 3.5rem;
+      float: left;
+      line-height: 1;
+      margin-right: var(--space-sm);
+      color: var(--color-accent);
+    }
+
+    .bio-highlights {
+      display: grid;
+      gap: var(--space-lg);
+    }
+
+    .bio-card {
+      display: block;
+      padding: var(--space-xl);
+      background: var(--color-surface);
+      border-radius: var(--radius-md);
+      border: 1px solid var(--color-border);
+      text-decoration: none;
+      transition: all var(--transition-fast);
+      cursor: pointer;
+    }
+
+    .bio-card:hover {
+      border-color: var(--color-accent);
+      transform: translateY(-2px);
+      box-shadow: var(--shadow-md);
+    }
+
+    .bio-card-icon {
+      width: 48px;
+      height: 48px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: var(--color-accent-subtle);
+      border-radius: var(--radius-sm);
+      margin-bottom: var(--space-md);
+      font-size: 1.5rem;
+    }
+
+    .bio-card h3 {
+      font-family: var(--font-display);
+      font-size: 1.25rem;
+      margin-bottom: var(--space-sm);
+    }
+
+    .bio-card p {
+      color: var(--color-text-muted);
+      font-size: 0.9375rem;
+    }
+
+    /* ===== VIDEOS SECTION ===== */
+    .videos {
+      background: var(--color-bg);
+    }
+
+    .video-tabs {
+      display: flex;
+      justify-content: center;
+      gap: var(--space-sm);
+      margin-bottom: var(--space-2xl);
+    }
+
+    .video-tab {
+      padding: var(--space-md) var(--space-xl);
+      font-weight: 500;
+      color: var(--color-text-muted);
+      background: var(--color-surface);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-md);
+      transition: all var(--transition-fast);
+    }
+
+    .video-tab:hover {
+      color: var(--color-text);
+      border-color: var(--color-text-subtle);
+    }
+
+    .video-tab.active {
+      background: var(--color-accent);
+      color: var(--color-bg);
+      border-color: var(--color-accent);
+    }
+
+    .video-grid {
+      display: none;
+      flex-direction: column;
+      gap: var(--space-md);
+      max-width: 700px;
+      margin: 0 auto;
+    }
+
+    .video-grid.active {
+      display: flex;
+    }
+
+    .video-card {
+      display: flex;
+      align-items: center;
+      gap: var(--space-md);
+      background: var(--color-surface);
+      border-radius: var(--radius-md);
+      overflow: hidden;
+      border: 1px solid var(--color-border);
+      transition: all var(--transition-base);
+      padding: var(--space-sm);
+    }
+
+    .video-card:hover {
+      box-shadow: var(--shadow-md);
+      border-color: var(--color-accent);
+    }
+
+    .video-thumbnail {
+      position: relative;
+      width: 160px;
+      min-width: 160px;
+      aspect-ratio: 16/9;
+      background: var(--color-bg);
+      overflow: hidden;
+      border-radius: var(--radius-sm);
+    }
+
+    .video-thumbnail img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .video-play {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: rgba(0, 0, 0, 0.4);
+      opacity: 0;
+      transition: opacity var(--transition-fast);
+    }
+
+    .video-card:hover .video-play {
+      opacity: 1;
+    }
+
+    .video-play-btn {
+      width: 36px;
+      height: 36px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: var(--color-accent);
+      border-radius: 50%;
+      color: var(--color-bg);
+      font-size: 0.875rem;
+    }
+
+    .video-info {
+      display: block;
+      flex: 1;
+      padding: var(--space-xs) 0;
+      text-decoration: none;
+    }
+
+    .video-title {
+      font-family: var(--font-display);
+      font-size: 1rem;
+      margin-bottom: 4px;
+      line-height: 1.3;
+      color: var(--color-text);
+    }
+
+    .video-meta {
+      font-size: 0.8125rem;
+      color: var(--color-text-muted);
+      line-height: 1.4;
+    }
+
+    .video-placeholder-message {
+      text-align: center;
+      padding: var(--space-3xl);
+      color: var(--color-text-muted);
+    }
+
+    .video-year-separator {
+      width: 100%;
+      display: flex;
+      align-items: center;
+      gap: var(--space-md);
+      margin: var(--space-lg) 0;
+    }
+
+    .video-year-separator::before,
+    .video-year-separator::after {
+      content: '';
+      flex: 1;
+      height: 1px;
+      background: var(--color-border);
+    }
+
+    .video-year-separator span {
+      font-family: var(--font-display);
+      font-size: 1rem;
+      color: var(--color-accent);
+      font-weight: 500;
+    }
+
+    /* ===== CONCERTS SECTION ===== */
+    .concerts {
+      background: var(--color-bg-alt);
+    }
+
+    .concerts-list {
+      max-width: 800px;
+      margin: 0 auto;
+    }
+
+    .concert-item {
+      display: grid;
+      grid-template-columns: auto 1fr auto;
+      gap: var(--space-xl);
+      align-items: center;
+      padding: var(--space-xl);
+      background: var(--color-surface);
+      border-radius: var(--radius-md);
+      border: 1px solid var(--color-border);
+      margin-bottom: var(--space-md);
+      transition: all var(--transition-fast);
+    }
+
+    .concert-item:hover {
+      border-color: var(--color-accent);
+    }
+
+    .concert-date {
+      text-align: center;
+      padding: var(--space-md);
+      background: var(--color-accent-subtle);
+      border-radius: var(--radius-sm);
+      min-width: 80px;
+    }
+
+    .concert-date-day {
+      font-family: var(--font-display);
+      font-size: 1.75rem;
+      font-weight: 600;
+      color: var(--color-accent);
+    }
+
+    .concert-date-month {
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: var(--color-text-muted);
+    }
+
+    .concert-info h3 {
+      font-family: var(--font-display);
+      font-size: 1.25rem;
+      margin-bottom: var(--space-xs);
+    }
+
+    .concert-info p {
+      color: var(--color-text-muted);
+      font-size: 0.9375rem;
+    }
+
+    .concert-placeholder {
+      text-align: center;
+      padding: var(--space-3xl);
+      background: var(--color-surface);
+      border-radius: var(--radius-md);
+      border: 1px solid var(--color-border);
+    }
+
+    .concert-placeholder p {
+      color: var(--color-text-muted);
+    }
+
+    /* ===== CONTACT SECTION ===== */
+    .contact {
+      background: var(--color-bg);
+    }
+
+    .contact-content {
+      max-width: 600px;
+      margin: 0 auto;
+      text-align: center;
+    }
+
+    .contact-content p {
+      color: var(--color-text-muted);
+      font-size: 1.0625rem;
+      max-width: 500px;
+      margin: 0 auto;
+    }
+
+    .contact-links {
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-lg);
+      align-items: center;
+      margin-top: var(--space-xl);
+    }
+
+    .contact-link {
+      display: inline-flex;
+      align-items: center;
+      gap: var(--space-md);
+      padding: var(--space-lg) var(--space-xl);
+      background: var(--color-surface);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-md);
+      color: var(--color-text);
+      font-size: 1.125rem;
+      transition: all var(--transition-fast);
+      min-width: 280px;
+      justify-content: center;
+    }
+
+    .contact-link:hover {
+      background: var(--color-accent);
+      border-color: var(--color-accent);
+      color: var(--color-bg);
+      transform: translateY(-2px);
+      box-shadow: var(--shadow-md);
+    }
+
+    .contact-link svg {
+      flex-shrink: 0;
+    }
+
+    /* ===== FOOTER ===== */
+    .footer {
+      padding: var(--space-2xl) 0;
+      background: var(--color-bg-alt);
+      border-top: 1px solid var(--color-border);
+    }
+
+    .footer .container {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: var(--space-md);
+    }
+
+    .footer-text {
+      color: var(--color-text-muted);
+      font-size: 0.875rem;
+    }
+
+    .footer-links {
+      display: flex;
+      gap: var(--space-lg);
+    }
+
+    .footer-link {
+      color: var(--color-text-muted);
+      font-size: 0.875rem;
+      transition: color var(--transition-fast);
+    }
+
+    .footer-link:hover {
+      color: var(--color-accent);
+    }
+
+    .footer-logo {
+      height: 120px;
+      width: auto;
+      filter: invert(1);
+      margin-top: var(--space-lg);
+      opacity: 0.8;
+    }
+
+    /* ===== ANIMATIONS ===== */
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+
+    @keyframes fadeInUp {
+      from {
+        opacity: 0;
+        transform: translateY(20px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    /* ===== RESPONSIVE ===== */
+    @media (max-width: 968px) {
+      .hero .container {
+        grid-template-columns: 1fr;
+        text-align: center;
+      }
+
+      .hero-content {
+        order: 2;
+      }
+
+      .hero-image {
+        order: 1;
+        max-width: 400px;
+        margin: 0 auto;
+      }
+
+      .hero-description {
+        margin-left: auto;
+        margin-right: auto;
+      }
+
+      .hero-tags {
+        justify-content: center;
+      }
+
+      .hero-cta {
+        justify-content: center;
+      }
+
+      .bio-content {
+        grid-template-columns: 1fr;
+      }
+
+      .contact-content {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    @media (max-width: 768px) {
+      :root {
+        --header-height: 70px;
+      }
+
+      .nav-links {
+        display: none;
+        position: absolute;
+        top: var(--header-height);
+        left: 0;
+        right: 0;
+        flex-direction: column;
+        padding: var(--space-lg);
+        background: var(--color-bg);
+        border-bottom: 1px solid var(--color-border);
+      }
+
+      .nav-links.active {
+        display: flex;
+      }
+
+      .menu-toggle {
+        display: flex;
+      }
+
+      .video-tabs {
+        flex-wrap: wrap;
+      }
+
+      .concert-item {
+        grid-template-columns: 1fr;
+        text-align: center;
+      }
+
+      .concert-date {
+        margin: 0 auto;
+      }
+
+      .footer .container {
+        flex-direction: column;
+        gap: var(--space-md);
+        text-align: center;
+      }
+    }
+
+    /* ===== UTILITIES ===== */
+    [data-lang]:not(.lang-btn) {
+      display: none;
+    }
+
+    [data-lang].active:not(.lang-btn) {
+      display: block;
+    }
+
+    .inline-lang {
+      display: none;
+    }
+
+    .inline-lang.active {
+      display: inline;
+    }
+  </style>
+</head>
+<body>
+  <a class="skip-link" href="#main">Aller au contenu principal</a>
+
+  <!-- Header -->
+  <header class="header">
+    <div class="container">
+      <a href="#" class="logo">
+          <img src="photos/Paul_logo_black.png" alt="Logo" class="logo-img">
+          Paul <span>Bednarczyk</span>
+        </a>
+
+      <nav class="nav">
+        <ul class="nav-links" id="navLinks">
+          <li><a href="#about" class="nav-link">
+            <span class="inline-lang active" data-lang-text="fr">Biographie</span>
+            <span class="inline-lang" data-lang-text="en">Biography</span>
+            <span class="inline-lang" data-lang-text="pl">Biografia</span>
+          </a></li>
+          <li><a href="#videos" class="nav-link">
+            <span class="inline-lang active" data-lang-text="fr">Vidéos</span>
+            <span class="inline-lang" data-lang-text="en">Videos</span>
+            <span class="inline-lang" data-lang-text="pl">Filmy</span>
+          </a></li>
+          <li><a href="#concerts" class="nav-link">
+            <span class="inline-lang active" data-lang-text="fr">Événements</span>
+            <span class="inline-lang" data-lang-text="en">Events</span>
+            <span class="inline-lang" data-lang-text="pl">Wydarzenia</span>
+          </a></li>
+          <li><a href="#contact" class="nav-link">Contact</a></li>
+        </ul>
+
+        <div class="lang-switcher" id="langSwitcher">
+          <button class="lang-current" id="langToggle">FR</button>
+          <div class="lang-dropdown">
+            <button class="lang-btn active" data-lang="fr">Français</button>
+            <button class="lang-btn" data-lang="en">English</button>
+            <button class="lang-btn" data-lang="pl">Polski</button>
+          </div>
+        </div>
+
+        <button class="menu-toggle" id="menuToggle" aria-label="Menu">
+          <span></span>
+          <span></span>
+          <span></span>
+        </button>
+      </nav>
+    </div>
+  </header>
+
+  <!-- Main Content -->
+  <main id="main">
+    <!-- Hero Section -->
+    <section class="hero">
+      <div class="container">
+        <div class="hero-content">
+          <span class="hero-subtitle">
+            <span class="inline-lang active" data-lang-text="fr">Musicien Franco-Polonais</span>
+            <span class="inline-lang" data-lang-text="en">French-Polish Musician</span>
+            <span class="inline-lang" data-lang-text="pl">Muzyk Polsko-Francuski</span>
+          </span>
+          <h1 class="hero-title">Paul Bednarczyk</h1>
+          <p class="hero-description">
+            <span class="inline-lang active" data-lang-text="fr">Violoniste, pianiste et apprenti chef d'orchestre. Étudiant au CPES du Conservatoire à Rayonnement Régional de Paris et ancien élève du CRR de Nice.</span>
+            <span class="inline-lang" data-lang-text="en">Violinist, pianist and aspiring conductor. Student at CPES of the Paris Regional Conservatory and former student of the Nice CRR.</span>
+            <span class="inline-lang" data-lang-text="pl">Skrzypek, pianista i przyszły dyrygent. Student CPES w Konserwatorium Regionalnym w Paryżu i były uczeń CRR w Nicei.</span>
+          </p>
+          <div class="hero-tags">
+            <a href="#videos" class="hero-tag" data-video-tab="violin">
+              <span class="inline-lang active" data-lang-text="fr">Violon</span>
+              <span class="inline-lang" data-lang-text="en">Violin</span>
+              <span class="inline-lang" data-lang-text="pl">Skrzypce</span>
+            </a>
+            <a href="#videos" class="hero-tag" data-video-tab="piano">Piano</a>
+            <a href="#videos" class="hero-tag" data-video-tab="conducting">
+              <span class="inline-lang active" data-lang-text="fr">Direction d'orchestre</span>
+              <span class="inline-lang" data-lang-text="en">Conducting</span>
+              <span class="inline-lang" data-lang-text="pl">Dyrygowanie</span>
+            </a>
+          </div>
+          <div class="hero-cta">
+            <a href="#videos" class="btn btn-primary">
+              <span class="inline-lang active" data-lang-text="fr">Voir les vidéos</span>
+              <span class="inline-lang" data-lang-text="en">Watch videos</span>
+              <span class="inline-lang" data-lang-text="pl">Zobacz filmy</span>
+            </a>
+            <a href="#contact" class="btn btn-secondary">Contact</a>
+          </div>
+        </div>
+        <div class="hero-image">
+          <div class="hero-decoration hero-decoration-1"></div>
+          <div class="hero-decoration hero-decoration-2"></div>
+          <div class="hero-image-wrapper">
+            <img src="photos/PXL_20250719_112302798.PORTRAIT.ORIGINAL.jpg" alt="Paul Bednarczyk">
+            <img src="photos/Paul_logo_black.png" alt="Logo Paul Bednarczyk" class="hero-logo-overlay">
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Biography Section -->
+    <section class="biography" id="about">
+      <div class="container">
+        <header class="section-header">
+          <span class="section-label">
+            <span class="inline-lang active" data-lang-text="fr">À propos</span>
+            <span class="inline-lang" data-lang-text="en">About</span>
+            <span class="inline-lang" data-lang-text="pl">O mnie</span>
+          </span>
+          <h2 class="section-title">
+            <span class="inline-lang active" data-lang-text="fr">Biographie</span>
+            <span class="inline-lang" data-lang-text="en">Biography</span>
+            <span class="inline-lang" data-lang-text="pl">Biografia</span>
+          </h2>
+        </header>
+
+        <div class="bio-content">
+          <div class="bio-text">
+            <!-- French -->
+            <div data-lang="fr" class="active">
+              <p>Né le 9 février 2010, Paul Bednarczyk est un jeune musicien de double nationalité franco-polonaise. Quadrilingue de naissance — russe avec sa mère Ekaterina, polonais avec son père Grzegorz, français à l'école et anglais grâce aux médias — il baigne dans un environnement multiculturel. Passionné par la musique classique dès son plus jeune âge, il débute le piano à 4 ans, puis le violon à 5 ans. Très proche de sa sœur Alice, de cinq ans sa cadette et également pianiste, il l'a beaucoup accompagnée dans son apprentissage avant de quitter Nice pour Paris.</p>
+              <p>Après avoir étudié au Conservatoire à Rayonnement Régional (CRR) de Nice, Paul poursuit actuellement sa formation en violon au sein du Cycle Préparatoire à l'Enseignement Supérieur (CPES) du CRR de Paris, l'une des formations les plus prestigieuses pour les jeunes musiciens en France, avec l'objectif d'intégrer le Conservatoire National Supérieur de Musique (CNSM).</p>
+              <p>En parallèle de ses études de violon et de piano, Paul se forme à la direction d'orchestre depuis l'âge de 13 ans, développant ainsi une vision complète de l'art musical.</p>
+            </div>
+            <!-- English -->
+            <div data-lang="en">
+              <p>Born on February 9, 2010, Paul Bednarczyk is a young musician with dual French-Polish nationality. Quadrilingual from birth — Russian with his mother Ekaterina, Polish with his father Grzegorz, French at school and English through media — he grew up in a multicultural environment. Passionate about classical music from an early age, he began studying piano at age 4, then violin at age 5. Very close to his sister Alice, five years his junior and also a pianist, he supported her greatly in her musical journey before leaving Nice for Paris.</p>
+              <p>After studying at the Regional Conservatory (CRR) of Nice, Paul is currently pursuing his violin training at the Pre-Higher Education Cycle (CPES) of the Paris CRR, one of the most prestigious programs for young musicians in France, with the goal of entering the Conservatoire National Supérieur de Musique (CNSM).</p>
+              <p>Alongside his violin and piano studies, Paul has been training in orchestra conducting since age 13, developing a comprehensive vision of musical art.</p>
+            </div>
+            <!-- Polish -->
+            <div data-lang="pl">
+              <p>Urodzony 9 lutego 2010 roku, Paul Bednarczyk to młody muzyk o podwójnym obywatelstwie polsko-francuskim. Czterojęzyczny od urodzenia — rosyjski z mamą Ekateriną, polski z tatą Grzegorzem, francuski w szkole i angielski dzięki mediom — dorastał w wielokulturowym środowisku. Zafascynowany muzyką klasyczną od najmłodszych lat, zaczął grać na fortepianie w wieku 4 lat, a następnie na skrzypcach w wieku 5 lat. Bardzo bliski ze swoją siostrą Alice, młodszą o pięć lat i również pianistką, wspierał ją w nauce muzyki przed wyjazdem z Nicei do Paryża.</p>
+              <p>Po nauce w Konserwatorium Regionalnym (CRR) w Nicei, Paul kontynuuje obecnie kształcenie skrzypcowe w Cyklu Przygotowawczym do Szkolnictwa Wyższego (CPES) paryskiego CRR, jednego z najbardziej prestiżowych programów dla młodych muzyków we Francji, z celem dostania się do Conservatoire National Supérieur de Musique (CNSM).</p>
+              <p>Równolegle do nauki gry na skrzypcach i fortepianie, Paul kształci się w dziedzinie dyrygentury od 13 roku życia, rozwijając pełną wizję sztuki muzycznej.</p>
+            </div>
+          </div>
+
+          <div class="bio-highlights">
+            <a href="#videos" class="bio-card" data-video-tab="piano">
+              <div class="bio-card-icon">🎹</div>
+              <h3>Piano</h3>
+              <p>
+                <span class="inline-lang active" data-lang-text="fr">Depuis l'âge de 4 ans • Cours à domicile, puis CRR Nice, puis CMA Paris 17</span>
+                <span class="inline-lang" data-lang-text="en">Since age 4 • Home lessons, then CRR Nice, then CMA Paris 17</span>
+                <span class="inline-lang" data-lang-text="pl">Od 4 roku życia • Lekcje prywatne, potem CRR Nicea, potem CMA Paryż 17</span>
+              </p>
+            </a>
+            <a href="#videos" class="bio-card" data-video-tab="violin">
+              <div class="bio-card-icon">🎻</div>
+              <h3>
+                <span class="inline-lang active" data-lang-text="fr">Violon</span>
+                <span class="inline-lang" data-lang-text="en">Violin</span>
+                <span class="inline-lang" data-lang-text="pl">Skrzypce</span>
+              </h3>
+              <p>
+                <span class="inline-lang active" data-lang-text="fr">Depuis l'âge de 5 ans • CRR Nice, puis CPES CRR Paris</span>
+                <span class="inline-lang" data-lang-text="en">Since age 5 • CRR Nice, then CPES CRR Paris</span>
+                <span class="inline-lang" data-lang-text="pl">Od 5 roku życia • CRR Nicea, potem CPES CRR Paryż</span>
+              </p>
+            </a>
+            <a href="#videos" class="bio-card" data-video-tab="conducting">
+              <div class="bio-card-icon">🎼</div>
+              <h3>
+                <span class="inline-lang active" data-lang-text="fr">Direction</span>
+                <span class="inline-lang" data-lang-text="en">Conducting</span>
+                <span class="inline-lang" data-lang-text="pl">Dyrygowanie</span>
+              </h3>
+              <p>
+                <span class="inline-lang active" data-lang-text="fr">Depuis l'âge de 13 ans • CRR Nice, puis CRR Paris & Conservatoire de Levallois-Perret</span>
+                <span class="inline-lang" data-lang-text="en">Since age 13 • CRR Nice, then CRR Paris & Levallois-Perret Conservatory</span>
+                <span class="inline-lang" data-lang-text="pl">Od 13 roku życia • CRR Nicea, potem CRR Paryż & Konserwatorium Levallois-Perret</span>
+              </p>
+            </a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Videos Section -->
+    <section class="videos" id="videos">
+      <div class="container">
+        <header class="section-header">
+          <span class="section-label">
+            <span class="inline-lang active" data-lang-text="fr">Performances</span>
+            <span class="inline-lang" data-lang-text="en">Performances</span>
+            <span class="inline-lang" data-lang-text="pl">Występy</span>
+          </span>
+          <h2 class="section-title">
+            <span class="inline-lang active" data-lang-text="fr">Vidéos</span>
+            <span class="inline-lang" data-lang-text="en">Videos</span>
+            <span class="inline-lang" data-lang-text="pl">Filmy</span>
+          </h2>
+        </header>
+
+        <div class="video-tabs">
+          <button class="video-tab active" data-tab="violin">
+            <span class="inline-lang active" data-lang-text="fr">Violon</span>
+            <span class="inline-lang" data-lang-text="en">Violin</span>
+            <span class="inline-lang" data-lang-text="pl">Skrzypce</span>
+          </button>
+          <button class="video-tab" data-tab="piano">Piano</button>
+          <button class="video-tab" data-tab="conducting">
+            <span class="inline-lang active" data-lang-text="fr">Direction</span>
+            <span class="inline-lang" data-lang-text="en">Conducting</span>
+            <span class="inline-lang" data-lang-text="pl">Dyrygowanie</span>
+          </button>
+        </div>
+
+        <!-- Violin Videos -->
+        <div class="video-grid active" id="violin">
+          <div class="video-year-separator"><span>2025</span></div>
+          <article class="video-card">
+            <a href="https://www.youtube.com/watch?v=4rrl7aUl_24" target="_blank" rel="noopener" class="video-info">
+              <h3 class="video-title">Concerto n°3, 1er mouvement</h3>
+              <p class="video-meta">C. Saint-Saëns, Op. 61 en si mineur<br>Académies de Flaine, 15 août 2025</p>
+            </a>
+            <a href="https://www.youtube.com/watch?v=4rrl7aUl_24" target="_blank" rel="noopener" class="video-thumbnail">
+              <img src="https://img.youtube.com/vi/4rrl7aUl_24/maxresdefault.jpg" alt="Saint-Saëns Concerto n°3">
+              <div class="video-play">
+                <span class="video-play-btn">▶</span>
+              </div>
+            </a>
+          </article>
+          <article class="video-card">
+            <a href="https://www.youtube.com/watch?v=pVNspbrNciM" target="_blank" rel="noopener" class="video-info">
+              <h3 class="video-title">L'Arlésienne Suite n°2</h3>
+              <p class="video-meta">G. Bizet<br>Académies de Flaine, 14 août 2025</p>
+            </a>
+            <a href="https://www.youtube.com/watch?v=pVNspbrNciM" target="_blank" rel="noopener" class="video-thumbnail">
+              <img src="https://img.youtube.com/vi/pVNspbrNciM/maxresdefault.jpg" alt="Bizet L'Arlésienne Suite n°2">
+              <div class="video-play">
+                <span class="video-play-btn">▶</span>
+              </div>
+            </a>
+          </article>
+          <article class="video-card">
+            <a href="https://www.youtube.com/watch?v=o6yHfN7RxXM" target="_blank" rel="noopener" class="video-info">
+              <h3 class="video-title">Quatuor américain</h3>
+              <p class="video-meta">A. Dvořák<br>Paul Bednarczyk, Monia Moukhtar Hamache, Ruben Galluzzo, Juliette Nonnay Lages<br>Académies de Flaine, 13 août 2025</p>
+            </a>
+            <a href="https://www.youtube.com/watch?v=o6yHfN7RxXM" target="_blank" rel="noopener" class="video-thumbnail">
+              <img src="https://img.youtube.com/vi/o6yHfN7RxXM/maxresdefault.jpg" alt="Dvořák Quatuor américain">
+              <div class="video-play">
+                <span class="video-play-btn">▶</span>
+              </div>
+            </a>
+          </article>
+          <article class="video-card">
+            <a href="https://www.youtube.com/watch?v=jZ8wmuMgado" target="_blank" rel="noopener" class="video-info">
+              <h3 class="video-title">Quintette, 1er mouvement</h3>
+              <p class="video-meta">J. Brahms<br>Paul Bednarczyk, Alma Hotensche, Naïs Metivier-Ragonnet, Pauline Creissen, Angelo Balducci<br>Don Bosco, mai 2025</p>
+            </a>
+            <a href="https://www.youtube.com/watch?v=jZ8wmuMgado" target="_blank" rel="noopener" class="video-thumbnail">
+              <img src="https://img.youtube.com/vi/jZ8wmuMgado/maxresdefault.jpg" alt="Brahms Quintette">
+              <div class="video-play">
+                <span class="video-play-btn">▶</span>
+              </div>
+            </a>
+          </article>
+          <article class="video-card">
+            <a href="https://www.youtube.com/watch?v=8gkHY_myJFQ" target="_blank" rel="noopener" class="video-info">
+              <h3 class="video-title">Concerto pour violon, 1er mouvement</h3>
+              <p class="video-meta">A. Dvořák, Op. 53<br>CRR Nice, 13 mars 2025</p>
+            </a>
+            <a href="https://www.youtube.com/watch?v=8gkHY_myJFQ" target="_blank" rel="noopener" class="video-thumbnail">
+              <img src="https://img.youtube.com/vi/8gkHY_myJFQ/maxresdefault.jpg" alt="Dvořák Concerto pour violon">
+              <div class="video-play">
+                <span class="video-play-btn">▶</span>
+              </div>
+            </a>
+          </article>
+          <div class="video-year-separator"><span>2024</span></div>
+          <article class="video-card">
+            <a href="https://www.youtube.com/watch?v=y6uy_GkQde8" target="_blank" rel="noopener" class="video-info">
+              <h3 class="video-title">Romance en Fa majeur</h3>
+              <p class="video-meta">L. van Beethoven, Op. 50<br>CRR Nice, 18 décembre 2024</p>
+            </a>
+            <a href="https://www.youtube.com/watch?v=y6uy_GkQde8" target="_blank" rel="noopener" class="video-thumbnail">
+              <img src="https://img.youtube.com/vi/y6uy_GkQde8/maxresdefault.jpg" alt="Beethoven Romance en Fa majeur">
+              <div class="video-play">
+                <span class="video-play-btn">▶</span>
+              </div>
+            </a>
+          </article>
+          <article class="video-card">
+            <a href="https://www.youtube.com/watch?v=EFQrKEqsMh4" target="_blank" rel="noopener" class="video-info">
+              <h3 class="video-title">Symphonie espagnole</h3>
+              <p class="video-meta">É. Lalo, Op. 21<br>19 octobre 2024</p>
+            </a>
+            <a href="https://www.youtube.com/watch?v=EFQrKEqsMh4" target="_blank" rel="noopener" class="video-thumbnail">
+              <img src="https://img.youtube.com/vi/EFQrKEqsMh4/maxresdefault.jpg" alt="Lalo Symphonie espagnole">
+              <div class="video-play">
+                <span class="video-play-btn">▶</span>
+              </div>
+            </a>
+          </article>
+          <article class="video-card">
+            <a href="https://www.youtube.com/watch?v=tXjyAbX0N0Q" target="_blank" rel="noopener" class="video-info">
+              <h3 class="video-title">Concerto n°2, 1er mouvement</h3>
+              <p class="video-meta">H. Wieniawski, Op. 22<br>Académies de Flaine, août 2024</p>
+            </a>
+            <a href="https://www.youtube.com/watch?v=tXjyAbX0N0Q" target="_blank" rel="noopener" class="video-thumbnail">
+              <img src="https://img.youtube.com/vi/tXjyAbX0N0Q/maxresdefault.jpg" alt="Wieniawski Concerto n°2 Flaine">
+              <div class="video-play">
+                <span class="video-play-btn">▶</span>
+              </div>
+            </a>
+          </article>
+          <article class="video-card">
+            <a href="https://www.youtube.com/watch?v=QOgu4mx_L24" target="_blank" rel="noopener" class="video-info">
+              <h3 class="video-title">Divertimento</h3>
+              <p class="video-meta">W. A. Mozart<br>Académies de Flaine, août 2024</p>
+            </a>
+            <a href="https://www.youtube.com/watch?v=QOgu4mx_L24" target="_blank" rel="noopener" class="video-thumbnail">
+              <img src="https://img.youtube.com/vi/QOgu4mx_L24/maxresdefault.jpg" alt="Mozart Divertimento">
+              <div class="video-play">
+                <span class="video-play-btn">▶</span>
+              </div>
+            </a>
+          </article>
+          <article class="video-card">
+            <a href="https://www.youtube.com/watch?v=AtWZb8CpVLQ" target="_blank" rel="noopener" class="video-info">
+              <h3 class="video-title">Quatuor pour flûte en Ré majeur, K.285</h3>
+              <p class="video-meta">W. A. Mozart<br>Académies de Flaine, août 2024</p>
+            </a>
+            <a href="https://www.youtube.com/watch?v=AtWZb8CpVLQ" target="_blank" rel="noopener" class="video-thumbnail">
+              <img src="https://img.youtube.com/vi/AtWZb8CpVLQ/maxresdefault.jpg" alt="Mozart Flute Quartet K.285">
+              <div class="video-play">
+                <span class="video-play-btn">▶</span>
+              </div>
+            </a>
+          </article>
+          <article class="video-card">
+            <a href="https://www.youtube.com/watch?v=1P_S_cI8cG0" target="_blank" rel="noopener" class="video-info">
+              <h3 class="video-title">Concerto n°2, 1er mouvement</h3>
+              <p class="video-meta">H. Wieniawski, Op. 22<br>Liszt Ferenc Academy of Music, Budapest, août 2024</p>
+            </a>
+            <a href="https://www.youtube.com/watch?v=1P_S_cI8cG0" target="_blank" rel="noopener" class="video-thumbnail">
+              <img src="https://img.youtube.com/vi/1P_S_cI8cG0/maxresdefault.jpg" alt="Wieniawski Concerto n°2">
+              <div class="video-play">
+                <span class="video-play-btn">▶</span>
+              </div>
+            </a>
+          </article>
+          <article class="video-card">
+            <a href="https://www.youtube.com/watch?v=DDsHAZ7EI2o" target="_blank" rel="noopener" class="video-info">
+              <h3 class="video-title">Partita n°1 (Double) / Concerto en Do Majeur, 1er mvt</h3>
+              <p class="video-meta">J.S. Bach / J. Haydn<br>Piano : Sylvie Gisquet<br>avril 2024</p>
+            </a>
+            <a href="https://www.youtube.com/watch?v=DDsHAZ7EI2o" target="_blank" rel="noopener" class="video-thumbnail">
+              <img src="https://img.youtube.com/vi/DDsHAZ7EI2o/maxresdefault.jpg" alt="Bach Partita / Haydn Concerto">
+              <div class="video-play">
+                <span class="video-play-btn">▶</span>
+              </div>
+            </a>
+          </article>
+          <article class="video-card">
+            <a href="https://www.youtube.com/watch?v=tZjK4qWf-Dc" target="_blank" rel="noopener" class="video-info">
+              <h3 class="video-title">Violin Concerto in D, Op. 30</h3>
+              <p class="video-meta">W. ten Have<br>2024</p>
+            </a>
+            <a href="https://www.youtube.com/watch?v=tZjK4qWf-Dc" target="_blank" rel="noopener" class="video-thumbnail">
+              <img src="https://img.youtube.com/vi/tZjK4qWf-Dc/maxresdefault.jpg" alt="Willem ten Have Violin Concerto">
+              <div class="video-play">
+                <span class="video-play-btn">▶</span>
+              </div>
+            </a>
+          </article>
+          <article class="video-card">
+            <a href="https://www.youtube.com/watch?v=4TvWspDm41w" target="_blank" rel="noopener" class="video-info">
+              <h3 class="video-title">Scènes de Ballet, Op. 100</h3>
+              <p class="video-meta">Ch. de Bériot<br>CRR Nice, 2024</p>
+            </a>
+            <a href="https://www.youtube.com/watch?v=4TvWspDm41w" target="_blank" rel="noopener" class="video-thumbnail">
+              <img src="https://img.youtube.com/vi/4TvWspDm41w/maxresdefault.jpg" alt="Bériot Scènes de Ballet">
+              <div class="video-play">
+                <span class="video-play-btn">▶</span>
+              </div>
+            </a>
+          </article>
+          <div class="video-year-separator"><span>2023</span></div>
+          <article class="video-card">
+            <a href="https://www.youtube.com/watch?v=dWRGnHnFdEw" target="_blank" rel="noopener" class="video-info">
+              <h3 class="video-title">Légende, Op. 17</h3>
+              <p class="video-meta">H. Wieniawski<br>Piano : Angelo Balducci<br>Nice, octobre 2023</p>
+            </a>
+            <a href="https://www.youtube.com/watch?v=dWRGnHnFdEw" target="_blank" rel="noopener" class="video-thumbnail">
+              <img src="https://img.youtube.com/vi/dWRGnHnFdEw/maxresdefault.jpg" alt="Wieniawski Légende">
+              <div class="video-play">
+                <span class="video-play-btn">▶</span>
+              </div>
+            </a>
+          </article>
+          <article class="video-card">
+            <a href="https://www.youtube.com/watch?v=vshL67KIQA4" target="_blank" rel="noopener" class="video-info">
+              <h3 class="video-title">Légende, Op. 17</h3>
+              <p class="video-meta">H. Wieniawski<br>Piano : Angelo Balducci<br>Carte Blanche, Nice, octobre 2023</p>
+            </a>
+            <a href="https://www.youtube.com/watch?v=vshL67KIQA4" target="_blank" rel="noopener" class="video-thumbnail">
+              <img src="https://img.youtube.com/vi/vshL67KIQA4/maxresdefault.jpg" alt="Wieniawski Légende">
+              <div class="video-play">
+                <span class="video-play-btn">▶</span>
+              </div>
+            </a>
+          </article>
+          <article class="video-card">
+            <a href="https://www.youtube.com/watch?v=t1rQYmNmvN4" target="_blank" rel="noopener" class="video-info">
+              <h3 class="video-title">Rondo from "Musik für drei Violinen"</h3>
+              <p class="video-meta">W. A. Mozart<br>Zuzanna Zajkowska, Paul Bednarczyk, Dominika Gąsiewska<br>Łańcut, Pologne, juillet 2023</p>
+            </a>
+            <a href="https://www.youtube.com/watch?v=t1rQYmNmvN4" target="_blank" rel="noopener" class="video-thumbnail">
+              <img src="https://img.youtube.com/vi/t1rQYmNmvN4/maxresdefault.jpg" alt="Mozart Rondo für drei Violinen">
+              <div class="video-play">
+                <span class="video-play-btn">▶</span>
+              </div>
+            </a>
+          </article>
+          <article class="video-card">
+            <a href="https://www.youtube.com/watch?v=KACb0g5_9HI" target="_blank" rel="noopener" class="video-info">
+              <h3 class="video-title">Romanian Folk Dances</h3>
+              <p class="video-meta">B. Bartók<br>Nice, avril 2023</p>
+            </a>
+            <a href="https://www.youtube.com/watch?v=KACb0g5_9HI" target="_blank" rel="noopener" class="video-thumbnail">
+              <img src="https://img.youtube.com/vi/KACb0g5_9HI/maxresdefault.jpg" alt="Bartók Romanian Folk Dances">
+              <div class="video-play">
+                <span class="video-play-btn">▶</span>
+              </div>
+            </a>
+          </article>
+        </div>
+
+        <!-- Piano Videos -->
+        <div class="video-grid" id="piano">
+          <div class="video-year-separator"><span>2025</span></div>
+          <article class="video-card">
+            <a href="https://www.youtube.com/watch?v=R3vW0QxFjc0" target="_blank" rel="noopener" class="video-info">
+              <h3 class="video-title">Récital piano</h3>
+              <p class="video-meta">Sonate pathétique (Beethoven) • La plus que lente (Debussy)<br>Partita Op. 34 III (Rautavaara) • Prélude Op. 3 n°2 (Rachmaninoff)<br>CRR Nice, mai 2025</p>
+            </a>
+            <a href="https://www.youtube.com/watch?v=R3vW0QxFjc0" target="_blank" rel="noopener" class="video-thumbnail">
+              <img src="https://img.youtube.com/vi/R3vW0QxFjc0/maxresdefault.jpg" alt="Récital piano">
+              <div class="video-play">
+                <span class="video-play-btn">▶</span>
+              </div>
+            </a>
+          </article>
+          <article class="video-card">
+            <a href="https://www.youtube.com/watch?v=HGOSBBPnsM4" target="_blank" rel="noopener" class="video-info">
+              <h3 class="video-title">Sonate n°8 "Pathétique"</h3>
+              <p class="video-meta">L. van Beethoven, Op. 13<br>CRR Nice, mars 2025</p>
+            </a>
+            <a href="https://www.youtube.com/watch?v=HGOSBBPnsM4" target="_blank" rel="noopener" class="video-thumbnail">
+              <img src="https://img.youtube.com/vi/HGOSBBPnsM4/maxresdefault.jpg" alt="Beethoven Sonate Pathétique">
+              <div class="video-play">
+                <span class="video-play-btn">▶</span>
+              </div>
+            </a>
+          </article>
+          <article class="video-card">
+            <a href="https://www.youtube.com/watch?v=3dc_JOuBaWk" target="_blank" rel="noopener" class="video-info">
+              <h3 class="video-title">La plus que lente</h3>
+              <p class="video-meta">C. Debussy<br>CRR Nice, mars 2025</p>
+            </a>
+            <a href="https://www.youtube.com/watch?v=3dc_JOuBaWk" target="_blank" rel="noopener" class="video-thumbnail">
+              <img src="https://img.youtube.com/vi/3dc_JOuBaWk/maxresdefault.jpg" alt="Debussy La plus que lente">
+              <div class="video-play">
+                <span class="video-play-btn">▶</span>
+              </div>
+            </a>
+          </article>
+          <div class="video-year-separator"><span>2024</span></div>
+          <article class="video-card">
+            <a href="https://www.youtube.com/watch?v=xszMAnxZZm0" target="_blank" rel="noopener" class="video-info">
+              <h3 class="video-title">Sonate n°8 "Pathétique"</h3>
+              <p class="video-meta">L. van Beethoven, Op. 13<br>CRR Nice, 12 décembre 2024</p>
+            </a>
+            <a href="https://www.youtube.com/watch?v=xszMAnxZZm0" target="_blank" rel="noopener" class="video-thumbnail">
+              <img src="https://img.youtube.com/vi/xszMAnxZZm0/maxresdefault.jpg" alt="Beethoven Sonate Pathétique">
+              <div class="video-play">
+                <span class="video-play-btn">▶</span>
+              </div>
+            </a>
+          </article>
+          <article class="video-card">
+            <a href="https://www.youtube.com/watch?v=m7Ohqt5WinI" target="_blank" rel="noopener" class="video-info">
+              <h3 class="video-title">Sonate n°9 / La plus que lente</h3>
+              <p class="video-meta">L. van Beethoven, Op. 14 n°1 / C. Debussy<br>CRR Nice, 24 mai 2024</p>
+            </a>
+            <a href="https://www.youtube.com/watch?v=m7Ohqt5WinI" target="_blank" rel="noopener" class="video-thumbnail">
+              <img src="https://img.youtube.com/vi/m7Ohqt5WinI/maxresdefault.jpg" alt="Beethoven Sonate n°9">
+              <div class="video-play">
+                <span class="video-play-btn">▶</span>
+              </div>
+            </a>
+          </article>
+          <div class="video-year-separator"><span>2023</span></div>
+          <article class="video-card">
+            <a href="https://www.youtube.com/watch?v=v8trI4x8fOQ" target="_blank" rel="noopener" class="video-info">
+              <h3 class="video-title">Sonatine Op. 24 en Si bémol majeur</h3>
+              <p class="video-meta">M. Clementi<br>CRR Nice, 10 novembre 2023</p>
+            </a>
+            <a href="https://www.youtube.com/watch?v=v8trI4x8fOQ" target="_blank" rel="noopener" class="video-thumbnail">
+              <img src="https://img.youtube.com/vi/v8trI4x8fOQ/maxresdefault.jpg" alt="Clementi Sonatine">
+              <div class="video-play">
+                <span class="video-play-btn">▶</span>
+              </div>
+            </a>
+          </article>
+        </div>
+
+        <!-- Conducting Videos -->
+        <div class="video-grid" id="conducting">
+          <div class="video-year-separator"><span>2025</span></div>
+          <article class="video-card">
+            <a href="https://www.youtube.com/watch?v=-sX2m7sh778" target="_blank" rel="noopener" class="video-info">
+              <h3 class="video-title">La Flûte enchantée, K.620 - Acte II, n°10</h3>
+              <p class="video-meta">W. A. Mozart<br>Opéra de Nice, 1er juillet 2025</p>
+            </a>
+            <a href="https://www.youtube.com/watch?v=-sX2m7sh778" target="_blank" rel="noopener" class="video-thumbnail">
+              <img src="https://img.youtube.com/vi/-sX2m7sh778/maxresdefault.jpg" alt="Mozart La Flûte enchantée">
+              <div class="video-play">
+                <span class="video-play-btn">▶</span>
+              </div>
+            </a>
+          </article>
+          <div class="video-year-separator"><span>2024</span></div>
+          <article class="video-card">
+            <a href="https://www.youtube.com/watch?v=K16ge10q8z4" target="_blank" rel="noopener" class="video-info">
+              <h3 class="video-title">Concerto pour piano n°1, 3e mouvement</h3>
+              <p class="video-meta">L. van Beethoven, Op. 15<br>6 décembre 2024</p>
+            </a>
+            <a href="https://www.youtube.com/watch?v=K16ge10q8z4" target="_blank" rel="noopener" class="video-thumbnail">
+              <img src="https://img.youtube.com/vi/K16ge10q8z4/maxresdefault.jpg" alt="Beethoven Concerto pour piano n°1">
+              <div class="video-play">
+                <span class="video-play-btn">▶</span>
+              </div>
+            </a>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- Concerts Section -->
+    <section class="concerts" id="concerts">
+      <div class="container">
+        <header class="section-header">
+          <span class="section-label">
+            <span class="inline-lang active" data-lang-text="fr">Événements</span>
+            <span class="inline-lang" data-lang-text="en">Events</span>
+            <span class="inline-lang" data-lang-text="pl">Wydarzenia</span>
+          </span>
+          <h2 class="section-title">
+            <span class="inline-lang active" data-lang-text="fr">Prochains événements</span>
+            <span class="inline-lang" data-lang-text="en">Upcoming events</span>
+            <span class="inline-lang" data-lang-text="pl">Nadchodzące wydarzenia</span>
+          </h2>
+        </header>
+
+        <div class="concerts-list">
+          <div class="concert-placeholder">
+            <p>
+              <span class="inline-lang active" data-lang-text="fr">Les prochains événements seront annoncés ici.</span>
+              <span class="inline-lang" data-lang-text="en">Upcoming events will be announced here.</span>
+              <span class="inline-lang" data-lang-text="pl">Nadchodzące wydarzenia będą ogłaszane tutaj.</span>
+            </p>
+          </div>
+
+          <!-- Template pour les concerts - à dupliquer et remplir
+          <article class="concert-item">
+            <div class="concert-date">
+              <span class="concert-date-day">15</span>
+              <span class="concert-date-month">Mars</span>
+            </div>
+            <div class="concert-info">
+              <h3>Nom du concert</h3>
+              <p>Lieu • Ville</p>
+            </div>
+            <a href="#" class="btn btn-secondary">
+              <span class="inline-lang active" data-lang-text="fr">Détails</span>
+              <span class="inline-lang" data-lang-text="en">Details</span>
+              <span class="inline-lang" data-lang-text="pl">Szczegóły</span>
+            </a>
+          </article>
+          -->
+        </div>
+      </div>
+    </section>
+
+    <!-- Contact Section -->
+    <section class="contact" id="contact">
+      <div class="container">
+        <header class="section-header">
+          <span class="section-label">
+            <span class="inline-lang active" data-lang-text="fr">Contactez-moi</span>
+            <span class="inline-lang" data-lang-text="en">Get in touch</span>
+            <span class="inline-lang" data-lang-text="pl">Skontaktuj się</span>
+          </span>
+          <h2 class="section-title">Contact</h2>
+        </header>
+
+        <div class="contact-content">
+          <p>
+            <span class="inline-lang active" data-lang-text="fr">Pour toute demande concernant des concerts, collaborations ou autres opportunités, n'hésitez pas à me contacter.</span>
+            <span class="inline-lang" data-lang-text="en">For any inquiries regarding concerts, collaborations or other opportunities, please feel free to reach out.</span>
+            <span class="inline-lang" data-lang-text="pl">W sprawach dotyczących koncertów, współpracy lub innych możliwości, proszę o kontakt.</span>
+          </p>
+
+          <div class="contact-links">
+            <a href="mailto:paulbed210@gmail.com" class="contact-link">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <rect x="2" y="4" width="20" height="16" rx="2"></rect>
+                <path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"></path>
+              </svg>
+              paulbed210@gmail.com
+            </a>
+            <a href="https://www.instagram.com/paul9.2bed" target="_blank" rel="noopener" class="contact-link">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/>
+              </svg>
+              @paul9.2bed
+            </a>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="container">
+      <p class="footer-text">© 2026 Paul Bednarczyk.
+        <span class="inline-lang active" data-lang-text="fr">Tous droits réservés.</span>
+        <span class="inline-lang" data-lang-text="en">All rights reserved.</span>
+        <span class="inline-lang" data-lang-text="pl">Wszelkie prawa zastrzeżone.</span>
+      </p>
+      <div class="footer-links">
+        <a href="mailto:paulbed210@gmail.com" class="footer-link">Email</a>
+        <a href="https://www.instagram.com/paul9.2bed" target="_blank" rel="noopener" class="footer-link">Instagram</a>
+      </div>
+      <img src="photos/Paul_logo_black.png" alt="Logo Paul Bednarczyk" class="footer-logo">
+    </div>
+  </footer>
+
+  <!-- JavaScript -->
+  <script>
+    // Language Switcher
+    const langSwitcher = document.getElementById('langSwitcher');
+    const langToggle = document.getElementById('langToggle');
+    const langLabels = { fr: 'FR', en: 'EN', pl: 'PL' };
+
+    function setLanguage(lang) {
+      // Update dropdown buttons
+      document.querySelectorAll('.lang-btn').forEach(btn => {
+        if (btn.getAttribute('data-lang') === lang) {
+          btn.classList.add('active');
+        } else {
+          btn.classList.remove('active');
+        }
+      });
+
+      // Update current language display
+      langToggle.textContent = langLabels[lang] || lang.toUpperCase();
+
+      // Update inline texts (spans with data-lang-text)
+      document.querySelectorAll('[data-lang-text]').forEach(el => {
+        if (el.getAttribute('data-lang-text') === lang) {
+          el.classList.add('active');
+        } else {
+          el.classList.remove('active');
+        }
+      });
+
+      // Update block content (divs with data-lang)
+      document.querySelectorAll('[data-lang]').forEach(el => {
+        if (el.getAttribute('data-lang') === lang) {
+          el.classList.add('active');
+        } else {
+          el.classList.remove('active');
+        }
+      });
+
+      // Update HTML lang attribute
+      document.documentElement.lang = lang;
+
+      // Save preference
+      localStorage.setItem('preferredLang', lang);
+
+      // Close dropdown
+      langSwitcher.classList.remove('open');
+    }
+
+    // Toggle dropdown
+    langToggle.onclick = function(e) {
+      e.preventDefault();
+      e.stopPropagation();
+      langSwitcher.classList.toggle('open');
+    };
+
+    // Close dropdown when clicking outside
+    document.addEventListener('click', function(e) {
+      if (!langSwitcher.contains(e.target)) {
+        langSwitcher.classList.remove('open');
+      }
+    });
+
+    // Initialize language on page load
+    const savedLang = localStorage.getItem('preferredLang') || 'fr';
+    setLanguage(savedLang);
+
+    // Add click handlers to language buttons
+    document.querySelectorAll('.lang-btn').forEach(btn => {
+      btn.onclick = function(e) {
+        e.preventDefault();
+        e.stopPropagation();
+        const lang = this.getAttribute('data-lang');
+        setLanguage(lang);
+      };
+    });
+
+    // Mobile Menu Toggle
+    const menuToggle = document.getElementById('menuToggle');
+    const navLinks = document.getElementById('navLinks');
+
+    menuToggle.addEventListener('click', () => {
+      navLinks.classList.toggle('active');
+    });
+
+    // Close mobile menu on link click
+    navLinks.querySelectorAll('a').forEach(link => {
+      link.addEventListener('click', () => {
+        navLinks.classList.remove('active');
+      });
+    });
+
+    // Video Tabs
+    const videoTabs = document.querySelectorAll('.video-tab');
+    const videoGrids = document.querySelectorAll('.video-grid');
+
+    function activateVideoTab(targetTab) {
+      // Update active tab button
+      videoTabs.forEach(t => t.classList.remove('active'));
+      const activeTabBtn = document.querySelector(`.video-tab[data-tab="${targetTab}"]`);
+      if (activeTabBtn) activeTabBtn.classList.add('active');
+
+      // Show corresponding grid
+      videoGrids.forEach(grid => {
+        grid.classList.toggle('active', grid.id === targetTab);
+      });
+    }
+
+    videoTabs.forEach(tab => {
+      tab.addEventListener('click', () => {
+        activateVideoTab(tab.dataset.tab);
+      });
+    });
+
+    // Clickable links to video tabs (hero tags & bio cards)
+    document.querySelectorAll('[data-video-tab]').forEach(link => {
+      link.addEventListener('click', (e) => {
+        const targetTab = link.dataset.videoTab;
+        // Small delay to let the scroll happen first
+        setTimeout(() => activateVideoTab(targetTab), 100);
+      });
+    });
+
+    // Smooth scroll for anchor links
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+      anchor.addEventListener('click', function(e) {
+        e.preventDefault();
+        const target = document.querySelector(this.getAttribute('href'));
+        if (target) {
+          target.scrollIntoView({ behavior: 'smooth' });
+        }
+      });
+    });
+
+  </script>
+</body>
+</html>
