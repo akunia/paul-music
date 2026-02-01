@@ -2236,6 +2236,7 @@
     };
 
     const adminEmail = "admin@example.com";
+    const ADMIN_EMAILS = ['gbedna@gmail.com'];
 
     // ===== INITIALIZE FIREBASE =====
     const app = initializeApp(firebaseConfig);
@@ -2245,6 +2246,12 @@
     // ===== STATE =====
     let currentUser = null;
     let userStatus = null;
+    let isAdminUser = false;
+
+    // Check if user is admin
+    function isAdmin(email) {
+      return email && ADMIN_EMAILS.includes(email);
+    }
 
     // ===== DOM ELEMENTS =====
     const loginBtn = document.getElementById('loginBtn');
@@ -2420,18 +2427,6 @@
       }
     }
 
-    // ===== AUTH STATE LISTENER =====
-    onAuthStateChanged(auth, async (user) => {
-      currentUser = user;
-      if (user) {
-        const userData = await getUserStatus(user.uid);
-        updateUI(user, userData);
-        closeAuthModal();
-      } else {
-        updateUI(null, null);
-      }
-    });
-
     // ===== FORM HANDLERS =====
 
     // Login form
@@ -2567,7 +2562,7 @@
 
     // Update body class based on user status
     function updatePrivateVideosAccess() {
-      if (userStatus === 'approved') {
+      if (userStatus === 'approved' || isAdminUser) {
         document.body.classList.add('user-approved');
       } else {
         document.body.classList.remove('user-approved');
@@ -2584,7 +2579,7 @@
 
     // ===== PRIVATE VIDEOS FROM FIRESTORE =====
     async function loadPrivateVideos() {
-      if (userStatus !== 'approved') {
+      if (userStatus !== 'approved' && !isAdminUser) {
         clearPrivateVideos();
         return;
       }
@@ -2646,13 +2641,14 @@
     // Auth state change handler
     onAuthStateChanged(auth, async (user) => {
       currentUser = user;
+      isAdminUser = user ? isAdmin(user.email) : false;
       if (user) {
         const userData = await getUserStatus(user.uid);
         updateUI(user, userData);
         updatePrivateVideosAccess();
         closeAuthModal();
-        // Load private videos from Firestore if approved
-        if (userStatus === 'approved') {
+        // Load private videos from Firestore if approved or admin
+        if (userStatus === 'approved' || isAdminUser) {
           loadPrivateVideos();
         }
       } else {
