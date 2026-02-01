@@ -1040,6 +1040,383 @@
     .inline-lang.active {
       display: inline;
     }
+
+    /* ===== AUTH MODAL ===== */
+    .auth-modal-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.8);
+      backdrop-filter: blur(4px);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 1000;
+      opacity: 0;
+      visibility: hidden;
+      transition: all var(--transition-base);
+    }
+
+    .auth-modal-overlay.active {
+      opacity: 1;
+      visibility: visible;
+    }
+
+    .auth-modal {
+      background: var(--color-surface);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-lg);
+      padding: var(--space-2xl);
+      width: 100%;
+      max-width: 400px;
+      margin: var(--space-md);
+      transform: translateY(20px);
+      transition: transform var(--transition-base);
+    }
+
+    .auth-modal-overlay.active .auth-modal {
+      transform: translateY(0);
+    }
+
+    .auth-modal-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: var(--space-xl);
+    }
+
+    .auth-modal-title {
+      font-family: var(--font-display);
+      font-size: 1.5rem;
+    }
+
+    .auth-modal-close {
+      width: 32px;
+      height: 32px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: transparent;
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-sm);
+      color: var(--color-text-muted);
+      cursor: pointer;
+      transition: all var(--transition-fast);
+    }
+
+    .auth-modal-close:hover {
+      border-color: var(--color-accent);
+      color: var(--color-accent);
+    }
+
+    .auth-tabs {
+      display: flex;
+      gap: var(--space-sm);
+      margin-bottom: var(--space-xl);
+    }
+
+    .auth-tab {
+      flex: 1;
+      padding: var(--space-sm) var(--space-md);
+      background: transparent;
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-sm);
+      color: var(--color-text-muted);
+      font-weight: 500;
+      cursor: pointer;
+      transition: all var(--transition-fast);
+    }
+
+    .auth-tab:hover {
+      border-color: var(--color-text-subtle);
+      color: var(--color-text);
+    }
+
+    .auth-tab.active {
+      background: var(--color-accent);
+      border-color: var(--color-accent);
+      color: var(--color-bg);
+    }
+
+    .auth-form {
+      display: none;
+    }
+
+    .auth-form.active {
+      display: block;
+    }
+
+    .auth-field {
+      margin-bottom: var(--space-md);
+    }
+
+    .auth-field label {
+      display: block;
+      font-size: 0.875rem;
+      color: var(--color-text-muted);
+      margin-bottom: var(--space-xs);
+    }
+
+    .auth-field input {
+      width: 100%;
+      padding: var(--space-md);
+      background: var(--color-bg);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-sm);
+      color: var(--color-text);
+      font-size: 1rem;
+      transition: border-color var(--transition-fast);
+    }
+
+    .auth-field input:focus {
+      outline: none;
+      border-color: var(--color-accent);
+    }
+
+    .auth-submit {
+      width: 100%;
+      padding: var(--space-md);
+      background: var(--color-accent);
+      border: none;
+      border-radius: var(--radius-md);
+      color: var(--color-bg);
+      font-weight: 600;
+      cursor: pointer;
+      transition: all var(--transition-fast);
+      margin-top: var(--space-md);
+    }
+
+    .auth-submit:hover {
+      background: var(--color-accent-hover);
+    }
+
+    .auth-submit:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+    }
+
+    .auth-message {
+      padding: var(--space-md);
+      border-radius: var(--radius-sm);
+      font-size: 0.875rem;
+      margin-top: var(--space-md);
+      display: none;
+    }
+
+    .auth-message.error {
+      display: block;
+      background: rgba(220, 53, 69, 0.15);
+      border: 1px solid rgba(220, 53, 69, 0.3);
+      color: #ff6b6b;
+    }
+
+    .auth-message.success {
+      display: block;
+      background: rgba(40, 167, 69, 0.15);
+      border: 1px solid rgba(40, 167, 69, 0.3);
+      color: #51cf66;
+    }
+
+    .auth-message.info {
+      display: block;
+      background: rgba(201, 169, 98, 0.15);
+      border: 1px solid rgba(201, 169, 98, 0.3);
+      color: var(--color-accent);
+    }
+
+    /* ===== USER MENU ===== */
+    .user-menu {
+      position: relative;
+      margin-left: var(--space-md);
+    }
+
+    .user-btn {
+      display: flex;
+      align-items: center;
+      gap: var(--space-sm);
+      padding: 8px 12px;
+      background: var(--color-surface);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-sm);
+      color: var(--color-text);
+      font-size: 0.85rem;
+      cursor: pointer;
+      transition: all var(--transition-fast);
+    }
+
+    .user-btn:hover {
+      border-color: var(--color-accent);
+    }
+
+    .user-btn svg {
+      width: 18px;
+      height: 18px;
+    }
+
+    .user-dropdown {
+      position: absolute;
+      top: 100%;
+      right: 0;
+      margin-top: 4px;
+      min-width: 180px;
+      background: var(--color-surface);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-sm);
+      box-shadow: var(--shadow-md);
+      display: none;
+      z-index: 1000;
+    }
+
+    .user-menu.open .user-dropdown {
+      display: block;
+    }
+
+    .user-dropdown-item {
+      display: block;
+      width: 100%;
+      padding: 10px 14px;
+      font-size: 0.85rem;
+      color: var(--color-text-muted);
+      background: transparent;
+      border: none;
+      text-align: left;
+      cursor: pointer;
+      transition: all var(--transition-fast);
+    }
+
+    .user-dropdown-item:hover {
+      color: var(--color-text);
+      background: rgba(255, 255, 255, 0.1);
+    }
+
+    .user-status {
+      padding: 10px 14px;
+      font-size: 0.75rem;
+      color: var(--color-text-subtle);
+      border-bottom: 1px solid var(--color-border);
+    }
+
+    .user-status.pending {
+      color: #ffa94d;
+    }
+
+    .user-status.approved {
+      color: #51cf66;
+    }
+
+    /* Login button in nav */
+    .login-btn {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      padding: 8px 16px;
+      background: var(--color-accent);
+      border: none;
+      border-radius: var(--radius-sm);
+      color: var(--color-bg);
+      font-size: 0.85rem;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all var(--transition-fast);
+      margin-left: var(--space-md);
+    }
+
+    .login-btn:hover {
+      background: var(--color-accent-hover);
+    }
+
+    .login-btn svg {
+      width: 16px;
+      height: 16px;
+    }
+
+    /* Private video badge */
+    .video-private-badge {
+      display: inline-block;
+      padding: 2px 8px;
+      background: rgba(201, 169, 98, 0.2);
+      border: 1px solid rgba(201, 169, 98, 0.4);
+      border-radius: var(--radius-sm);
+      font-size: 0.7rem;
+      color: var(--color-accent);
+      margin-left: var(--space-sm);
+    }
+
+    /* Private videos placeholder (shown when not logged in) */
+    .private-videos-placeholder {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: var(--space-2xl);
+      background: var(--color-surface);
+      border: 2px dashed var(--color-border);
+      border-radius: var(--radius-md);
+      text-align: center;
+      cursor: pointer;
+      transition: all var(--transition-fast);
+    }
+
+    .private-videos-placeholder:hover {
+      border-color: var(--color-accent);
+      background: var(--color-surface-hover);
+    }
+
+    .private-placeholder-icon {
+      font-size: 2.5rem;
+      margin-bottom: var(--space-md);
+      opacity: 0.7;
+    }
+
+    .private-placeholder-text {
+      font-size: 1rem;
+      color: var(--color-text-muted);
+      margin-bottom: var(--space-md);
+    }
+
+    .private-placeholder-btn {
+      padding: var(--space-sm) var(--space-lg);
+      background: var(--color-accent);
+      border: none;
+      border-radius: var(--radius-sm);
+      color: var(--color-bg);
+      font-size: 0.875rem;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all var(--transition-fast);
+    }
+
+    .private-placeholder-btn:hover {
+      background: var(--color-accent-hover);
+    }
+
+    /* Hide placeholder when user is approved */
+    body.user-approved .private-videos-placeholder {
+      display: none;
+    }
+
+    /* Private videos container (for dynamically loaded videos) */
+    .private-videos-container {
+      display: none;
+    }
+
+    body.user-approved .private-videos-container {
+      display: contents;
+    }
+
+    /* Loading spinner */
+    .auth-loading {
+      display: inline-block;
+      width: 16px;
+      height: 16px;
+      border: 2px solid rgba(255, 255, 255, 0.3);
+      border-top-color: currentColor;
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+    }
+
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
   </style>
 </head>
 <body>
@@ -1091,6 +1468,45 @@
           </div>
         </div>
 
+        <!-- Auth: Login Button (shown when not logged in) -->
+        <button class="login-btn" id="loginBtn">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"/>
+            <polyline points="10 17 15 12 10 7"/>
+            <line x1="15" y1="12" x2="3" y2="12"/>
+          </svg>
+          <span class="inline-lang active" data-lang-text="fr">Connexion</span>
+          <span class="inline-lang" data-lang-text="en">Login</span>
+          <span class="inline-lang" data-lang-text="pl">Zaloguj</span>
+          <span class="inline-lang" data-lang-text="ru">Вход</span>
+        </button>
+
+        <!-- Auth: User Menu (shown when logged in) -->
+        <div class="user-menu" id="userMenu" style="display: none;">
+          <button class="user-btn" id="userMenuBtn">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
+              <circle cx="12" cy="7" r="4"/>
+            </svg>
+            <span id="userDisplayName">User</span>
+          </button>
+          <div class="user-dropdown">
+            <div class="user-status" id="userStatus">
+              <span class="inline-lang active" data-lang-text="fr">Statut : </span>
+              <span class="inline-lang" data-lang-text="en">Status: </span>
+              <span class="inline-lang" data-lang-text="pl">Status: </span>
+              <span class="inline-lang" data-lang-text="ru">Статус: </span>
+              <strong id="userStatusText">-</strong>
+            </div>
+            <button class="user-dropdown-item" id="logoutBtn">
+              <span class="inline-lang active" data-lang-text="fr">Déconnexion</span>
+              <span class="inline-lang" data-lang-text="en">Logout</span>
+              <span class="inline-lang" data-lang-text="pl">Wyloguj</span>
+              <span class="inline-lang" data-lang-text="ru">Выйти</span>
+            </button>
+          </div>
+        </div>
+
         <button class="menu-toggle" id="menuToggle" aria-label="Menu">
           <span></span>
           <span></span>
@@ -1099,6 +1515,93 @@
       </nav>
     </div>
   </header>
+
+  <!-- Auth Modal -->
+  <div class="auth-modal-overlay" id="authModal">
+    <div class="auth-modal">
+      <div class="auth-modal-header">
+        <h2 class="auth-modal-title">
+          <span class="inline-lang active" data-lang-text="fr">Espace membre</span>
+          <span class="inline-lang" data-lang-text="en">Member area</span>
+          <span class="inline-lang" data-lang-text="pl">Strefa członka</span>
+          <span class="inline-lang" data-lang-text="ru">Личный кабинет</span>
+        </h2>
+        <button class="auth-modal-close" id="authModalClose">&times;</button>
+      </div>
+
+      <div class="auth-tabs">
+        <button class="auth-tab active" data-auth-tab="login">
+          <span class="inline-lang active" data-lang-text="fr">Connexion</span>
+          <span class="inline-lang" data-lang-text="en">Login</span>
+          <span class="inline-lang" data-lang-text="pl">Zaloguj</span>
+          <span class="inline-lang" data-lang-text="ru">Вход</span>
+        </button>
+        <button class="auth-tab" data-auth-tab="register">
+          <span class="inline-lang active" data-lang-text="fr">Inscription</span>
+          <span class="inline-lang" data-lang-text="en">Register</span>
+          <span class="inline-lang" data-lang-text="pl">Rejestracja</span>
+          <span class="inline-lang" data-lang-text="ru">Регистрация</span>
+        </button>
+      </div>
+
+      <!-- Login Form -->
+      <form class="auth-form active" id="loginForm">
+        <div class="auth-field">
+          <label for="loginEmail">Email</label>
+          <input type="email" id="loginEmail" required autocomplete="email">
+        </div>
+        <div class="auth-field">
+          <label for="loginPassword">
+            <span class="inline-lang active" data-lang-text="fr">Mot de passe</span>
+            <span class="inline-lang" data-lang-text="en">Password</span>
+            <span class="inline-lang" data-lang-text="pl">Hasło</span>
+            <span class="inline-lang" data-lang-text="ru">Пароль</span>
+          </label>
+          <input type="password" id="loginPassword" required autocomplete="current-password">
+        </div>
+        <button type="submit" class="auth-submit" id="loginSubmit">
+          <span class="inline-lang active" data-lang-text="fr">Se connecter</span>
+          <span class="inline-lang" data-lang-text="en">Sign in</span>
+          <span class="inline-lang" data-lang-text="pl">Zaloguj się</span>
+          <span class="inline-lang" data-lang-text="ru">Войти</span>
+        </button>
+        <div class="auth-message" id="loginMessage"></div>
+      </form>
+
+      <!-- Register Form -->
+      <form class="auth-form" id="registerForm">
+        <div class="auth-field">
+          <label for="registerName">
+            <span class="inline-lang active" data-lang-text="fr">Nom complet</span>
+            <span class="inline-lang" data-lang-text="en">Full name</span>
+            <span class="inline-lang" data-lang-text="pl">Imię i nazwisko</span>
+            <span class="inline-lang" data-lang-text="ru">Полное имя</span>
+          </label>
+          <input type="text" id="registerName" required autocomplete="name">
+        </div>
+        <div class="auth-field">
+          <label for="registerEmail">Email</label>
+          <input type="email" id="registerEmail" required autocomplete="email">
+        </div>
+        <div class="auth-field">
+          <label for="registerPassword">
+            <span class="inline-lang active" data-lang-text="fr">Mot de passe</span>
+            <span class="inline-lang" data-lang-text="en">Password</span>
+            <span class="inline-lang" data-lang-text="pl">Hasło</span>
+            <span class="inline-lang" data-lang-text="ru">Пароль</span>
+          </label>
+          <input type="password" id="registerPassword" required minlength="6" autocomplete="new-password">
+        </div>
+        <button type="submit" class="auth-submit" id="registerSubmit">
+          <span class="inline-lang active" data-lang-text="fr">Créer un compte</span>
+          <span class="inline-lang" data-lang-text="en">Create account</span>
+          <span class="inline-lang" data-lang-text="pl">Utwórz konto</span>
+          <span class="inline-lang" data-lang-text="ru">Создать аккаунт</span>
+        </button>
+        <div class="auth-message" id="registerMessage"></div>
+      </form>
+    </div>
+  </div>
 
   <!-- Main Content -->
   <main id="main">
@@ -1316,42 +1819,24 @@
               </div>
             </a>
           </article>
-          <article class="video-card">
-            <a href="https://www.youtube.com/watch?v=pVNspbrNciM" target="_blank" rel="noopener" class="video-info">
-              <h3 class="video-title">L'Arlésienne Suite n°2</h3>
-              <p class="video-meta">G. Bizet<br>Académies de Flaine, 14 août 2025</p>
-            </a>
-            <a href="https://www.youtube.com/watch?v=pVNspbrNciM" target="_blank" rel="noopener" class="video-thumbnail">
-              <img src="https://img.youtube.com/vi/pVNspbrNciM/maxresdefault.jpg" alt="Bizet L'Arlésienne Suite n°2">
-              <div class="video-play">
-                <span class="video-play-btn">▶</span>
-              </div>
-            </a>
-          </article>
-          <article class="video-card">
-            <a href="https://www.youtube.com/watch?v=o6yHfN7RxXM" target="_blank" rel="noopener" class="video-info">
-              <h3 class="video-title">Quatuor américain</h3>
-              <p class="video-meta">A. Dvořák<br>Paul Bednarczyk, Monia Moukhtar Hamache, Ruben Galluzzo, Juliette Nonnay Lages<br>Académies de Flaine, 13 août 2025</p>
-            </a>
-            <a href="https://www.youtube.com/watch?v=o6yHfN7RxXM" target="_blank" rel="noopener" class="video-thumbnail">
-              <img src="https://img.youtube.com/vi/o6yHfN7RxXM/maxresdefault.jpg" alt="Dvořák Quatuor américain">
-              <div class="video-play">
-                <span class="video-play-btn">▶</span>
-              </div>
-            </a>
-          </article>
-          <article class="video-card">
-            <a href="https://www.youtube.com/watch?v=jZ8wmuMgado" target="_blank" rel="noopener" class="video-info">
-              <h3 class="video-title">Quintette, 1er mouvement</h3>
-              <p class="video-meta">J. Brahms<br>Paul Bednarczyk, Alma Hotensche, Naïs Metivier-Ragonnet, Pauline Creissen, Angelo Balducci<br>Don Bosco, mai 2025</p>
-            </a>
-            <a href="https://www.youtube.com/watch?v=jZ8wmuMgado" target="_blank" rel="noopener" class="video-thumbnail">
-              <img src="https://img.youtube.com/vi/jZ8wmuMgado/maxresdefault.jpg" alt="Brahms Quintette">
-              <div class="video-play">
-                <span class="video-play-btn">▶</span>
-              </div>
-            </a>
-          </article>
+          <!-- Placeholder vidéos privées (URLs stockées dans Firestore, pas dans le HTML) -->
+          <div class="private-videos-placeholder" id="privateVideosPlaceholder-violin">
+            <div class="private-placeholder-icon">&#128274;</div>
+            <div class="private-placeholder-text">
+              <span class="inline-lang active" data-lang-text="fr">Vidéos privées disponibles</span>
+              <span class="inline-lang" data-lang-text="en">Private videos available</span>
+              <span class="inline-lang" data-lang-text="pl">Dostępne prywatne filmy</span>
+              <span class="inline-lang" data-lang-text="ru">Доступны приватные видео</span>
+            </div>
+            <button class="private-placeholder-btn">
+              <span class="inline-lang active" data-lang-text="fr">Se connecter pour voir</span>
+              <span class="inline-lang" data-lang-text="en">Login to view</span>
+              <span class="inline-lang" data-lang-text="pl">Zaloguj się, aby zobaczyć</span>
+              <span class="inline-lang" data-lang-text="ru">Войти для просмотра</span>
+            </button>
+          </div>
+          <!-- Container pour vidéos privées chargées depuis Firestore -->
+          <div class="private-videos-container" id="privateVideosContainer-violin"></div>
           <article class="video-card">
             <a href="https://www.youtube.com/watch?v=8gkHY_myJFQ" target="_blank" rel="noopener" class="video-info">
               <h3 class="video-title">Concerto pour violon, 1er mouvement</h3>
@@ -1401,30 +1886,7 @@
               </div>
             </a>
           </article>
-          <article class="video-card">
-            <a href="https://www.youtube.com/watch?v=QOgu4mx_L24" target="_blank" rel="noopener" class="video-info">
-              <h3 class="video-title">Divertimento</h3>
-              <p class="video-meta">W. A. Mozart<br>Académies de Flaine, août 2024</p>
-            </a>
-            <a href="https://www.youtube.com/watch?v=QOgu4mx_L24" target="_blank" rel="noopener" class="video-thumbnail">
-              <img src="https://img.youtube.com/vi/QOgu4mx_L24/maxresdefault.jpg" alt="Mozart Divertimento">
-              <div class="video-play">
-                <span class="video-play-btn">▶</span>
-              </div>
-            </a>
-          </article>
-          <article class="video-card">
-            <a href="https://www.youtube.com/watch?v=AtWZb8CpVLQ" target="_blank" rel="noopener" class="video-info">
-              <h3 class="video-title">Quatuor pour flûte en Ré majeur, K.285</h3>
-              <p class="video-meta">W. A. Mozart<br>Académies de Flaine, août 2024</p>
-            </a>
-            <a href="https://www.youtube.com/watch?v=AtWZb8CpVLQ" target="_blank" rel="noopener" class="video-thumbnail">
-              <img src="https://img.youtube.com/vi/AtWZb8CpVLQ/maxresdefault.jpg" alt="Mozart Flute Quartet K.285">
-              <div class="video-play">
-                <span class="video-play-btn">▶</span>
-              </div>
-            </a>
-          </article>
+          <!-- Divertimento & Quatuor pour flûte supprimés - vidéos privées -->
           <article class="video-card">
             <a href="https://www.youtube.com/watch?v=1P_S_cI8cG0" target="_blank" rel="noopener" class="video-info">
               <h3 class="video-title">Concerto n°2, 1er mouvement</h3>
@@ -1498,18 +1960,7 @@
               </div>
             </a>
           </article>
-          <article class="video-card">
-            <a href="https://www.youtube.com/watch?v=t1rQYmNmvN4" target="_blank" rel="noopener" class="video-info">
-              <h3 class="video-title">Rondo from "Musik für drei Violinen"</h3>
-              <p class="video-meta">W. A. Mozart<br>Zuzanna Zajkowska, Paul Bednarczyk, Dominika Gąsiewska<br>Łańcut, Pologne, juillet 2023</p>
-            </a>
-            <a href="https://www.youtube.com/watch?v=t1rQYmNmvN4" target="_blank" rel="noopener" class="video-thumbnail">
-              <img src="https://img.youtube.com/vi/t1rQYmNmvN4/maxresdefault.jpg" alt="Mozart Rondo für drei Violinen">
-              <div class="video-play">
-                <span class="video-play-btn">▶</span>
-              </div>
-            </a>
-          </article>
+          <!-- Rondo from "Musik für drei Violinen" supprimé - vidéo privée -->
           <article class="video-card">
             <a href="https://www.youtube.com/watch?v=KACb0g5_9HI" target="_blank" rel="noopener" class="video-info">
               <h3 class="video-title">Romanian Folk Dances</h3>
@@ -1526,6 +1977,23 @@
 
         <!-- Piano Videos -->
         <div class="video-grid" id="piano">
+          <!-- Placeholder vidéos privées Piano -->
+          <div class="private-videos-placeholder" id="privateVideosPlaceholder-piano">
+            <div class="private-placeholder-icon">&#128274;</div>
+            <div class="private-placeholder-text">
+              <span class="inline-lang active" data-lang-text="fr">Vidéos privées disponibles</span>
+              <span class="inline-lang" data-lang-text="en">Private videos available</span>
+              <span class="inline-lang" data-lang-text="pl">Dostępne prywatne filmy</span>
+              <span class="inline-lang" data-lang-text="ru">Доступны приватные видео</span>
+            </div>
+            <button class="private-placeholder-btn">
+              <span class="inline-lang active" data-lang-text="fr">Se connecter pour voir</span>
+              <span class="inline-lang" data-lang-text="en">Login to view</span>
+              <span class="inline-lang" data-lang-text="pl">Zaloguj się, aby zobaczyć</span>
+              <span class="inline-lang" data-lang-text="ru">Войти для просмотра</span>
+            </button>
+          </div>
+          <div class="private-videos-container" id="privateVideosContainer-piano"></div>
           <div class="video-year-separator"><span>2025</span></div>
           <article class="video-card">
             <a href="https://www.youtube.com/watch?v=R3vW0QxFjc0" target="_blank" rel="noopener" class="video-info">
@@ -1588,49 +2056,29 @@
               </div>
             </a>
           </article>
-          <div class="video-year-separator"><span>2023</span></div>
-          <article class="video-card">
-            <a href="https://www.youtube.com/watch?v=v8trI4x8fOQ" target="_blank" rel="noopener" class="video-info">
-              <h3 class="video-title">Sonatine Op. 24 en Si bémol majeur</h3>
-              <p class="video-meta">M. Clementi<br>CRR Nice, 10 novembre 2023</p>
-            </a>
-            <a href="https://www.youtube.com/watch?v=v8trI4x8fOQ" target="_blank" rel="noopener" class="video-thumbnail">
-              <img src="https://img.youtube.com/vi/v8trI4x8fOQ/maxresdefault.jpg" alt="Clementi Sonatine">
-              <div class="video-play">
-                <span class="video-play-btn">▶</span>
-              </div>
-            </a>
-          </article>
+          <!-- Sonatine Op. 24 supprimée - vidéo privée -->
         </div>
 
         <!-- Conducting Videos -->
         <div class="video-grid" id="conducting">
-          <div class="video-year-separator"><span>2025</span></div>
-          <article class="video-card">
-            <a href="https://www.youtube.com/watch?v=-sX2m7sh778" target="_blank" rel="noopener" class="video-info">
-              <h3 class="video-title">La Flûte enchantée, K.620 - Acte II, n°10</h3>
-              <p class="video-meta">W. A. Mozart<br>Opéra de Nice, 1er juillet 2025</p>
-            </a>
-            <a href="https://www.youtube.com/watch?v=-sX2m7sh778" target="_blank" rel="noopener" class="video-thumbnail">
-              <img src="https://img.youtube.com/vi/-sX2m7sh778/maxresdefault.jpg" alt="Mozart La Flûte enchantée">
-              <div class="video-play">
-                <span class="video-play-btn">▶</span>
-              </div>
-            </a>
-          </article>
-          <div class="video-year-separator"><span>2024</span></div>
-          <article class="video-card">
-            <a href="https://www.youtube.com/watch?v=K16ge10q8z4" target="_blank" rel="noopener" class="video-info">
-              <h3 class="video-title">Concerto pour piano n°1, 3e mouvement</h3>
-              <p class="video-meta">L. van Beethoven, Op. 15<br>6 décembre 2024</p>
-            </a>
-            <a href="https://www.youtube.com/watch?v=K16ge10q8z4" target="_blank" rel="noopener" class="video-thumbnail">
-              <img src="https://img.youtube.com/vi/K16ge10q8z4/maxresdefault.jpg" alt="Beethoven Concerto pour piano n°1">
-              <div class="video-play">
-                <span class="video-play-btn">▶</span>
-              </div>
-            </a>
-          </article>
+          <!-- Placeholder vidéos privées Direction -->
+          <div class="private-videos-placeholder" id="privateVideosPlaceholder-conducting">
+            <div class="private-placeholder-icon">&#128274;</div>
+            <div class="private-placeholder-text">
+              <span class="inline-lang active" data-lang-text="fr">Vidéos privées disponibles</span>
+              <span class="inline-lang" data-lang-text="en">Private videos available</span>
+              <span class="inline-lang" data-lang-text="pl">Dostępne prywatne filmy</span>
+              <span class="inline-lang" data-lang-text="ru">Доступны приватные видео</span>
+            </div>
+            <button class="private-placeholder-btn">
+              <span class="inline-lang active" data-lang-text="fr">Se connecter pour voir</span>
+              <span class="inline-lang" data-lang-text="en">Login to view</span>
+              <span class="inline-lang" data-lang-text="pl">Zaloguj się, aby zobaczyć</span>
+              <span class="inline-lang" data-lang-text="ru">Войти для просмотра</span>
+            </button>
+          </div>
+          <div class="private-videos-container" id="privateVideosContainer-conducting"></div>
+          <!-- La Flûte enchantée & Concerto pour piano n°1 supprimés - vidéos privées -->
         </div>
       </div>
     </section>
@@ -1747,7 +2195,478 @@
     </div>
   </footer>
 
-  <!-- JavaScript -->
+  <!-- Firebase SDK (Module) -->
+  <script type="module">
+    // ===== IMPORTS =====
+    import { initializeApp } from 'https://www.gstatic.com/firebasejs/11.2.0/firebase-app.js';
+    import {
+      getAuth,
+      createUserWithEmailAndPassword,
+      signInWithEmailAndPassword,
+      signOut,
+      onAuthStateChanged
+    } from 'https://www.gstatic.com/firebasejs/11.2.0/firebase-auth.js';
+    import {
+      getFirestore,
+      doc,
+      setDoc,
+      getDoc,
+      collection,
+      query,
+      where,
+      getDocs
+    } from 'https://www.gstatic.com/firebasejs/11.2.0/firebase-firestore.js';
+
+    // ===== CONFIGURATION =====
+    // IMPORTANT: Replace these values with your Firebase project credentials
+    const firebaseConfig = {
+      apiKey: "YOUR_API_KEY",
+      authDomain: "YOUR_PROJECT_ID.firebaseapp.com",
+      projectId: "YOUR_PROJECT_ID",
+      storageBucket: "YOUR_PROJECT_ID.appspot.com",
+      messagingSenderId: "YOUR_SENDER_ID",
+      appId: "YOUR_APP_ID"
+    };
+
+    // EmailJS Configuration
+    const emailJsConfig = {
+      serviceId: "YOUR_SERVICE_ID",
+      templateId: "YOUR_TEMPLATE_ID",
+      publicKey: "YOUR_PUBLIC_KEY"
+    };
+
+    const adminEmail = "admin@example.com";
+
+    // ===== INITIALIZE FIREBASE =====
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+    const db = getFirestore(app);
+
+    // ===== STATE =====
+    let currentUser = null;
+    let userStatus = null;
+
+    // ===== DOM ELEMENTS =====
+    const loginBtn = document.getElementById('loginBtn');
+    const userMenu = document.getElementById('userMenu');
+    const userMenuBtn = document.getElementById('userMenuBtn');
+    const userDisplayName = document.getElementById('userDisplayName');
+    const userStatusText = document.getElementById('userStatusText');
+    const userStatusDiv = document.getElementById('userStatus');
+    const logoutBtn = document.getElementById('logoutBtn');
+    const authModal = document.getElementById('authModal');
+    const authModalClose = document.getElementById('authModalClose');
+    const authTabs = document.querySelectorAll('.auth-tab');
+    const loginForm = document.getElementById('loginForm');
+    const registerForm = document.getElementById('registerForm');
+    const loginMessage = document.getElementById('loginMessage');
+    const registerMessage = document.getElementById('registerMessage');
+
+    // ===== AUTH MODAL =====
+    function openAuthModal() {
+      authModal.classList.add('active');
+      document.body.style.overflow = 'hidden';
+    }
+
+    function closeAuthModal() {
+      authModal.classList.remove('active');
+      document.body.style.overflow = '';
+      loginMessage.className = 'auth-message';
+      registerMessage.className = 'auth-message';
+      loginForm.reset();
+      registerForm.reset();
+    }
+
+    loginBtn.addEventListener('click', openAuthModal);
+    authModalClose.addEventListener('click', closeAuthModal);
+    authModal.addEventListener('click', (e) => {
+      if (e.target === authModal) closeAuthModal();
+    });
+
+    // Auth tabs
+    authTabs.forEach(tab => {
+      tab.addEventListener('click', () => {
+        const targetTab = tab.dataset.authTab;
+        authTabs.forEach(t => t.classList.toggle('active', t.dataset.authTab === targetTab));
+        loginForm.classList.toggle('active', targetTab === 'login');
+        registerForm.classList.toggle('active', targetTab === 'register');
+      });
+    });
+
+    // ===== USER MENU =====
+    userMenuBtn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      userMenu.classList.toggle('open');
+    });
+
+    document.addEventListener('click', (e) => {
+      if (!userMenu.contains(e.target)) {
+        userMenu.classList.remove('open');
+      }
+    });
+
+    // ===== AUTH FUNCTIONS =====
+
+    // Send notification email via EmailJS
+    async function sendNotificationEmail(userName, userEmail) {
+      // Only send if EmailJS is configured
+      if (emailJsConfig.publicKey === "YOUR_PUBLIC_KEY") {
+        console.log('EmailJS not configured, skipping notification');
+        return;
+      }
+
+      try {
+        await emailjs.send(
+          emailJsConfig.serviceId,
+          emailJsConfig.templateId,
+          {
+            to_email: adminEmail,
+            user_name: userName,
+            user_email: userEmail,
+            message: `New user registration: ${userName} (${userEmail}) is waiting for approval.`
+          },
+          emailJsConfig.publicKey
+        );
+        console.log('Notification email sent');
+      } catch (error) {
+        console.error('Failed to send notification email:', error);
+      }
+    }
+
+    // Register new user
+    async function registerUser(name, email, password) {
+      try {
+        // Create Firebase Auth user
+        const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+        const user = userCredential.user;
+
+        // Create Firestore user document
+        await setDoc(doc(db, 'users', user.uid), {
+          uid: user.uid,
+          name: name,
+          email: email,
+          status: 'pending',
+          createdAt: new Date().toISOString()
+        });
+
+        // Send notification email to admin
+        await sendNotificationEmail(name, email);
+
+        return { success: true, message: 'pending' };
+      } catch (error) {
+        console.error('Registration error:', error);
+        return { success: false, message: error.code };
+      }
+    }
+
+    // Login user
+    async function loginUser(email, password) {
+      try {
+        const userCredential = await signInWithEmailAndPassword(auth, email, password);
+        return { success: true };
+      } catch (error) {
+        console.error('Login error:', error);
+        return { success: false, message: error.code };
+      }
+    }
+
+    // Logout user
+    async function logoutUser() {
+      try {
+        await signOut(auth);
+      } catch (error) {
+        console.error('Logout error:', error);
+      }
+    }
+
+    // Get user status from Firestore
+    async function getUserStatus(uid) {
+      try {
+        const userDoc = await getDoc(doc(db, 'users', uid));
+        if (userDoc.exists()) {
+          return userDoc.data();
+        }
+        return null;
+      } catch (error) {
+        console.error('Error getting user status:', error);
+        return null;
+      }
+    }
+
+    // ===== UI UPDATE =====
+    function updateUI(user, userData) {
+      if (user && userData) {
+        loginBtn.style.display = 'none';
+        userMenu.style.display = 'block';
+        userDisplayName.textContent = userData.name || user.email.split('@')[0];
+
+        const statusLabels = {
+          pending: { fr: 'En attente', en: 'Pending', pl: 'Oczekuje', ru: 'Ожидание' },
+          approved: { fr: 'Approuvé', en: 'Approved', pl: 'Zatwierdzony', ru: 'Одобрено' }
+        };
+
+        const currentLang = localStorage.getItem('preferredLang') || 'fr';
+        const statusLabel = statusLabels[userData.status]?.[currentLang] || userData.status;
+        userStatusText.textContent = statusLabel;
+
+        userStatusDiv.classList.remove('pending', 'approved');
+        userStatusDiv.classList.add(userData.status);
+
+        userStatus = userData.status;
+      } else {
+        loginBtn.style.display = 'flex';
+        userMenu.style.display = 'none';
+        userStatus = null;
+      }
+    }
+
+    // ===== AUTH STATE LISTENER =====
+    onAuthStateChanged(auth, async (user) => {
+      currentUser = user;
+      if (user) {
+        const userData = await getUserStatus(user.uid);
+        updateUI(user, userData);
+        closeAuthModal();
+      } else {
+        updateUI(null, null);
+      }
+    });
+
+    // ===== FORM HANDLERS =====
+
+    // Login form
+    loginForm.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const email = document.getElementById('loginEmail').value;
+      const password = document.getElementById('loginPassword').value;
+      const submitBtn = document.getElementById('loginSubmit');
+
+      submitBtn.disabled = true;
+      submitBtn.innerHTML = '<span class="auth-loading"></span>';
+
+      const result = await loginUser(email, password);
+
+      if (!result.success) {
+        const errorMessages = {
+          'auth/user-not-found': {
+            fr: 'Aucun compte trouvé avec cet email.',
+            en: 'No account found with this email.',
+            pl: 'Nie znaleziono konta z tym emailem.',
+            ru: 'Аккаунт с этим email не найден.'
+          },
+          'auth/wrong-password': {
+            fr: 'Mot de passe incorrect.',
+            en: 'Incorrect password.',
+            pl: 'Nieprawidłowe hasło.',
+            ru: 'Неверный пароль.'
+          },
+          'auth/invalid-credential': {
+            fr: 'Email ou mot de passe invalide.',
+            en: 'Invalid email or password.',
+            pl: 'Nieprawidłowy email lub hasło.',
+            ru: 'Неверный email или пароль.'
+          }
+        };
+
+        const currentLang = localStorage.getItem('preferredLang') || 'fr';
+        const errorMsg = errorMessages[result.message]?.[currentLang] ||
+                         (currentLang === 'fr' ? 'Erreur de connexion.' : 'Login error.');
+
+        loginMessage.textContent = errorMsg;
+        loginMessage.className = 'auth-message error';
+      }
+
+      submitBtn.disabled = false;
+      submitBtn.innerHTML = `
+        <span class="inline-lang active" data-lang-text="fr">Se connecter</span>
+        <span class="inline-lang" data-lang-text="en">Sign in</span>
+        <span class="inline-lang" data-lang-text="pl">Zaloguj się</span>
+        <span class="inline-lang" data-lang-text="ru">Войти</span>
+      `;
+      // Re-apply language
+      const savedLang = localStorage.getItem('preferredLang') || 'fr';
+      submitBtn.querySelectorAll('[data-lang-text]').forEach(el => {
+        el.classList.toggle('active', el.getAttribute('data-lang-text') === savedLang);
+      });
+    });
+
+    // Register form
+    registerForm.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const name = document.getElementById('registerName').value;
+      const email = document.getElementById('registerEmail').value;
+      const password = document.getElementById('registerPassword').value;
+      const submitBtn = document.getElementById('registerSubmit');
+
+      submitBtn.disabled = true;
+      submitBtn.innerHTML = '<span class="auth-loading"></span>';
+
+      const result = await registerUser(name, email, password);
+
+      if (result.success) {
+        const successMessages = {
+          fr: 'Compte créé ! En attente de validation par l\'administrateur.',
+          en: 'Account created! Waiting for admin approval.',
+          pl: 'Konto utworzone! Oczekiwanie na zatwierdzenie administratora.',
+          ru: 'Аккаунт создан! Ожидание подтверждения администратором.'
+        };
+        const currentLang = localStorage.getItem('preferredLang') || 'fr';
+        registerMessage.textContent = successMessages[currentLang];
+        registerMessage.className = 'auth-message info';
+      } else {
+        const errorMessages = {
+          'auth/email-already-in-use': {
+            fr: 'Cet email est déjà utilisé.',
+            en: 'This email is already in use.',
+            pl: 'Ten email jest już używany.',
+            ru: 'Этот email уже используется.'
+          },
+          'auth/weak-password': {
+            fr: 'Le mot de passe doit contenir au moins 6 caractères.',
+            en: 'Password must be at least 6 characters.',
+            pl: 'Hasło musi mieć co najmniej 6 znaków.',
+            ru: 'Пароль должен содержать не менее 6 символов.'
+          }
+        };
+
+        const currentLang = localStorage.getItem('preferredLang') || 'fr';
+        const errorMsg = errorMessages[result.message]?.[currentLang] ||
+                         (currentLang === 'fr' ? 'Erreur lors de l\'inscription.' : 'Registration error.');
+
+        registerMessage.textContent = errorMsg;
+        registerMessage.className = 'auth-message error';
+      }
+
+      submitBtn.disabled = false;
+      submitBtn.innerHTML = `
+        <span class="inline-lang active" data-lang-text="fr">Créer un compte</span>
+        <span class="inline-lang" data-lang-text="en">Create account</span>
+        <span class="inline-lang" data-lang-text="pl">Utwórz konto</span>
+        <span class="inline-lang" data-lang-text="ru">Создать аккаунт</span>
+      `;
+      // Re-apply language
+      const savedLang = localStorage.getItem('preferredLang') || 'fr';
+      submitBtn.querySelectorAll('[data-lang-text]').forEach(el => {
+        el.classList.toggle('active', el.getAttribute('data-lang-text') === savedLang);
+      });
+    });
+
+    // Logout
+    logoutBtn.addEventListener('click', async () => {
+      await logoutUser();
+      userMenu.classList.remove('open');
+    });
+
+    // Export for potential use elsewhere
+    window.authState = {
+      get user() { return currentUser; },
+      get status() { return userStatus; }
+    };
+
+    // ===== PRIVATE VIDEOS LOCK SYSTEM =====
+
+    // Update body class based on user status
+    function updatePrivateVideosAccess() {
+      if (userStatus === 'approved') {
+        document.body.classList.add('user-approved');
+      } else {
+        document.body.classList.remove('user-approved');
+      }
+    }
+
+    // Click on private videos placeholder opens login modal
+    document.querySelectorAll('.private-videos-placeholder').forEach(placeholder => {
+      placeholder.addEventListener('click', (e) => {
+        e.preventDefault();
+        openAuthModal();
+      });
+    });
+
+    // ===== PRIVATE VIDEOS FROM FIRESTORE =====
+    async function loadPrivateVideos() {
+      if (userStatus !== 'approved') {
+        clearPrivateVideos();
+        return;
+      }
+
+      try {
+        const videosRef = collection(db, 'videos');
+        const snapshot = await getDocs(videosRef);
+        const videos = [];
+        snapshot.forEach(doc => {
+          videos.push({ id: doc.id, ...doc.data() });
+        });
+
+        // Group videos by category
+        const categories = ['violin', 'piano', 'conducting'];
+        categories.forEach(category => {
+          const container = document.getElementById(`privateVideosContainer-${category}`);
+          if (!container) return;
+
+          const categoryVideos = videos.filter(v => v.category === category);
+          container.innerHTML = '';
+
+          categoryVideos.forEach(video => {
+            const videoCard = createPrivateVideoCard(video);
+            container.appendChild(videoCard);
+          });
+        });
+
+      } catch (error) {
+        console.error('Error loading private videos:', error);
+      }
+    }
+
+    function createPrivateVideoCard(video) {
+      const ytMatch = video.url.match(/(?:youtube\.com\/watch\?v=|youtu\.be\/)([^&\s]+)/);
+      const ytId = ytMatch ? ytMatch[1] : null;
+      const thumb = ytId ? `https://img.youtube.com/vi/${ytId}/maxresdefault.jpg` : '';
+
+      const article = document.createElement('article');
+      article.className = 'video-card';
+      article.innerHTML = `
+        <a href="${video.url}" target="_blank" rel="noopener" class="video-info">
+          <h3 class="video-title">${video.title} <span class="video-private-badge">Privé</span></h3>
+          <p class="video-meta">${video.meta || ''}${video.year ? '<br>' + video.year : ''}</p>
+        </a>
+        <a href="${video.url}" target="_blank" rel="noopener" class="video-thumbnail">
+          ${thumb ? `<img src="${thumb}" alt="${video.title}">` : ''}
+          <div class="video-play">
+            <span class="video-play-btn">▶</span>
+          </div>
+        </a>
+      `;
+      return article;
+    }
+
+    function clearPrivateVideos() {
+      document.querySelectorAll('.private-videos-container').forEach(c => c.innerHTML = '');
+    }
+
+    // Auth state change handler
+    onAuthStateChanged(auth, async (user) => {
+      currentUser = user;
+      if (user) {
+        const userData = await getUserStatus(user.uid);
+        updateUI(user, userData);
+        updatePrivateVideosAccess();
+        closeAuthModal();
+        // Load private videos from Firestore if approved
+        if (userStatus === 'approved') {
+          loadPrivateVideos();
+        }
+      } else {
+        updateUI(null, null);
+        updatePrivateVideosAccess();
+        clearPrivateVideos();
+      }
+    });
+  </script>
+
+  <!-- EmailJS SDK (only if you want email notifications) -->
+  <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
+
+  <!-- Non-module JavaScript (existing functionality) -->
   <script>
     // Language Switcher
     const langSwitcher = document.getElementById('langSwitcher');

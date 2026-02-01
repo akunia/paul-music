@@ -1,0 +1,81 @@
+rules_version = '2';
+
+// ============================================
+// FIRESTORE SECURITY RULES - Paul Bednarczyk
+// ============================================
+//
+// INSTALLATION:
+// 1. Allez dans la console Firebase: https://console.firebase.google.com
+// 2. Selectionnez votre projet
+// 3. Firestore Database > Regles
+// 4. Copiez-collez ces regles et cliquez "Publier"
+//
+// ============================================
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // ===== HELPER FUNCTIONS =====
+
+    // Check if user is authenticated
+    function isAuthenticated() {
+      return request.auth != null;
+    }
+
+    // Check if user is admin (by email)
+    // IMPORTANT: Remplacez par votre email admin
+    function isAdmin() {
+      return isAuthenticated() &&
+             request.auth.token.email in ['admin@example.com'];
+    }
+
+    // Check if user is approved
+    function isApproved() {
+      return isAuthenticated() &&
+             exists(/databases/$(database)/documents/users/$(request.auth.uid)) &&
+             get(/databases/$(database)/documents/users/$(request.auth.uid)).data.status == 'approved';
+    }
+
+    // Check if user owns the document
+    function isOwner(userId) {
+      return isAuthenticated() && request.auth.uid == userId;
+    }
+
+    // ===== USERS COLLECTION =====
+    match /users/{userId} {
+      // Anyone authenticated can create their own user document (registration)
+      allow create: if isAuthenticated() &&
+                       request.auth.uid == userId &&
+                       request.resource.data.status == 'pending';
+
+      // Users can read their own document
+      allow read: if isOwner(userId) || isAdmin();
+
+      // Only admin can update user status
+      allow update: if isAdmin();
+
+      // Only admin can delete users
+      allow delete: if isAdmin();
+    }
+
+    // Admin can list all users
+    match /users/{document=**} {
+      allow list: if isAdmin();
+    }
+
+    // ===== VIDEOS COLLECTION (PRIVATE VIDEOS) =====
+    match /videos/{videoId} {
+      // Only approved users can read videos
+      // This is the KEY security rule that protects private videos
+      allow read: if isApproved() || isAdmin();
+
+      // Only admin can create/update/delete videos
+      allow create, update, delete: if isAdmin();
+    }
+
+    // Admin can list all videos
+    match /videos/{document=**} {
+      allow list: if isApproved() || isAdmin();
+    }
+  }
+}

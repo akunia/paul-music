@@ -1,0 +1,533 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="robots" content="noindex, nofollow">
+  <title>Administration | Paul Bednarczyk</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+
+  <style>
+    :root {
+      --color-bg: #0a0a0f;
+      --color-bg-alt: #12121a;
+      --color-surface: #1a1a24;
+      --color-surface-hover: #22222e;
+      --color-border: rgba(255, 255, 255, 0.1);
+      --color-text: #ffffff;
+      --color-text-muted: rgba(255, 255, 255, 0.6);
+      --color-text-subtle: rgba(255, 255, 255, 0.4);
+      --color-accent: #c9a962;
+      --color-accent-hover: #dfc07a;
+      --color-success: #51cf66;
+      --color-error: #ff6b6b;
+      --color-warning: #ffa94d;
+      --font-display: 'Playfair Display', Georgia, serif;
+      --font-body: 'Inter', system-ui, sans-serif;
+      --radius-sm: 0.375rem;
+      --radius-md: 0.75rem;
+      --radius-lg: 1rem;
+      --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.4);
+      --transition-fast: 150ms ease;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: var(--font-body);
+      color: var(--color-text);
+      background: var(--color-bg);
+      min-height: 100vh;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    :focus-visible { outline: 2px solid var(--color-accent); outline-offset: 2px; }
+
+    .header {
+      background: var(--color-bg-alt);
+      border-bottom: 1px solid var(--color-border);
+      padding: 1rem 2rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 1rem;
+    }
+    .header-title { font-family: var(--font-display); font-size: 1.5rem; }
+    .header-title span { color: var(--color-accent); }
+    .header-actions { display: flex; gap: 1rem; align-items: center; }
+    .admin-email { color: var(--color-text-muted); font-size: 0.875rem; }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.5rem 1rem;
+      font-size: 0.875rem;
+      font-weight: 500;
+      border-radius: var(--radius-sm);
+      cursor: pointer;
+      transition: all var(--transition-fast);
+      text-decoration: none;
+      border: none;
+    }
+    .btn-secondary { background: transparent; color: var(--color-text); border: 1px solid var(--color-border); }
+    .btn-secondary:hover { border-color: var(--color-accent); color: var(--color-accent); }
+    .btn-primary { background: var(--color-accent); color: var(--color-bg); }
+    .btn-primary:hover { background: var(--color-accent-hover); }
+    .btn-success { background: rgba(81, 207, 102, 0.2); color: var(--color-success); border: 1px solid rgba(81, 207, 102, 0.3); }
+    .btn-success:hover { background: rgba(81, 207, 102, 0.3); }
+    .btn-danger { background: rgba(255, 107, 107, 0.2); color: var(--color-error); border: 1px solid rgba(255, 107, 107, 0.3); }
+    .btn-danger:hover { background: rgba(255, 107, 107, 0.3); }
+
+    .main { max-width: 1200px; margin: 0 auto; padding: 2rem; }
+
+    .login-screen {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: calc(100vh - 80px);
+    }
+    .login-box {
+      background: var(--color-surface);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-lg);
+      padding: 2rem;
+      width: 100%;
+      max-width: 400px;
+    }
+    .login-box h2 { font-family: var(--font-display); margin-bottom: 1.5rem; text-align: center; }
+    .form-field { margin-bottom: 1rem; }
+    .form-field label { display: block; font-size: 0.875rem; color: var(--color-text-muted); margin-bottom: 0.25rem; }
+    .form-field input, .form-field select {
+      width: 100%;
+      padding: 0.75rem;
+      background: var(--color-bg);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-sm);
+      color: var(--color-text);
+      font-size: 1rem;
+    }
+    .form-field input:focus, .form-field select:focus { outline: none; border-color: var(--color-accent); }
+    .login-error { color: var(--color-error); font-size: 0.875rem; margin-top: 1rem; text-align: center; display: none; }
+    .login-error.visible { display: block; }
+
+    .tabs {
+      display: flex;
+      gap: 0.5rem;
+      margin-bottom: 1.5rem;
+      border-bottom: 1px solid var(--color-border);
+      padding-bottom: 1rem;
+    }
+    .tab {
+      padding: 0.75rem 1.5rem;
+      background: transparent;
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-md);
+      color: var(--color-text-muted);
+      font-weight: 500;
+      cursor: pointer;
+      transition: all var(--transition-fast);
+    }
+    .tab:hover { color: var(--color-text); border-color: var(--color-text-subtle); }
+    .tab.active { background: var(--color-accent); border-color: var(--color-accent); color: var(--color-bg); }
+    .tab-count {
+      display: inline-block;
+      min-width: 20px;
+      padding: 2px 6px;
+      background: rgba(255, 255, 255, 0.1);
+      border-radius: 10px;
+      font-size: 0.75rem;
+      margin-left: 0.5rem;
+    }
+    .tab.active .tab-count { background: rgba(0, 0, 0, 0.2); }
+
+    .panel { display: none; }
+    .panel.active { display: block; }
+
+    .section-title { font-family: var(--font-display); font-size: 1.25rem; margin-bottom: 1rem; }
+
+    .users-table { width: 100%; border-collapse: collapse; }
+    .users-table th, .users-table td { padding: 1rem; text-align: left; border-bottom: 1px solid var(--color-border); }
+    .users-table th { font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.1em; color: var(--color-text-muted); background: var(--color-bg-alt); }
+    .users-table tr:hover td { background: var(--color-surface-hover); }
+    .user-name { font-weight: 500; }
+    .user-email { color: var(--color-text-muted); font-size: 0.875rem; }
+    .user-date { color: var(--color-text-subtle); font-size: 0.875rem; }
+
+    .status-badge { display: inline-block; padding: 4px 10px; border-radius: var(--radius-sm); font-size: 0.75rem; font-weight: 500; }
+    .status-badge.pending { background: rgba(255, 169, 77, 0.2); color: var(--color-warning); }
+    .status-badge.approved { background: rgba(81, 207, 102, 0.2); color: var(--color-success); }
+
+    .action-btns { display: flex; gap: 0.5rem; flex-wrap: wrap; }
+    .action-btns .btn { padding: 0.375rem 0.75rem; font-size: 0.8rem; }
+
+    .empty-state { text-align: center; padding: 3rem; color: var(--color-text-muted); }
+    .empty-state-icon { font-size: 3rem; margin-bottom: 1rem; opacity: 0.5; }
+
+    .loading { display: flex; align-items: center; justify-content: center; padding: 3rem; color: var(--color-text-muted); }
+    .spinner { width: 24px; height: 24px; border: 2px solid var(--color-border); border-top-color: var(--color-accent); border-radius: 50%; animation: spin 0.8s linear infinite; margin-right: 0.75rem; }
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    .video-form {
+      background: var(--color-surface);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-md);
+      padding: 1.5rem;
+      margin-bottom: 2rem;
+    }
+    .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 1rem; }
+    .form-row.full { grid-template-columns: 1fr; }
+
+    .video-list { display: flex; flex-direction: column; gap: 0.75rem; }
+    .video-item {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      background: var(--color-surface);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-md);
+      padding: 1rem;
+      transition: all var(--transition-fast);
+    }
+    .video-item:hover { border-color: var(--color-accent); }
+    .video-thumb { width: 120px; height: 68px; background: var(--color-bg); border-radius: var(--radius-sm); overflow: hidden; flex-shrink: 0; }
+    .video-thumb img { width: 100%; height: 100%; object-fit: cover; }
+    .video-details { flex: 1; }
+    .video-details h4 { font-size: 0.9375rem; margin-bottom: 0.25rem; }
+    .video-details p { font-size: 0.8125rem; color: var(--color-text-muted); }
+    .category-badge { display: inline-block; padding: 2px 8px; background: var(--color-accent); color: var(--color-bg); border-radius: var(--radius-sm); font-size: 0.7rem; font-weight: 600; text-transform: uppercase; margin-right: 0.5rem; }
+
+    @media (max-width: 768px) {
+      .header { flex-direction: column; text-align: center; }
+      .form-row { grid-template-columns: 1fr; }
+      .users-table { display: block; overflow-x: auto; }
+      .video-item { flex-direction: column; text-align: center; }
+      .video-thumb { width: 100%; height: auto; aspect-ratio: 16/9; }
+    }
+  </style>
+</head>
+<body>
+  <header class="header">
+    <h1 class="header-title">Admin <span>Panel</span></h1>
+    <div class="header-actions">
+      <span class="admin-email" id="adminEmail"></span>
+      <a href="index.html" class="btn btn-secondary">Retour au site</a>
+      <button class="btn btn-secondary" id="logoutBtn">Deconnexion</button>
+    </div>
+  </header>
+
+  <div class="login-screen" id="loginScreen">
+    <div class="login-box">
+      <h2>Administration</h2>
+      <form id="loginForm">
+        <div class="form-field">
+          <label for="email">Email</label>
+          <input type="email" id="email" required>
+        </div>
+        <div class="form-field">
+          <label for="password">Mot de passe</label>
+          <input type="password" id="password" required>
+        </div>
+        <button type="submit" class="btn btn-primary" style="width: 100%; margin-top: 1rem;">Connexion</button>
+      </form>
+      <p class="login-error" id="loginError">Acces refuse. Seuls les administrateurs peuvent se connecter.</p>
+    </div>
+  </div>
+
+  <main class="main" id="mainContent" style="display: none;">
+    <div class="tabs">
+      <button class="tab active" data-tab="users">Utilisateurs<span class="tab-count" id="pendingCount">0</span></button>
+      <button class="tab" data-tab="videos">Videos privees<span class="tab-count" id="videoCount">0</span></button>
+    </div>
+
+    <!-- Users Panel -->
+    <div class="panel active" id="usersPanel">
+      <div class="loading" id="usersLoading"><span class="spinner"></span>Chargement...</div>
+      <div id="usersContent" style="display: none;">
+        <h3 class="section-title">En attente de validation</h3>
+        <table class="users-table" id="pendingTable">
+          <thead><tr><th>Nom</th><th>Email</th><th>Date</th><th>Statut</th><th>Actions</th></tr></thead>
+          <tbody id="pendingUsers"></tbody>
+        </table>
+        <div class="empty-state" id="pendingEmpty" style="display: none;"><div class="empty-state-icon">&#10003;</div><p>Aucun utilisateur en attente</p></div>
+
+        <h3 class="section-title" style="margin-top: 2rem;">Utilisateurs approuves</h3>
+        <table class="users-table" id="approvedTable">
+          <thead><tr><th>Nom</th><th>Email</th><th>Date</th><th>Statut</th><th>Actions</th></tr></thead>
+          <tbody id="approvedUsers"></tbody>
+        </table>
+        <div class="empty-state" id="approvedEmpty" style="display: none;"><div class="empty-state-icon">&#128100;</div><p>Aucun utilisateur approuve</p></div>
+      </div>
+    </div>
+
+    <!-- Videos Panel -->
+    <div class="panel" id="videosPanel">
+      <h3 class="section-title">Ajouter une video privee</h3>
+      <form class="video-form" id="addVideoForm">
+        <div class="form-row">
+          <div class="form-field">
+            <label for="videoTitle">Titre</label>
+            <input type="text" id="videoTitle" placeholder="Ex: Concerto n3, 1er mouvement" required>
+          </div>
+          <div class="form-field">
+            <label for="videoCategory">Categorie</label>
+            <select id="videoCategory" required>
+              <option value="violin">Violon</option>
+              <option value="piano">Piano</option>
+              <option value="conducting">Direction</option>
+            </select>
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-field">
+            <label for="videoUrl">URL YouTube</label>
+            <input type="url" id="videoUrl" placeholder="https://www.youtube.com/watch?v=..." required>
+          </div>
+          <div class="form-field">
+            <label for="videoYear">Annee</label>
+            <input type="number" id="videoYear" placeholder="2025" min="2000" max="2099">
+          </div>
+        </div>
+        <div class="form-row full">
+          <div class="form-field">
+            <label for="videoMeta">Description</label>
+            <input type="text" id="videoMeta" placeholder="Ex: Compositeur, lieu, date...">
+          </div>
+        </div>
+        <button type="submit" class="btn btn-primary">Ajouter la video</button>
+      </form>
+
+      <h3 class="section-title">Videos privees enregistrees</h3>
+      <div class="video-list" id="videoList">
+        <div class="empty-state" id="videosEmpty"><div class="empty-state-icon">&#127909;</div><p>Aucune video privee</p></div>
+      </div>
+    </div>
+  </main>
+
+  <script type="module">
+    import { initializeApp } from 'https://www.gstatic.com/firebasejs/11.2.0/firebase-app.js';
+    import { getAuth, signInWithEmailAndPassword, signOut, onAuthStateChanged } from 'https://www.gstatic.com/firebasejs/11.2.0/firebase-auth.js';
+    import { getFirestore, doc, updateDoc, deleteDoc, collection, getDocs, addDoc } from 'https://www.gstatic.com/firebasejs/11.2.0/firebase-firestore.js';
+
+    // ===== CONFIGURATION - REMPLACEZ PAR VOS CREDENTIALS =====
+    const firebaseConfig = {
+      apiKey: "YOUR_API_KEY",
+      authDomain: "YOUR_PROJECT_ID.firebaseapp.com",
+      projectId: "YOUR_PROJECT_ID",
+      storageBucket: "YOUR_PROJECT_ID.appspot.com",
+      messagingSenderId: "YOUR_SENDER_ID",
+      appId: "YOUR_APP_ID"
+    };
+    const ADMIN_EMAILS = ['admin@example.com'];
+
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+    const db = getFirestore(app);
+
+    // DOM
+    const loginScreen = document.getElementById('loginScreen');
+    const mainContent = document.getElementById('mainContent');
+    const loginForm = document.getElementById('loginForm');
+    const loginError = document.getElementById('loginError');
+    const adminEmailEl = document.getElementById('adminEmail');
+    const logoutBtn = document.getElementById('logoutBtn');
+    const tabs = document.querySelectorAll('.tab');
+    const panels = document.querySelectorAll('.panel');
+    const usersLoading = document.getElementById('usersLoading');
+    const usersContent = document.getElementById('usersContent');
+    const pendingUsers = document.getElementById('pendingUsers');
+    const approvedUsers = document.getElementById('approvedUsers');
+    const pendingEmpty = document.getElementById('pendingEmpty');
+    const approvedEmpty = document.getElementById('approvedEmpty');
+    const pendingTable = document.getElementById('pendingTable');
+    const approvedTable = document.getElementById('approvedTable');
+    const pendingCount = document.getElementById('pendingCount');
+    const videoCount = document.getElementById('videoCount');
+    const addVideoForm = document.getElementById('addVideoForm');
+    const videoList = document.getElementById('videoList');
+    const videosEmpty = document.getElementById('videosEmpty');
+
+    function isAdmin(email) { return ADMIN_EMAILS.includes(email); }
+
+    onAuthStateChanged(auth, async (user) => {
+      if (user && isAdmin(user.email)) {
+        loginScreen.style.display = 'none';
+        mainContent.style.display = 'block';
+        adminEmailEl.textContent = user.email;
+        loadUsers();
+        await initializePrivateVideos(); // Auto-init les vidéos privées si vide
+        loadVideos();
+      } else {
+        loginScreen.style.display = 'flex';
+        mainContent.style.display = 'none';
+        if (user && !isAdmin(user.email)) {
+          await signOut(auth);
+          loginError.classList.add('visible');
+        }
+      }
+    });
+
+    loginForm.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      try {
+        await signInWithEmailAndPassword(auth, document.getElementById('email').value, document.getElementById('password').value);
+        loginError.classList.remove('visible');
+      } catch { loginError.textContent = 'Email ou mot de passe incorrect.'; loginError.classList.add('visible'); }
+    });
+
+    logoutBtn.addEventListener('click', () => signOut(auth));
+
+    // Tabs
+    tabs.forEach(tab => {
+      tab.addEventListener('click', () => {
+        const t = tab.dataset.tab;
+        tabs.forEach(x => x.classList.toggle('active', x.dataset.tab === t));
+        panels.forEach(p => p.classList.toggle('active', p.id === `${t}Panel`));
+      });
+    });
+
+    // ===== USERS =====
+    async function loadUsers() {
+      usersLoading.style.display = 'flex';
+      usersContent.style.display = 'none';
+      try {
+        const snapshot = await getDocs(collection(db, 'users'));
+        const pending = [], approved = [];
+        snapshot.forEach(d => {
+          const data = { id: d.id, ...d.data() };
+          if (data.status === 'pending') pending.push(data);
+          else if (data.status === 'approved') approved.push(data);
+        });
+        renderUsers(pending, pendingUsers, pendingEmpty, pendingTable, false);
+        renderUsers(approved, approvedUsers, approvedEmpty, approvedTable, true);
+        pendingCount.textContent = pending.length;
+      } catch (e) { console.error('Error loading users:', e); }
+      usersLoading.style.display = 'none';
+      usersContent.style.display = 'block';
+    }
+
+    function renderUsers(users, tbody, emptyEl, tableEl, isApproved) {
+      tbody.innerHTML = '';
+      if (users.length === 0) { emptyEl.style.display = 'block'; tableEl.style.display = 'none'; return; }
+      emptyEl.style.display = 'none';
+      tableEl.style.display = 'table';
+      users.forEach(u => {
+        const tr = document.createElement('tr');
+        tr.innerHTML = `
+          <td><span class="user-name">${u.name || '-'}</span></td>
+          <td><span class="user-email">${u.email}</span></td>
+          <td><span class="user-date">${u.createdAt ? new Date(u.createdAt).toLocaleDateString('fr-FR') : '-'}</span></td>
+          <td><span class="status-badge ${u.status}">${u.status}</span></td>
+          <td><div class="action-btns">
+            ${!isApproved ? `<button class="btn btn-success" onclick="approveUser('${u.id}')">Approuver</button><button class="btn btn-danger" onclick="rejectUser('${u.id}')">Rejeter</button>` : `<button class="btn btn-danger" onclick="revokeUser('${u.id}')">Revoquer</button>`}
+          </div></td>`;
+        tbody.appendChild(tr);
+      });
+    }
+
+    window.approveUser = async (uid) => { await updateDoc(doc(db, 'users', uid), { status: 'approved' }); loadUsers(); };
+    window.rejectUser = async (uid) => { if (confirm('Supprimer cet utilisateur ?')) { await deleteDoc(doc(db, 'users', uid)); loadUsers(); } };
+    window.revokeUser = async (uid) => { if (confirm('Revoquer l\'acces ?')) { await updateDoc(doc(db, 'users', uid), { status: 'pending' }); loadUsers(); } };
+
+    // ===== VIDEOS =====
+    async function loadVideos() {
+      try {
+        const snapshot = await getDocs(collection(db, 'videos'));
+        const videos = [];
+        snapshot.forEach(d => videos.push({ id: d.id, ...d.data() }));
+        videoCount.textContent = videos.length;
+        renderVideos(videos);
+      } catch (e) { console.error('Error loading videos:', e); }
+    }
+
+    function getYouTubeId(url) {
+      const m = url.match(/(?:youtube\.com\/watch\?v=|youtu\.be\/)([^&\s]+)/);
+      return m ? m[1] : null;
+    }
+
+    function renderVideos(videos) {
+      videoList.innerHTML = '';
+      if (videos.length === 0) { videosEmpty.style.display = 'block'; return; }
+      videosEmpty.style.display = 'none';
+      videos.forEach(v => {
+        const ytId = getYouTubeId(v.url);
+        const item = document.createElement('div');
+        item.className = 'video-item';
+        item.innerHTML = `
+          <div class="video-thumb">${ytId ? `<img src="https://img.youtube.com/vi/${ytId}/mqdefault.jpg" alt="${v.title}">` : ''}</div>
+          <div class="video-details">
+            <h4><span class="category-badge">${v.category}</span>${v.title}</h4>
+            <p>${v.meta || ''} ${v.year ? `(${v.year})` : ''}</p>
+          </div>
+          <div class="action-btns">
+            <button class="btn btn-danger" onclick="deleteVideo('${v.id}')">Supprimer</button>
+          </div>`;
+        videoList.appendChild(item);
+      });
+    }
+
+    addVideoForm.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      try {
+        await addDoc(collection(db, 'videos'), {
+          title: document.getElementById('videoTitle').value,
+          category: document.getElementById('videoCategory').value,
+          url: document.getElementById('videoUrl').value,
+          year: document.getElementById('videoYear').value || null,
+          meta: document.getElementById('videoMeta').value,
+          createdAt: new Date().toISOString()
+        });
+        addVideoForm.reset();
+        loadVideos();
+      } catch (e) { console.error('Error adding video:', e); alert('Erreur'); }
+    });
+
+    window.deleteVideo = async (id) => { if (confirm('Supprimer cette video ?')) { await deleteDoc(doc(db, 'videos', id)); loadVideos(); } };
+
+    // ===== INITIALISATION AUTOMATIQUE DES VIDEOS PRIVEES =====
+    const PRIVATE_VIDEOS_INIT = [
+      // Violon
+      { title: "L'Arlésienne Suite n°2", category: "violin", url: "https://www.youtube.com/watch?v=pVNspbrNciM", meta: "G. Bizet - Académies de Flaine, 14 août 2025", year: "2025" },
+      { title: "Quatuor américain", category: "violin", url: "https://www.youtube.com/watch?v=o6yHfN7RxXM", meta: "A. Dvořák - Académies de Flaine, 13 août 2025", year: "2025" },
+      { title: "Quintette, 1er mouvement", category: "violin", url: "https://www.youtube.com/watch?v=jZ8wmuMgado", meta: "J. Brahms - Don Bosco, mai 2025", year: "2025" },
+      { title: "Divertimento", category: "violin", url: "https://www.youtube.com/watch?v=QOgu4mx_L24", meta: "W. A. Mozart - Académies de Flaine, août 2024", year: "2024" },
+      { title: "Quatuor pour flûte en Ré majeur, K.285", category: "violin", url: "https://www.youtube.com/watch?v=AtWZb8CpVLQ", meta: "W. A. Mozart - Académies de Flaine, août 2024", year: "2024" },
+      { title: 'Rondo from "Musik für drei Violinen"', category: "violin", url: "https://www.youtube.com/watch?v=t1rQYmNmvN4", meta: "W. A. Mozart - Łańcut, Pologne, juillet 2023", year: "2023" },
+      // Piano
+      { title: "Sonatine Op. 24 en Si bémol majeur", category: "piano", url: "https://www.youtube.com/watch?v=v8trI4x8fOQ", meta: "M. Clementi - CRR Nice, 10 novembre 2023", year: "2023" },
+      // Direction
+      { title: "La Flûte enchantée, K.620 - Acte II, n°10", category: "conducting", url: "https://www.youtube.com/watch?v=-sX2m7sh778", meta: "W. A. Mozart - Opéra de Nice, 1er juillet 2025", year: "2025" },
+      { title: "Concerto pour piano n°1, 3e mouvement", category: "conducting", url: "https://www.youtube.com/watch?v=K16ge10q8z4", meta: "L. van Beethoven, Op. 15 - 6 décembre 2024", year: "2024" }
+    ];
+
+    async function initializePrivateVideos() {
+      try {
+        const snapshot = await getDocs(collection(db, 'videos'));
+        if (snapshot.size > 0) {
+          console.log('Videos already initialized, skipping...');
+          return;
+        }
+
+        console.log('Initializing private videos...');
+        for (const video of PRIVATE_VIDEOS_INIT) {
+          await addDoc(collection(db, 'videos'), {
+            ...video,
+            createdAt: new Date().toISOString()
+          });
+        }
+        console.log('Private videos initialized successfully!');
+        alert('Les 9 vidéos privées ont été ajoutées automatiquement !');
+        loadVideos();
+      } catch (e) {
+        console.error('Error initializing videos:', e);
+      }
+    }
+
+    // Bouton pour initialiser manuellement si besoin
+    window.initVideos = initializePrivateVideos;
+  </script>
+</body>
+</html>
