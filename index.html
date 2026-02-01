@@ -2431,6 +2431,9 @@
 
     loginBtn.addEventListener('click', openAuthModal);
     authModalClose.addEventListener('click', closeAuthModal);
+
+    // Expose openAuthModal globally for locked video clicks
+    window.openAuthModal = openAuthModal;
     authModal.addEventListener('click', (e) => {
       if (e.target === authModal) closeAuthModal();
     });
