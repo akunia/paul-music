@@ -22,10 +22,10 @@ export const firebaseConfig = {
 // 4. Copiez vos IDs ci-dessous
 // ============================================
 export const emailJsConfig = {
-  publicKey: "YOUR_PUBLIC_KEY",           // Dashboard > Account > Public Key
-  serviceId: "YOUR_SERVICE_ID",           // Email Services > Service ID
-  templateNewUser: "YOUR_TEMPLATE_ID_1",  // Email Templates > Template pour admin
-  templateUserStatus: "YOUR_TEMPLATE_ID_2" // Email Templates > Template pour utilisateur
+  publicKey: "rfFNO7Jv_svjTEXds",
+  serviceId: "service_scsagwy",
+  templateNewUser: "template_inscription",
+  templateUserStatus: "template_status"
 };
 
 // Admin emails to receive notifications

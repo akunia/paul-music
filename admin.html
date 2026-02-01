@@ -477,9 +477,9 @@
 
     // EmailJS Configuration (configurer sur https://www.emailjs.com)
     const emailJsConfig = {
-      publicKey: "YOUR_PUBLIC_KEY",           // Dashboard > Account > Public Key
-      serviceId: "YOUR_SERVICE_ID",           // Email Services > Service ID
-      templateUserStatus: "YOUR_TEMPLATE_ID_2" // Template pour notifier utilisateur
+      publicKey: "rfFNO7Jv_svjTEXds",
+      serviceId: "service_scsagwy",
+      templateUserStatus: "template_status"
     };
     const siteUrl = "https://akunia.github.io/paul-music";
 
@@ -597,11 +597,30 @@
         return;
       }
 
-      const statusMessages = {
-        approved: 'Votre compte a été approuvé ! Vous pouvez maintenant accéder aux vidéos privées.',
-        rejected: 'Votre demande d\'accès a été refusée.',
-        revoked: 'Votre accès a été révoqué.'
+      // Variables dynamiques selon le statut (ton humoristique)
+      const statusConfig = {
+        approved: {
+          status_emoji: '🎉',
+          status_title: 'Bienvenue dans le cercle VIP !',
+          message: "C'est officiel ! Votre demande a été approuvée par notre jury très sélectif (composé d'un humain et de beaucoup de café). ☕\n\nVous avez maintenant accès à toutes les vidéos exclusives de Paul Bednarczyk. Performances live, coulisses, et peut-être même quelques bêtisiers qu'on a gardés pour le fun. 🎵\n\nVotre mission (si vous l'acceptez) : profiter de ce contenu exclusif et applaudir virtuellement !",
+          button_text: '🎬 Voir les vidéos exclusives'
+        },
+        rejected: {
+          status_emoji: '😅',
+          status_title: 'Pas cette fois...',
+          message: "Votre demande d'accès n'a pas été approuvée pour le moment. Ce n'est pas vous, c'est nous... enfin, peut-être un peu vous. 😄\n\nSi vous pensez qu'il s'agit d'une erreur, n'hésitez pas à nous contacter. On promet de relire votre dossier avec des lunettes propres cette fois !",
+          button_text: '🌐 Visiter le site'
+        },
+        revoked: {
+          status_emoji: '🔒',
+          status_title: 'Accès suspendu',
+          message: "Votre accès aux vidéos privées a été révoqué. Les portes du backstage se referment... pour l'instant.\n\nSi vous avez des questions, n'hésitez pas à nous contacter.",
+          button_text: '🌐 Visiter le site'
+        }
       };
+
+      const config = statusConfig[status];
+      if (!config) return;
 
       try {
         await emailjs.send(
@@ -610,7 +629,10 @@
           {
             to_email: userEmail,
             user_name: userName,
-            status: statusMessages[status] || status,
+            status_emoji: config.status_emoji,
+            status_title: config.status_title,
+            message: config.message,
+            button_text: config.button_text,
             site_url: siteUrl
           },
           emailJsConfig.publicKey
