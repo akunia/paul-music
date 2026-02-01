@@ -138,14 +138,65 @@
       display: inline-block;
       min-width: 20px;
       padding: 2px 6px;
-      background: rgba(255, 255, 255, 0.1);
+      background: rgba(255, 255, 255, 0.2);
       border-radius: 10px;
       font-size: 0.75rem;
       margin-left: 0.25rem;
+      font-weight: 600;
     }
-    .tab-count.pending { background: #ffa94d; color: #000; }
-    .tab-count.approved { background: #51cf66; color: #000; }
-    .tab.active .tab-count { opacity: 0.9; }
+    .tab-count.pending {
+      background: #ff8c00;
+      color: #fff;
+      box-shadow: 0 0 0 2px rgba(0,0,0,0.3), 0 2px 4px rgba(0,0,0,0.3);
+    }
+    .tab-count.approved {
+      background: #2ecc71;
+      color: #fff;
+      box-shadow: 0 0 0 2px rgba(0,0,0,0.3), 0 2px 4px rgba(0,0,0,0.3);
+    }
+    .tab.active .tab-count.pending,
+    .tab.active .tab-count.approved {
+      box-shadow: 0 0 0 2px var(--color-bg), 0 2px 4px rgba(0,0,0,0.4);
+    }
+    /* Video count with tooltip */
+    .video-count-wrapper {
+      position: relative;
+      display: inline-block;
+      cursor: help;
+    }
+    .video-count-tooltip {
+      position: absolute;
+      bottom: 100%;
+      left: 50%;
+      transform: translateX(-50%);
+      background: var(--color-surface);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-sm);
+      padding: 0.5rem 0.75rem;
+      font-size: 0.75rem;
+      white-space: nowrap;
+      opacity: 0;
+      visibility: hidden;
+      transition: all var(--transition-fast);
+      margin-bottom: 0.5rem;
+      box-shadow: var(--shadow-md);
+      z-index: 10;
+    }
+    .video-count-tooltip::after {
+      content: '';
+      position: absolute;
+      top: 100%;
+      left: 50%;
+      transform: translateX(-50%);
+      border: 6px solid transparent;
+      border-top-color: var(--color-surface);
+    }
+    .video-count-wrapper:hover .video-count-tooltip {
+      opacity: 1;
+      visibility: visible;
+    }
+    .video-count-tooltip .public { color: var(--color-success); }
+    .video-count-tooltip .private { color: var(--color-warning); }
 
     .panel { display: none; }
     .panel.active { display: block; }
@@ -334,7 +385,7 @@
   <main class="main" id="mainContent" style="display: none;">
     <div class="tabs">
       <button class="tab active" data-tab="users">Utilisateurs <span class="tab-count pending" id="pendingCount" title="En attente">0</span> <span class="tab-count approved" id="approvedCount" title="Approuvés">0</span></button>
-      <button class="tab" data-tab="videos">Vidéos<span class="tab-count" id="videoCount">0</span></button>
+      <button class="tab" data-tab="videos">Vidéos <span class="video-count-wrapper"><span class="tab-count" id="videoCount">0</span><span class="video-count-tooltip" id="videoTooltip">🌐 <span class="public">0</span> publiques • 🔒 <span class="private">0</span> privées</span></span></button>
     </div>
 
     <!-- Users Panel -->
@@ -712,7 +763,18 @@
         const snapshot = await getDocs(collection(db, 'videos'));
         const videos = [];
         snapshot.forEach(d => videos.push({ id: d.id, ...d.data() }));
+
+        // Count public/private
+        const publicCount = videos.filter(v => v.visibility === 'public').length;
+        const privateCount = videos.filter(v => v.visibility !== 'public').length;
+
         videoCount.textContent = videos.length;
+
+        // Update tooltip
+        const tooltip = document.getElementById('videoTooltip');
+        tooltip.querySelector('.public').textContent = publicCount;
+        tooltip.querySelector('.private').textContent = privateCount;
+
         renderVideos(videos);
       } catch (e) { console.error('Error loading videos:', e); }
     }
