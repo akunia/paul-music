@@ -240,7 +240,7 @@
   <main class="main" id="mainContent" style="display: none;">
     <div class="tabs">
       <button class="tab active" data-tab="users">Utilisateurs<span class="tab-count" id="pendingCount">0</span></button>
-      <button class="tab" data-tab="videos">Vidéos privées<span class="tab-count" id="videoCount">0</span></button>
+      <button class="tab" data-tab="videos">Vidéos<span class="tab-count" id="videoCount">0</span></button>
     </div>
 
     <!-- Users Panel -->
@@ -265,7 +265,7 @@
 
     <!-- Videos Panel -->
     <div class="panel" id="videosPanel">
-      <h3 class="section-title">Ajouter une vidéo privée</h3>
+      <h3 class="section-title">Ajouter une vidéo</h3>
       <form class="video-form" id="addVideoForm">
         <div class="form-row">
           <div class="form-field">
@@ -291,18 +291,25 @@
             <input type="number" id="videoYear" placeholder="2025" min="2000" max="2099">
           </div>
         </div>
-        <div class="form-row full">
+        <div class="form-row">
           <div class="form-field">
             <label for="videoMeta">Description</label>
             <input type="text" id="videoMeta" placeholder="Ex: Compositeur, lieu, date...">
+          </div>
+          <div class="form-field">
+            <label for="videoVisibility">Visibilité</label>
+            <select id="videoVisibility" required>
+              <option value="private">🔒 Privée (utilisateurs approuvés)</option>
+              <option value="public">🌐 Publique (visible par tous)</option>
+            </select>
           </div>
         </div>
         <button type="submit" class="btn btn-primary">Ajouter la vidéo</button>
       </form>
 
-      <h3 class="section-title">Vidéos privées enregistrées</h3>
+      <h3 class="section-title">Vidéos enregistrées</h3>
       <div class="video-list" id="videoList">
-        <div class="empty-state" id="videosEmpty"><div class="empty-state-icon">&#127909;</div><p>Aucune vidéo privée</p></div>
+        <div class="empty-state" id="videosEmpty"><div class="empty-state-icon">&#127909;</div><p>Aucune vidéo</p></div>
       </div>
     </div>
   </main>
@@ -452,14 +459,22 @@
       videoList.innerHTML = '';
       if (videos.length === 0) { videosEmpty.style.display = 'block'; return; }
       videosEmpty.style.display = 'none';
+      // Sort: private first, then by date
+      videos.sort((a, b) => {
+        if (a.visibility !== b.visibility) return a.visibility === 'private' ? -1 : 1;
+        return (b.createdAt || '').localeCompare(a.createdAt || '');
+      });
       videos.forEach(v => {
         const ytId = getYouTubeId(v.url);
+        const visibilityBadge = v.visibility === 'public'
+          ? '<span style="background:#51cf66;color:#000;padding:2px 6px;border-radius:4px;font-size:0.7rem;margin-left:0.5rem;">🌐 Public</span>'
+          : '<span style="background:#ffa94d;color:#000;padding:2px 6px;border-radius:4px;font-size:0.7rem;margin-left:0.5rem;">🔒 Privé</span>';
         const item = document.createElement('div');
         item.className = 'video-item';
         item.innerHTML = `
           <div class="video-thumb">${ytId ? `<img src="https://img.youtube.com/vi/${ytId}/mqdefault.jpg" alt="${v.title}">` : ''}</div>
           <div class="video-details">
-            <h4><span class="category-badge">${v.category}</span>${v.title}</h4>
+            <h4><span class="category-badge">${v.category}</span>${v.title}${visibilityBadge}</h4>
             <p>${v.meta || ''} ${v.year ? `(${v.year})` : ''}</p>
           </div>
           <div class="action-btns">
@@ -478,6 +493,7 @@
           url: document.getElementById('videoUrl').value,
           year: document.getElementById('videoYear').value || null,
           meta: document.getElementById('videoMeta').value,
+          visibility: document.getElementById('videoVisibility').value,
           createdAt: new Date().toISOString()
         });
         addVideoForm.reset();
@@ -490,17 +506,17 @@
     // ===== INITIALISATION AUTOMATIQUE DES VIDEOS PRIVEES =====
     const PRIVATE_VIDEOS_INIT = [
       // Violon
-      { title: "L'Arlésienne Suite n°2", category: "violin", url: "https://www.youtube.com/watch?v=pVNspbrNciM", meta: "G. Bizet - Académies de Flaine, 14 août 2025", year: "2025" },
-      { title: "Quatuor américain", category: "violin", url: "https://www.youtube.com/watch?v=o6yHfN7RxXM", meta: "A. Dvořák - Académies de Flaine, 13 août 2025", year: "2025" },
-      { title: "Quintette, 1er mouvement", category: "violin", url: "https://www.youtube.com/watch?v=jZ8wmuMgado", meta: "J. Brahms - Don Bosco, mai 2025", year: "2025" },
-      { title: "Divertimento", category: "violin", url: "https://www.youtube.com/watch?v=QOgu4mx_L24", meta: "W. A. Mozart - Académies de Flaine, août 2024", year: "2024" },
-      { title: "Quatuor pour flûte en Ré majeur, K.285", category: "violin", url: "https://www.youtube.com/watch?v=AtWZb8CpVLQ", meta: "W. A. Mozart - Académies de Flaine, août 2024", year: "2024" },
-      { title: 'Rondo from "Musik für drei Violinen"', category: "violin", url: "https://www.youtube.com/watch?v=t1rQYmNmvN4", meta: "W. A. Mozart - Łańcut, Pologne, juillet 2023", year: "2023" },
+      { title: "L'Arlésienne Suite n°2", category: "violin", url: "https://www.youtube.com/watch?v=pVNspbrNciM", meta: "G. Bizet - Académies de Flaine, 14 août 2025", year: "2025", visibility: "private" },
+      { title: "Quatuor américain", category: "violin", url: "https://www.youtube.com/watch?v=o6yHfN7RxXM", meta: "A. Dvořák - Académies de Flaine, 13 août 2025", year: "2025", visibility: "private" },
+      { title: "Quintette, 1er mouvement", category: "violin", url: "https://www.youtube.com/watch?v=jZ8wmuMgado", meta: "J. Brahms - Don Bosco, mai 2025", year: "2025", visibility: "private" },
+      { title: "Divertimento", category: "violin", url: "https://www.youtube.com/watch?v=QOgu4mx_L24", meta: "W. A. Mozart - Académies de Flaine, août 2024", year: "2024", visibility: "private" },
+      { title: "Quatuor pour flûte en Ré majeur, K.285", category: "violin", url: "https://www.youtube.com/watch?v=AtWZb8CpVLQ", meta: "W. A. Mozart - Académies de Flaine, août 2024", year: "2024", visibility: "private" },
+      { title: 'Rondo from "Musik für drei Violinen"', category: "violin", url: "https://www.youtube.com/watch?v=t1rQYmNmvN4", meta: "W. A. Mozart - Łańcut, Pologne, juillet 2023", year: "2023", visibility: "private" },
       // Piano
-      { title: "Sonatine Op. 24 en Si bémol majeur", category: "piano", url: "https://www.youtube.com/watch?v=v8trI4x8fOQ", meta: "M. Clementi - CRR Nice, 10 novembre 2023", year: "2023" },
+      { title: "Sonatine Op. 24 en Si bémol majeur", category: "piano", url: "https://www.youtube.com/watch?v=v8trI4x8fOQ", meta: "M. Clementi - CRR Nice, 10 novembre 2023", year: "2023", visibility: "private" },
       // Direction
-      { title: "La Flûte enchantée, K.620 - Acte II, n°10", category: "conducting", url: "https://www.youtube.com/watch?v=-sX2m7sh778", meta: "W. A. Mozart - Opéra de Nice, 1er juillet 2025", year: "2025" },
-      { title: "Concerto pour piano n°1, 3e mouvement", category: "conducting", url: "https://www.youtube.com/watch?v=K16ge10q8z4", meta: "L. van Beethoven, Op. 15 - 6 décembre 2024", year: "2024" }
+      { title: "La Flûte enchantée, K.620 - Acte II, n°10", category: "conducting", url: "https://www.youtube.com/watch?v=-sX2m7sh778", meta: "W. A. Mozart - Opéra de Nice, 1er juillet 2025", year: "2025", visibility: "private" },
+      { title: "Concerto pour piano n°1, 3e mouvement", category: "conducting", url: "https://www.youtube.com/watch?v=K16ge10q8z4", meta: "L. van Beethoven, Op. 15 - 6 décembre 2024", year: "2024", visibility: "private" }
     ];
 
     async function initializePrivateVideos() {
