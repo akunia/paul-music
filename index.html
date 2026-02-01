@@ -14,6 +14,9 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
 
+  <!-- reCAPTCHA v2 -->
+  <script src="https://www.google.com/recaptcha/api.js" async defer></script>
+
   <style>
     /* ===== CSS TOKENS ===== */
     :root {
@@ -1235,6 +1238,15 @@
       line-height: 1.4;
     }
 
+    /* reCAPTCHA */
+    .g-recaptcha {
+      display: flex;
+      justify-content: center;
+      margin-bottom: var(--space-md);
+      transform: scale(0.9);
+      transform-origin: center;
+    }
+
     /* ===== USER MENU ===== */
     .user-menu {
       position: relative;
@@ -1642,6 +1654,8 @@
           <span class="inline-lang" data-lang-text="pl">Twoje konto musi zostać zatwierdzone przez administratora, zanim uzyskasz dostęp do prywatnych filmów.</span>
           <span class="inline-lang" data-lang-text="ru">Ваш аккаунт должен быть одобрен администратором, прежде чем вы сможете получить доступ к приватным видео.</span>
         </div>
+        <!-- reCAPTCHA v2 -->
+        <div class="g-recaptcha" data-sitekey="6Le7XV0sAAAAANX4Ptz9_RxR60ItHx8SB-11I7Uz" data-theme="dark"></div>
         <button type="submit" class="auth-submit" id="registerSubmit">
           <span class="inline-lang active" data-lang-text="fr">Créer un compte</span>
           <span class="inline-lang" data-lang-text="en">Create account</span>
@@ -2559,6 +2573,21 @@
       const email = document.getElementById('registerEmail').value;
       const password = document.getElementById('registerPassword').value;
       const submitBtn = document.getElementById('registerSubmit');
+
+      // Vérifier reCAPTCHA
+      const captchaResponse = grecaptcha.getResponse();
+      if (!captchaResponse) {
+        const captchaErrors = {
+          fr: 'Veuillez compléter le captcha.',
+          en: 'Please complete the captcha.',
+          pl: 'Proszę wypełnić captcha.',
+          ru: 'Пожалуйста, заполните капчу.'
+        };
+        const currentLang = localStorage.getItem('preferredLang') || 'fr';
+        registerMessage.textContent = captchaErrors[currentLang];
+        registerMessage.className = 'auth-message error';
+        return;
+      }
 
       submitBtn.disabled = true;
       submitBtn.innerHTML = '<span class="auth-loading"></span>';
