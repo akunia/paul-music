@@ -141,9 +141,11 @@
       background: rgba(255, 255, 255, 0.1);
       border-radius: 10px;
       font-size: 0.75rem;
-      margin-left: 0.5rem;
+      margin-left: 0.25rem;
     }
-    .tab.active .tab-count { background: rgba(0, 0, 0, 0.2); }
+    .tab-count.pending { background: #ffa94d; color: #000; }
+    .tab-count.approved { background: #51cf66; color: #000; }
+    .tab.active .tab-count { opacity: 0.9; }
 
     .panel { display: none; }
     .panel.active { display: block; }
@@ -331,7 +333,7 @@
 
   <main class="main" id="mainContent" style="display: none;">
     <div class="tabs">
-      <button class="tab active" data-tab="users">Utilisateurs<span class="tab-count" id="pendingCount">0</span></button>
+      <button class="tab active" data-tab="users">Utilisateurs <span class="tab-count pending" id="pendingCount" title="En attente">0</span> <span class="tab-count approved" id="approvedCount" title="Approuvés">0</span></button>
       <button class="tab" data-tab="videos">Vidéos<span class="tab-count" id="videoCount">0</span></button>
     </div>
 
@@ -528,6 +530,7 @@
     const pendingTable = document.getElementById('pendingTable');
     const approvedTable = document.getElementById('approvedTable');
     const pendingCount = document.getElementById('pendingCount');
+    const approvedCount = document.getElementById('approvedCount');
     const videoCount = document.getElementById('videoCount');
     const addVideoForm = document.getElementById('addVideoForm');
     const videoList = document.getElementById('videoList');
@@ -589,6 +592,7 @@
         renderUsers(pending, pendingUsers, pendingEmpty, pendingTable, false);
         renderUsers(approved, approvedUsers, approvedEmpty, approvedTable, true);
         pendingCount.textContent = pending.length;
+        approvedCount.textContent = approved.length;
       } catch (e) { console.error('Error loading users:', e); }
       usersLoading.style.display = 'none';
       usersContent.style.display = 'block';
