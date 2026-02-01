@@ -208,6 +208,74 @@
       .video-item { flex-direction: column; text-align: center; }
       .video-thumb { width: 100%; height: auto; aspect-ratio: 16/9; }
     }
+
+    /* Modal styles */
+    .modal-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.8);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 1000;
+      opacity: 0;
+      visibility: hidden;
+      transition: all var(--transition-fast);
+    }
+    .modal-overlay.active { opacity: 1; visibility: visible; }
+    .modal {
+      background: var(--color-surface);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-lg);
+      padding: 2rem;
+      width: 100%;
+      max-width: 500px;
+      max-height: 90vh;
+      overflow-y: auto;
+      transform: scale(0.95);
+      transition: transform var(--transition-fast);
+    }
+    .modal-overlay.active .modal { transform: scale(1); }
+    .modal-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 1.5rem;
+    }
+    .modal-header h3 { font-family: var(--font-display); font-size: 1.25rem; }
+    .modal-close {
+      background: none;
+      border: none;
+      color: var(--color-text-muted);
+      font-size: 1.5rem;
+      cursor: pointer;
+      padding: 0.25rem;
+      line-height: 1;
+    }
+    .modal-close:hover { color: var(--color-text); }
+    .modal-actions { display: flex; gap: 1rem; margin-top: 1.5rem; }
+    .modal-actions .btn { flex: 1; justify-content: center; }
+
+    /* Delete confirmation modal */
+    .delete-warning {
+      background: rgba(255, 107, 107, 0.1);
+      border: 1px solid rgba(255, 107, 107, 0.3);
+      border-radius: var(--radius-md);
+      padding: 1rem;
+      margin-bottom: 1rem;
+      text-align: center;
+    }
+    .delete-warning-icon { font-size: 2.5rem; margin-bottom: 0.5rem; }
+    .delete-warning-title { color: var(--color-error); font-weight: 600; margin-bottom: 0.5rem; }
+    .delete-warning-text { color: var(--color-text-muted); font-size: 0.875rem; }
+    .delete-video-title {
+      color: var(--color-text);
+      font-weight: 500;
+      margin-top: 0.75rem;
+      padding: 0.5rem;
+      background: var(--color-bg);
+      border-radius: var(--radius-sm);
+    }
   </style>
 </head>
 <body>
@@ -319,6 +387,77 @@
       </div>
     </div>
   </main>
+
+  <!-- Edit Video Modal -->
+  <div class="modal-overlay" id="editModal">
+    <div class="modal">
+      <div class="modal-header">
+        <h3>Modifier la vidéo</h3>
+        <button class="modal-close" onclick="closeEditModal()">&times;</button>
+      </div>
+      <form id="editVideoForm">
+        <input type="hidden" id="editVideoId">
+        <div class="form-field">
+          <label for="editTitle">Titre</label>
+          <input type="text" id="editTitle" required>
+        </div>
+        <div class="form-row">
+          <div class="form-field">
+            <label for="editCategory">Catégorie</label>
+            <select id="editCategory" required>
+              <option value="violin">Violon</option>
+              <option value="piano">Piano</option>
+              <option value="conducting">Direction</option>
+            </select>
+          </div>
+          <div class="form-field">
+            <label for="editYear">Année</label>
+            <input type="number" id="editYear" min="2000" max="2099">
+          </div>
+        </div>
+        <div class="form-field">
+          <label for="editUrl">URL YouTube</label>
+          <input type="url" id="editUrl" required>
+        </div>
+        <div class="form-field">
+          <label for="editMeta">Description</label>
+          <input type="text" id="editMeta">
+        </div>
+        <div class="form-field">
+          <label for="editVisibility">Visibilité</label>
+          <select id="editVisibility" required>
+            <option value="private">🔒 Privée (utilisateurs approuvés)</option>
+            <option value="public">🌐 Publique (visible par tous)</option>
+          </select>
+        </div>
+        <div class="modal-actions">
+          <button type="button" class="btn btn-secondary" onclick="closeEditModal()">Annuler</button>
+          <button type="submit" class="btn btn-primary">Enregistrer</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Delete Confirmation Modal -->
+  <div class="modal-overlay" id="deleteModal">
+    <div class="modal">
+      <div class="modal-header">
+        <h3>Supprimer la vidéo</h3>
+        <button class="modal-close" onclick="closeDeleteModal()">&times;</button>
+      </div>
+      <div class="delete-warning">
+        <div class="delete-warning-icon">⚠️</div>
+        <div class="delete-warning-title">Attention !</div>
+        <div class="delete-warning-text">Cette action est irréversible. La vidéo sera définitivement supprimée de la base de données.</div>
+        <div class="delete-video-title" id="deleteVideoTitle"></div>
+      </div>
+      <input type="hidden" id="deleteVideoId">
+      <div class="modal-actions">
+        <button type="button" class="btn btn-secondary" onclick="closeDeleteModal()">Annuler</button>
+        <button type="button" class="btn btn-danger" onclick="confirmDelete()">🗑️ Supprimer définitivement</button>
+      </div>
+    </div>
+  </div>
 
   <script type="module">
     import { initializeApp } from 'https://www.gstatic.com/firebasejs/11.2.0/firebase-app.js';
@@ -493,9 +632,6 @@
         const visibilityBadge = isPublic
           ? '<span style="background:#51cf66;color:#000;padding:2px 6px;border-radius:4px;font-size:0.7rem;margin-left:0.5rem;">🌐 Public</span>'
           : '<span style="background:#ffa94d;color:#000;padding:2px 6px;border-radius:4px;font-size:0.7rem;margin-left:0.5rem;">🔒 Privé</span>';
-        const toggleBtn = isPublic
-          ? `<button class="btn btn-secondary" onclick="toggleVisibility('${v.id}', 'private')" title="Rendre privée">🔒</button>`
-          : `<button class="btn btn-secondary" onclick="toggleVisibility('${v.id}', 'public')" title="Rendre publique">🌐</button>`;
         const item = document.createElement('div');
         item.className = 'video-item';
         item.innerHTML = `
@@ -506,10 +642,8 @@
             <p style="font-size:0.75rem;color:var(--color-text-subtle);margin-top:0.25rem;">${v.url}</p>
           </div>
           <div class="action-btns">
-            ${toggleBtn}
-            <button class="btn btn-secondary" onclick="editVideoUrl('${v.id}', '${v.url.replace(/'/g, "\\'")}')">✏️ URL</button>
-            <button class="btn btn-secondary" onclick="editVideoMeta('${v.id}', '${(v.meta || '').replace(/'/g, "\\'")}')">✏️ Desc</button>
-            <button class="btn btn-danger" onclick="deleteVideo('${v.id}')">Supprimer</button>
+            <button class="btn btn-secondary" onclick="openEditModal('${v.id}')">✏️ Modifier</button>
+            <button class="btn btn-danger" onclick="openDeleteModal('${v.id}', '${v.title.replace(/'/g, "\\'")}')">🗑️ Supprimer</button>
           </div>`;
         videoList.appendChild(item);
       });
@@ -524,35 +658,92 @@
       });
     });
 
-    // Toggle visibility
-    window.toggleVisibility = async (id, newVisibility) => {
+    // ===== EDIT MODAL =====
+    const editModal = document.getElementById('editModal');
+    const editVideoForm = document.getElementById('editVideoForm');
+
+    window.openEditModal = (videoId) => {
+      const video = allVideos.find(v => v.id === videoId);
+      if (!video) return;
+
+      document.getElementById('editVideoId').value = videoId;
+      document.getElementById('editTitle').value = video.title || '';
+      document.getElementById('editCategory').value = video.category || 'violin';
+      document.getElementById('editYear').value = video.year || '';
+      document.getElementById('editUrl').value = video.url || '';
+      document.getElementById('editMeta').value = video.meta || '';
+      document.getElementById('editVisibility').value = video.visibility || 'private';
+
+      editModal.classList.add('active');
+    };
+
+    window.closeEditModal = () => {
+      editModal.classList.remove('active');
+    };
+
+    editVideoForm.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const videoId = document.getElementById('editVideoId').value;
+
       try {
-        await updateDoc(doc(db, 'videos', id), { visibility: newVisibility });
+        await updateDoc(doc(db, 'videos', videoId), {
+          title: document.getElementById('editTitle').value,
+          category: document.getElementById('editCategory').value,
+          year: document.getElementById('editYear').value || null,
+          url: document.getElementById('editUrl').value,
+          meta: document.getElementById('editMeta').value,
+          visibility: document.getElementById('editVisibility').value
+        });
+        closeEditModal();
         loadVideos();
-      } catch (e) { console.error('Error updating visibility:', e); alert('Erreur'); }
+      } catch (e) {
+        console.error('Error updating video:', e);
+        alert('Erreur lors de la mise à jour');
+      }
+    });
+
+    // Close modal on overlay click
+    editModal.addEventListener('click', (e) => {
+      if (e.target === editModal) closeEditModal();
+    });
+
+    // ===== DELETE MODAL =====
+    const deleteModal = document.getElementById('deleteModal');
+
+    window.openDeleteModal = (videoId, videoTitle) => {
+      document.getElementById('deleteVideoId').value = videoId;
+      document.getElementById('deleteVideoTitle').textContent = videoTitle;
+      deleteModal.classList.add('active');
     };
 
-    // Edit video URL
-    window.editVideoUrl = async (id, currentUrl) => {
-      const newUrl = prompt('Nouvelle URL YouTube:', currentUrl);
-      if (newUrl && newUrl !== currentUrl) {
-        try {
-          await updateDoc(doc(db, 'videos', id), { url: newUrl });
-          loadVideos();
-        } catch (e) { console.error('Error updating URL:', e); alert('Erreur'); }
+    window.closeDeleteModal = () => {
+      deleteModal.classList.remove('active');
+    };
+
+    window.confirmDelete = async () => {
+      const videoId = document.getElementById('deleteVideoId').value;
+      try {
+        await deleteDoc(doc(db, 'videos', videoId));
+        closeDeleteModal();
+        loadVideos();
+      } catch (e) {
+        console.error('Error deleting video:', e);
+        alert('Erreur lors de la suppression');
       }
     };
 
-    // Edit video description
-    window.editVideoMeta = async (id, currentMeta) => {
-      const newMeta = prompt('Nouvelle description:', currentMeta);
-      if (newMeta !== null && newMeta !== currentMeta) {
-        try {
-          await updateDoc(doc(db, 'videos', id), { meta: newMeta });
-          loadVideos();
-        } catch (e) { console.error('Error updating description:', e); alert('Erreur'); }
+    // Close modal on overlay click
+    deleteModal.addEventListener('click', (e) => {
+      if (e.target === deleteModal) closeDeleteModal();
+    });
+
+    // Close modals on Escape key
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') {
+        closeEditModal();
+        closeDeleteModal();
       }
-    };
+    });
 
     addVideoForm.addEventListener('submit', async (e) => {
       e.preventDefault();
@@ -571,9 +762,10 @@
       } catch (e) { console.error('Error adding video:', e); alert('Erreur'); }
     });
 
-    window.deleteVideo = async (id) => { if (confirm('Supprimer cette vidéo ?')) { await deleteDoc(doc(db, 'videos', id)); loadVideos(); } };
 
-    // ===== INITIALISATION AUTOMATIQUE DES VIDEOS PRIVEES =====
+    // ===== INITIALISATION AUTOMATIQUE DES VIDEOS =====
+
+    // Vidéos PRIVÉES (réservées aux utilisateurs approuvés)
     const PRIVATE_VIDEOS_INIT = [
       // Violon
       { title: "L'Arlésienne Suite n°2", category: "violin", url: "https://www.youtube.com/watch?v=pVNspbrNciM", meta: "G. Bizet - Académies de Flaine, 14 août 2025", year: "2025", visibility: "private" },
@@ -589,6 +781,32 @@
       { title: "Concerto pour piano n°1, 3e mouvement", category: "conducting", url: "https://www.youtube.com/watch?v=K16ge10q8z4", meta: "L. van Beethoven, Op. 15 - 6 décembre 2024", year: "2024", visibility: "private" }
     ];
 
+    // Vidéos PUBLIQUES (visibles par tous)
+    const PUBLIC_VIDEOS_INIT = [
+      // Violon 2025
+      { title: "Concerto n°3, 1er mouvement", category: "violin", url: "https://www.youtube.com/watch?v=4rrl7aUl_24", meta: "C. Saint-Saëns, Op. 61 - Académies de Flaine, 15 août 2025", year: "2025", visibility: "public" },
+      { title: "Concerto pour violon, 1er mouvement", category: "violin", url: "https://www.youtube.com/watch?v=8gkHY_myJFQ", meta: "A. Dvořák, Op. 53 - CRR Nice, 13 mars 2025", year: "2025", visibility: "public" },
+      // Violon 2024
+      { title: "Romance en Fa majeur", category: "violin", url: "https://www.youtube.com/watch?v=y6uy_GkQde8", meta: "L. van Beethoven, Op. 50 - CRR Nice, 18 décembre 2024", year: "2024", visibility: "public" },
+      { title: "Symphonie espagnole", category: "violin", url: "https://www.youtube.com/watch?v=EFQrKEqsMh4", meta: "É. Lalo, Op. 21 - 19 octobre 2024", year: "2024", visibility: "public" },
+      { title: "Concerto n°2, 1er mouvement (Flaine)", category: "violin", url: "https://www.youtube.com/watch?v=tXjyAbX0N0Q", meta: "H. Wieniawski, Op. 22 - Académies de Flaine, août 2024", year: "2024", visibility: "public" },
+      { title: "Concerto n°2, 1er mouvement (Budapest)", category: "violin", url: "https://www.youtube.com/watch?v=1P_S_cI8cG0", meta: "H. Wieniawski, Op. 22 - Liszt Ferenc Academy, Budapest, août 2024", year: "2024", visibility: "public" },
+      { title: "Partita n°1 / Concerto en Do Majeur", category: "violin", url: "https://www.youtube.com/watch?v=DDsHAZ7EI2o", meta: "J.S. Bach / J. Haydn - Piano : Sylvie Gisquet, avril 2024", year: "2024", visibility: "public" },
+      { title: "Violin Concerto in D, Op. 30", category: "violin", url: "https://www.youtube.com/watch?v=tZjK4qWf-Dc", meta: "W. ten Have - 2024", year: "2024", visibility: "public" },
+      { title: "Scènes de Ballet, Op. 100", category: "violin", url: "https://www.youtube.com/watch?v=4TvWspDm41w", meta: "Ch. de Bériot - CRR Nice, 2024", year: "2024", visibility: "public" },
+      // Violon 2023
+      { title: "Légende, Op. 17", category: "violin", url: "https://www.youtube.com/watch?v=dWRGnHnFdEw", meta: "H. Wieniawski - Piano : Angelo Balducci, Nice, octobre 2023", year: "2023", visibility: "public" },
+      { title: "Légende, Op. 17 (Carte Blanche)", category: "violin", url: "https://www.youtube.com/watch?v=vshL67KIQA4", meta: "H. Wieniawski - Piano : Angelo Balducci, Carte Blanche Nice, octobre 2023", year: "2023", visibility: "public" },
+      { title: "Romanian Folk Dances", category: "violin", url: "https://www.youtube.com/watch?v=KACb0g5_9HI", meta: "B. Bartók - Nice, avril 2023", year: "2023", visibility: "public" },
+      // Piano 2025
+      { title: "Récital piano", category: "piano", url: "https://www.youtube.com/watch?v=R3vW0QxFjc0", meta: "Sonate pathétique (Beethoven) • La plus que lente (Debussy) • Partita Op. 34 III (Rautavaara) • Prélude Op. 3 n°2 (Rachmaninoff) - CRR Nice, mai 2025", year: "2025", visibility: "public" },
+      { title: "Sonate n°8 'Pathétique'", category: "piano", url: "https://www.youtube.com/watch?v=HGOSBBPnsM4", meta: "L. van Beethoven, Op. 13 - CRR Nice, mars 2025", year: "2025", visibility: "public" },
+      { title: "La plus que lente", category: "piano", url: "https://www.youtube.com/watch?v=3dc_JOuBaWk", meta: "C. Debussy - CRR Nice, mars 2025", year: "2025", visibility: "public" },
+      // Piano 2024
+      { title: "Sonate n°8 'Pathétique' (déc 2024)", category: "piano", url: "https://www.youtube.com/watch?v=xszMAnxZZm0", meta: "L. van Beethoven, Op. 13 - CRR Nice, 12 décembre 2024", year: "2024", visibility: "public" },
+      { title: "Sonate n°9 / La plus que lente", category: "piano", url: "https://www.youtube.com/watch?v=m7Ohqt5WinI", meta: "L. van Beethoven, Op. 14 n°1 / C. Debussy - CRR Nice, 24 mai 2024", year: "2024", visibility: "public" }
+    ];
+
     async function initializePrivateVideos() {
       try {
         const snapshot = await getDocs(collection(db, 'videos'));
@@ -597,15 +815,28 @@
           return;
         }
 
-        console.log('Initializing private videos...');
+        console.log('Initializing all videos...');
+
+        // Ajouter les vidéos privées
         for (const video of PRIVATE_VIDEOS_INIT) {
           await addDoc(collection(db, 'videos'), {
             ...video,
             createdAt: new Date().toISOString()
           });
         }
-        console.log('Private videos initialized successfully!');
-        alert('Les 9 vidéos privées ont été ajoutées automatiquement !');
+        console.log('Private videos initialized!');
+
+        // Ajouter les vidéos publiques
+        for (const video of PUBLIC_VIDEOS_INIT) {
+          await addDoc(collection(db, 'videos'), {
+            ...video,
+            createdAt: new Date().toISOString()
+          });
+        }
+        console.log('Public videos initialized!');
+
+        const totalVideos = PRIVATE_VIDEOS_INIT.length + PUBLIC_VIDEOS_INIT.length;
+        alert(`${totalVideos} vidéos ont été ajoutées automatiquement !\n- ${PRIVATE_VIDEOS_INIT.length} privées\n- ${PUBLIC_VIDEOS_INIT.length} publiques`);
         loadVideos();
       } catch (e) {
         console.error('Error initializing videos:', e);
