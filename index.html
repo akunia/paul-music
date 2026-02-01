@@ -1223,6 +1223,18 @@
       color: var(--color-accent);
     }
 
+    .auth-info {
+      padding: var(--space-md);
+      background: rgba(100, 149, 237, 0.1);
+      border: 1px solid rgba(100, 149, 237, 0.3);
+      border-radius: var(--radius-sm);
+      font-size: 0.8rem;
+      color: rgba(255, 255, 255, 0.7);
+      margin-bottom: var(--space-md);
+      text-align: center;
+      line-height: 1.4;
+    }
+
     /* ===== USER MENU ===== */
     .user-menu {
       position: relative;
@@ -1623,6 +1635,12 @@
             <span class="inline-lang" data-lang-text="ru">Пароль</span>
           </label>
           <input type="password" id="registerPassword" required minlength="6" autocomplete="new-password">
+        </div>
+        <div class="auth-info">
+          <span class="inline-lang active" data-lang-text="fr">Votre compte devra être validé par un administrateur avant de pouvoir accéder aux vidéos privées.</span>
+          <span class="inline-lang" data-lang-text="en">Your account will need to be approved by an administrator before you can access private videos.</span>
+          <span class="inline-lang" data-lang-text="pl">Twoje konto musi zostać zatwierdzone przez administratora, zanim uzyskasz dostęp do prywatnych filmów.</span>
+          <span class="inline-lang" data-lang-text="ru">Ваш аккаунт должен быть одобрен администратором, прежде чем вы сможете получить доступ к приватным видео.</span>
         </div>
         <button type="submit" class="auth-submit" id="registerSubmit">
           <span class="inline-lang active" data-lang-text="fr">Créer un compte</span>
