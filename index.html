@@ -1467,13 +1467,18 @@
   </style>
 </head>
 <body>
-  <a class="skip-link" href="#main">Aller au contenu principal</a>
+  <a class="skip-link" href="#main">
+    <span class="inline-lang active" data-lang-text="fr">Aller au contenu principal</span>
+    <span class="inline-lang" data-lang-text="en">Skip to main content</span>
+    <span class="inline-lang" data-lang-text="pl">Przejdź do głównej treści</span>
+    <span class="inline-lang" data-lang-text="ru">Перейти к основному содержимому</span>
+  </a>
 
   <!-- Header -->
   <header class="header">
     <div class="container">
       <a href="#" class="logo">
-          <img src="photos/Paul_logo_black.png" alt="Logo" class="logo-img">
+          <img src="photos/Paul_logo_black.png" alt="Logo" class="logo-img" data-lang-attr="alt" data-lang-attr-fr="Logo" data-lang-attr-en="Logo" data-lang-attr-pl="Logo" data-lang-attr-ru="Логотип">
           Paul <span>Bednarczyk</span>
         </a>
 
@@ -1560,7 +1565,7 @@
           </div>
         </div>
 
-        <button class="menu-toggle" id="menuToggle" aria-label="Menu">
+        <button class="menu-toggle" id="menuToggle" aria-label="Menu" data-lang-attr="aria-label" data-lang-attr-fr="Menu" data-lang-attr-en="Menu" data-lang-attr-pl="Menu" data-lang-attr-ru="Меню">
           <span></span>
           <span></span>
           <span></span>
@@ -1600,7 +1605,12 @@
       <!-- Login Form -->
       <form class="auth-form active" id="loginForm">
         <div class="auth-field">
-          <label for="loginEmail">Email</label>
+          <label for="loginEmail">
+            <span class="inline-lang active" data-lang-text="fr">Email</span>
+            <span class="inline-lang" data-lang-text="en">Email</span>
+            <span class="inline-lang" data-lang-text="pl">E-mail</span>
+            <span class="inline-lang" data-lang-text="ru">Эл. почта</span>
+          </label>
           <input type="email" id="loginEmail" required autocomplete="email">
         </div>
         <div class="auth-field">
@@ -1633,7 +1643,12 @@
           <input type="text" id="registerName" required autocomplete="name">
         </div>
         <div class="auth-field">
-          <label for="registerEmail">Email</label>
+          <label for="registerEmail">
+            <span class="inline-lang active" data-lang-text="fr">Email</span>
+            <span class="inline-lang" data-lang-text="en">Email</span>
+            <span class="inline-lang" data-lang-text="pl">E-mail</span>
+            <span class="inline-lang" data-lang-text="ru">Эл. почта</span>
+          </label>
           <input type="email" id="registerEmail" required autocomplete="email">
         </div>
         <div class="auth-field">
@@ -1723,7 +1738,7 @@
           <div class="hero-decoration hero-decoration-2"></div>
           <div class="hero-image-wrapper">
             <img src="photos/PXL_20250719_112302798.PORTRAIT.ORIGINAL.jpg" alt="Paul Bednarczyk">
-            <img src="photos/Paul_logo_black.png" alt="Logo Paul Bednarczyk" class="hero-logo-overlay">
+            <img src="photos/Paul_logo_black.png" alt="Logo Paul Bednarczyk" class="hero-logo-overlay" data-lang-attr="alt" data-lang-attr-fr="Logo Paul Bednarczyk" data-lang-attr-en="Paul Bednarczyk logo" data-lang-attr-pl="Logo Paul Bednarczyk" data-lang-attr-ru="Логотип Paul Bednarczyk">
           </div>
         </div>
       </div>
@@ -2186,6 +2201,7 @@
               <span class="inline-lang active" data-lang-text="fr">Détails</span>
               <span class="inline-lang" data-lang-text="en">Details</span>
               <span class="inline-lang" data-lang-text="pl">Szczegóły</span>
+              <span class="inline-lang" data-lang-text="ru">Подробности</span>
             </a>
           </article>
           -->
@@ -2249,10 +2265,20 @@
         <span class="inline-lang" data-lang-text="ru">Все права защищены.</span>
       </p>
       <div class="footer-links">
-        <a href="mailto:paulbed210@gmail.com" class="footer-link">Email</a>
-        <a href="https://www.instagram.com/paul9.2bed" target="_blank" rel="noopener" class="footer-link">Instagram</a>
+        <a href="mailto:paulbed210@gmail.com" class="footer-link">
+          <span class="inline-lang active" data-lang-text="fr">Email</span>
+          <span class="inline-lang" data-lang-text="en">Email</span>
+          <span class="inline-lang" data-lang-text="pl">E-mail</span>
+          <span class="inline-lang" data-lang-text="ru">Эл. почта</span>
+        </a>
+        <a href="https://www.instagram.com/paul9.2bed" target="_blank" rel="noopener" class="footer-link">
+          <span class="inline-lang active" data-lang-text="fr">Instagram</span>
+          <span class="inline-lang" data-lang-text="en">Instagram</span>
+          <span class="inline-lang" data-lang-text="pl">Instagram</span>
+          <span class="inline-lang" data-lang-text="ru">Instagram</span>
+        </a>
       </div>
-      <img src="photos/Paul_logo_black.png" alt="Logo Paul Bednarczyk" class="footer-logo">
+      <img src="photos/Paul_logo_black.png" alt="Logo Paul Bednarczyk" class="footer-logo" data-lang-attr="alt" data-lang-attr-fr="Logo Paul Bednarczyk" data-lang-attr-en="Paul Bednarczyk logo" data-lang-attr-pl="Logo Paul Bednarczyk" data-lang-attr-ru="Логотип Paul Bednarczyk">
     </div>
   </footer>
 
@@ -2736,7 +2762,14 @@
 
       const article = document.createElement('article');
       article.className = 'video-card' + (restricted ? ' video-restricted' : '');
-      const privateBadge = isPrivate ? '<span class="video-private-badge">Privé</span>' : '';
+      const privateBadge = isPrivate ? `
+        <span class="video-private-badge">
+          <span class="inline-lang active" data-lang-text="fr">Privé</span>
+          <span class="inline-lang" data-lang-text="en">Private</span>
+          <span class="inline-lang" data-lang-text="pl">Prywatne</span>
+          <span class="inline-lang" data-lang-text="ru">Приватное</span>
+        </span>
+      ` : '';
 
       if (restricted) {
         // Mode restreint: titre visible, miniature verrouillée
@@ -2749,7 +2782,12 @@
             ${thumb ? `<img src="${thumb}" alt="${video.title}">` : ''}
             <div class="video-lock-overlay">
               <span class="video-lock-icon">🔒</span>
-              <span class="video-lock-text">Connectez-vous</span>
+              <span class="video-lock-text">
+                <span class="inline-lang active" data-lang-text="fr">Connectez-vous</span>
+                <span class="inline-lang" data-lang-text="en">Log in</span>
+                <span class="inline-lang" data-lang-text="pl">Zaloguj się</span>
+                <span class="inline-lang" data-lang-text="ru">Войти</span>
+              </span>
             </div>
           </div>
         `;
@@ -2774,12 +2812,89 @@
     // Load videos on page load (for everyone)
     loadVideosFromFirestore();
 
+    // Re-request access for deleted users (creates new Firestore document)
+    async function reRequestAccess(user) {
+      try {
+        await setDoc(doc(db, 'users', user.uid), {
+          uid: user.uid,
+          name: user.email.split('@')[0],
+          email: user.email,
+          status: 'pending',
+          createdAt: new Date().toISOString(),
+          reRequested: true
+        });
+
+        // Send notification to admin
+        await sendNotificationEmail(user.email.split('@')[0], user.email);
+
+        // Refresh user data
+        const userData = await getUserStatus(user.uid);
+        updateUI(user, userData);
+        closeAuthModal();
+        return true;
+      } catch (error) {
+        console.error('Re-request error:', error);
+        return false;
+      }
+    }
+
     // Auth state change handler
     onAuthStateChanged(auth, async (user) => {
       currentUser = user;
       isAdminUser = user ? isAdmin(user.email) : false;
       if (user) {
         const userData = await getUserStatus(user.uid);
+
+        // Check for orphan account (Auth exists, Firestore doc doesn't)
+        if (!userData && !isAdminUser) {
+          const currentLang = localStorage.getItem('preferredLang') || 'fr';
+          const orphanMessages = {
+            fr: 'Votre compte a été supprimé ou votre demande a été refusée.',
+            en: 'Your account was deleted or your request was rejected.',
+            pl: 'Twoje konto zostało usunięte lub Twoja prośba została odrzucona.',
+            ru: 'Ваш аккаунт был удалён или ваш запрос был отклонён.'
+          };
+          const reRequestLabels = {
+            fr: 'Redemander l\'accès',
+            en: 'Request access again',
+            pl: 'Poproś ponownie o dostęp',
+            ru: 'Запросить доступ снова'
+          };
+
+          // Show error message with re-request button
+          openAuthModal();
+          loginMessage.innerHTML = `
+            ${orphanMessages[currentLang]}<br><br>
+            <button type="button" class="auth-btn" id="reRequestBtn" style="margin-top: 0.5rem;">
+              ${reRequestLabels[currentLang]}
+            </button>
+          `;
+          loginMessage.className = 'auth-message error';
+
+          // Add click handler for re-request button
+          document.getElementById('reRequestBtn').addEventListener('click', async () => {
+            const btn = document.getElementById('reRequestBtn');
+            btn.disabled = true;
+            btn.innerHTML = '<span class="auth-loading"></span>';
+
+            const success = await reRequestAccess(user);
+            if (success) {
+              const successMsgs = {
+                fr: 'Demande envoyée ! Votre statut est en attente.',
+                en: 'Request sent! Your status is pending.',
+                pl: 'Prośba wysłana! Twój status oczekuje.',
+                ru: 'Запрос отправлен! Ваш статус: ожидание.'
+              };
+              loginMessage.textContent = successMsgs[currentLang];
+              loginMessage.className = 'auth-message success';
+            } else {
+              btn.disabled = false;
+              btn.textContent = reRequestLabels[currentLang];
+            }
+          });
+          return; // Don't update UI normally
+        }
+
         updateUI(user, userData);
         updatePrivateVideosAccess();
         closeAuthModal();
@@ -2801,6 +2916,32 @@
     const langSwitcher = document.getElementById('langSwitcher');
     const langToggle = document.getElementById('langToggle');
     const langLabels = { fr: 'FR', en: 'EN', pl: 'PL', ru: 'RU' };
+    const pageMeta = {
+      fr: {
+        title: "Paul Bednarczyk | Violoniste • Pianiste • Chef d'orchestre",
+        description: "Paul Bednarczyk - Jeune violoniste, pianiste et chef d'orchestre franco-polonais. Étudiant au CPES du CRR de Paris.",
+        ogTitle: "Paul Bednarczyk - Violoniste & Pianiste",
+        ogDescription: "Jeune musicien franco-polonais - Violon, Piano, Direction d'orchestre"
+      },
+      en: {
+        title: "Paul Bednarczyk | Violinist • Pianist • Conductor",
+        description: "Paul Bednarczyk - Young French-Polish violinist, pianist and conductor. Student in the CPES program at the Paris CRR.",
+        ogTitle: "Paul Bednarczyk - Violinist & Pianist",
+        ogDescription: "Young French-Polish musician - Violin, Piano, Conducting"
+      },
+      pl: {
+        title: "Paul Bednarczyk | Skrzypek • Pianista • Dyrygent",
+        description: "Paul Bednarczyk - Młody francusko-polski skrzypek, pianista i dyrygent. Student CPES w CRR w Paryżu.",
+        ogTitle: "Paul Bednarczyk - Skrzypek i Pianista",
+        ogDescription: "Młody francusko-polski muzyk - skrzypce, fortepian, dyrygowanie"
+      },
+      ru: {
+        title: "Paul Bednarczyk | Скрипач • Пианист • Дирижёр",
+        description: "Paul Bednarczyk - Молодой франко-польский скрипач, пианист и дирижёр. Студент программы CPES в Парижской региональной консерватории (CRR).",
+        ogTitle: "Paul Bednarczyk - Скрипач и пианист",
+        ogDescription: "Молодой франко-польский музыкант — скрипка, фортепиано, дирижирование"
+      }
+    };
 
     function setLanguage(lang) {
       // Update dropdown buttons
@@ -2835,6 +2976,27 @@
 
       // Update HTML lang attribute
       document.documentElement.lang = lang;
+
+      // Update translated attributes (alt, aria-label, placeholder, title, etc.)
+      document.querySelectorAll('[data-lang-attr]').forEach(el => {
+        const attr = el.getAttribute('data-lang-attr');
+        const value = el.getAttribute(`data-lang-attr-${lang}`) || el.getAttribute('data-lang-attr-fr');
+        if (attr && value) {
+          el.setAttribute(attr, value);
+        }
+      });
+
+      // Update meta/title content
+      const meta = pageMeta[lang] || pageMeta.fr;
+      if (meta) {
+        document.title = meta.title;
+        const metaDescription = document.querySelector('meta[name=\"description\"]');
+        const ogTitle = document.querySelector('meta[property=\"og:title\"]');
+        const ogDescription = document.querySelector('meta[property=\"og:description\"]');
+        if (metaDescription) metaDescription.setAttribute('content', meta.description);
+        if (ogTitle) ogTitle.setAttribute('content', meta.ogTitle);
+        if (ogDescription) ogDescription.setAttribute('content', meta.ogDescription);
+      }
 
       // Save preference
       localStorage.setItem('preferredLang', lang);
