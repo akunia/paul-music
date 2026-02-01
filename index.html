@@ -2692,11 +2692,11 @@
       if (!viewedVideosCache.includes(videoId)) {
         viewedVideosCache.push(videoId);
 
-        // Update Firestore
+        // Update Firestore (setDoc with merge to handle admins without user doc)
         try {
-          await updateDoc(doc(db, 'users', currentUser.uid), {
+          await setDoc(doc(db, 'users', currentUser.uid), {
             viewedVideos: viewedVideosCache
-          });
+          }, { merge: true });
         } catch (e) {
           console.error('Error saving viewed video:', e);
         }
