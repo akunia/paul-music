@@ -183,6 +183,29 @@
     .form-row.full { grid-template-columns: 1fr; }
 
     .video-list { display: flex; flex-direction: column; gap: 0.75rem; }
+    .year-separator {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      margin: 1.5rem 0 0.75rem;
+      font-family: var(--font-display);
+      font-size: 1.25rem;
+      color: var(--color-accent);
+    }
+    .year-separator:first-child { margin-top: 0; }
+    .year-separator::before,
+    .year-separator::after {
+      content: '';
+      flex: 1;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, var(--color-border), transparent);
+    }
+    .year-separator span {
+      background: var(--color-bg);
+      padding: 0.25rem 1rem;
+      border-radius: 2rem;
+      border: 1px solid var(--color-border);
+    }
     .video-item {
       display: flex;
       align-items: center;
@@ -715,13 +738,28 @@
       }
       videosEmpty.style.display = 'none';
 
-      // Sort: private first, then by date
+      // Sort by year (descending), then by title
       filtered.sort((a, b) => {
-        if (a.visibility !== b.visibility) return a.visibility === 'private' ? -1 : 1;
-        return (b.createdAt || '').localeCompare(a.createdAt || '');
+        const yearA = a.year || '0000';
+        const yearB = b.year || '0000';
+        if (yearA !== yearB) return yearB.localeCompare(yearA);
+        return (a.title || '').localeCompare(b.title || '');
       });
 
+      // Group by year
+      let currentYear = null;
       filtered.forEach(v => {
+        const videoYear = v.year || 'Sans année';
+
+        // Add year separator if new year
+        if (videoYear !== currentYear) {
+          currentYear = videoYear;
+          const separator = document.createElement('div');
+          separator.className = 'year-separator';
+          separator.innerHTML = `<span>${videoYear}</span>`;
+          videoList.appendChild(separator);
+        }
+
         const ytId = getYouTubeId(v.url);
         const isPublic = v.visibility === 'public';
         const visibilityBadge = isPublic
@@ -733,7 +771,7 @@
           <div class="video-thumb">${ytId ? `<img src="https://img.youtube.com/vi/${ytId}/mqdefault.jpg" alt="${v.title}">` : ''}</div>
           <div class="video-details">
             <h4><span class="category-badge">${v.category}</span>${v.title}${visibilityBadge}</h4>
-            <p>${v.meta || ''} ${v.year ? `(${v.year})` : ''}</p>
+            <p>${v.meta || ''}</p>
             <p style="font-size:0.75rem;color:var(--color-text-subtle);margin-top:0.25rem;">${v.url}</p>
           </div>
           <div class="action-btns">
