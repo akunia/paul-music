@@ -1,4 +1,4 @@
-rules_version = '2';
+rules_version = '3';
 
 // ============================================
 // FIRESTORE SECURITY RULES - Paul Bednarczyk
@@ -65,11 +65,9 @@ service cloud.firestore {
 
     // ===== VIDEOS COLLECTION =====
     match /videos/{videoId} {
-      // Public videos: readable by everyone
-      // Private videos: only readable by approved users or admins
-      allow read: if resource.data.visibility == 'public'
-                  || isApproved()
-                  || isAdmin();
+      // All videos readable by everyone (titles shown with locked thumbnails)
+      // L'accès aux URLs est géré côté client (miniatures verrouillées)
+      allow read: if true;
 
       // Only admin can create/update/delete videos
       allow create, update, delete: if isAdmin();
