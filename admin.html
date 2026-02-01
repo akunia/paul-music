@@ -1225,6 +1225,24 @@
       }
     }
     window.fixVideosCreatedAt = fixVideosCreatedAt;
+
+    // Reset ALL videos createdAt to today (for "Nouveau" badge)
+    async function resetAllVideosCreatedAt() {
+      if (!confirm('Réinitialiser la date de TOUTES les vidéos à aujourd\'hui ?')) return;
+      try {
+        const snapshot = await getDocs(collection(db, 'videos'));
+        for (const docSnap of snapshot.docs) {
+          await updateDoc(doc(db, 'videos', docSnap.id), {
+            createdAt: new Date().toISOString()
+          });
+        }
+        alert(`${snapshot.size} vidéo(s) mise(s) à jour avec la date d'aujourd'hui`);
+        loadVideos();
+      } catch (e) {
+        console.error('Error resetting videos:', e);
+      }
+    }
+    window.resetAllVideosCreatedAt = resetAllVideosCreatedAt;
   </script>
 
   <!-- EmailJS SDK for notifications -->

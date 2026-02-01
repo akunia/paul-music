@@ -1441,6 +1441,24 @@
       50% { opacity: 0.7; }
     }
 
+    /* Notification badge in header */
+    .unviewed-badge {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-width: 22px;
+      height: 22px;
+      padding: 0 6px;
+      background: linear-gradient(135deg, #ff6b6b, #ee5a5a);
+      color: #fff;
+      font-size: 0.75rem;
+      font-weight: 600;
+      border-radius: 11px;
+      margin-left: var(--space-sm);
+      animation: pulse-new 2s ease-in-out infinite;
+      cursor: default;
+    }
+
     /* Locked video thumbnail (for non-approved users) */
     .video-locked {
       position: relative;
@@ -1640,6 +1658,11 @@
             </button>
           </div>
         </div>
+
+        <!-- Notification badge for new videos -->
+        <span class="unviewed-badge" id="unviewedBadge" style="display: none;" title="Nouvelles vidéos">
+          <span id="unviewedCount">0</span>
+        </span>
 
         <button class="menu-toggle" id="menuToggle" aria-label="Menu" data-lang-attr="aria-label" data-lang-attr-fr="Menu" data-lang-attr-en="Menu" data-lang-attr-pl="Menu" data-lang-attr-ru="Меню">
           <span></span>
@@ -2374,6 +2397,7 @@
       doc,
       setDoc,
       getDoc,
+      updateDoc,
       collection,
       query,
       where,
@@ -2802,7 +2826,10 @@
           allFirestoreVideos.push({ id: doc.id, ...doc.data() });
         });
         console.log('Loaded', allFirestoreVideos.length, 'videos from Firestore');
+        // Store for notification counting
+        allLoadedVideos = allFirestoreVideos;
         renderVideos();
+        updateUnviewedNotification();
       } catch (error) {
         console.error('Error loading videos:', error);
       }
@@ -2858,6 +2885,73 @@
       return diffDays <= 7;
     }
 
+    // Firebase for viewed videos (synced across devices)
+    let viewedVideosCache = [];
+    let allLoadedVideos = [];
+
+    async function loadViewedVideos(userId) {
+      if (!userId) {
+        viewedVideosCache = [];
+        return;
+      }
+      try {
+        const userDoc = await getDoc(doc(db, 'users', userId));
+        if (userDoc.exists()) {
+          viewedVideosCache = userDoc.data().viewedVideos || [];
+        }
+      } catch (e) {
+        console.error('Error loading viewed videos:', e);
+        viewedVideosCache = [];
+      }
+    }
+
+    async function markVideoAsViewed(videoId) {
+      if (!currentUser) return;
+
+      if (!viewedVideosCache.includes(videoId)) {
+        viewedVideosCache.push(videoId);
+
+        // Update Firestore
+        try {
+          await updateDoc(doc(db, 'users', currentUser.uid), {
+            viewedVideos: viewedVideosCache
+          });
+        } catch (e) {
+          console.error('Error saving viewed video:', e);
+        }
+
+        // Update UI
+        updateUnviewedNotification();
+
+        // Remove "Nouveau" badge from clicked video
+        const badge = document.querySelector(`[data-video-id="${videoId}"] .video-new-badge`);
+        if (badge) badge.remove();
+      }
+    }
+    window.markVideoAsViewed = markVideoAsViewed;
+
+    function isVideoViewed(videoId) {
+      return viewedVideosCache.includes(videoId);
+    }
+
+    function updateUnviewedNotification() {
+      const unviewed = allLoadedVideos.filter(v =>
+        isNewVideo(v.createdAt) && !isVideoViewed(v.id)
+      ).length;
+
+      const badge = document.getElementById('unviewedBadge');
+      const count = document.getElementById('unviewedCount');
+
+      if (badge && count) {
+        if (unviewed > 0) {
+          badge.style.display = 'inline-flex';
+          count.textContent = unviewed;
+        } else {
+          badge.style.display = 'none';
+        }
+      }
+    }
+
     function createVideoCard(video, isPrivate, restricted = false) {
       const ytMatch = video.url.match(/(?:youtube\.com\/watch\?v=|youtu\.be\/)([^&\s]+)/);
       const ytId = ytMatch ? ytMatch[1] : null;
@@ -2865,6 +2959,7 @@
 
       const article = document.createElement('article');
       article.className = 'video-card' + (restricted ? ' video-restricted' : '');
+      article.setAttribute('data-video-id', video.id);
       const privateBadge = isPrivate ? `
         <span class="video-private-badge">
           <span class="inline-lang active" data-lang-text="fr">Privé</span>
@@ -2873,7 +2968,9 @@
           <span class="inline-lang" data-lang-text="ru">Приватное</span>
         </span>
       ` : '';
-      const newBadge = isNewVideo(video.createdAt) ? `
+      // Badge "Nouveau" only if: recent (< 7 days) AND not viewed
+      const showNewBadge = isNewVideo(video.createdAt) && !isVideoViewed(video.id);
+      const newBadge = showNewBadge ? `
         <span class="video-new-badge">
           <span class="inline-lang active" data-lang-text="fr">Nouveau</span>
           <span class="inline-lang" data-lang-text="en">New</span>
@@ -2905,11 +3002,11 @@
       } else {
         // Mode normal: tout visible
         article.innerHTML = `
-          <a href="${video.url}" target="_blank" rel="noopener" class="video-info">
+          <a href="${video.url}" target="_blank" rel="noopener" class="video-info" onclick="markVideoAsViewed('${video.id}')">
             <h3 class="video-title">${video.title} ${privateBadge} ${newBadge}</h3>
             <p class="video-meta">${video.meta || ''}${video.year ? '<br>' + video.year : ''}</p>
           </a>
-          <a href="${video.url}" target="_blank" rel="noopener" class="video-thumbnail">
+          <a href="${video.url}" target="_blank" rel="noopener" class="video-thumbnail" onclick="markVideoAsViewed('${video.id}')">
             ${thumb ? `<img src="${thumb}" alt="${video.title}">` : ''}
             <div class="video-play">
               <span class="video-play-btn">▶</span>
@@ -3038,15 +3135,23 @@
           return; // Don't update UI normally
         }
 
+        // Load viewed videos for this user
+        await loadViewedVideos(user.uid);
+
         updateUI(user, userData);
         updatePrivateVideosAccess();
+        updateUnviewedNotification();
+
         // Don't close modal if user status is 'pending' - let them see the confirmation message
         if (userData?.status !== 'pending') {
           closeAuthModal();
         }
       } else {
+        // Reset viewed videos cache when logged out
+        viewedVideosCache = [];
         updateUI(null, null);
         updatePrivateVideosAccess();
+        updateUnviewedNotification();
       }
       // Re-render videos based on new auth state
       renderVideos();
