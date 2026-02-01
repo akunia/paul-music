@@ -75,6 +75,7 @@
     }
     .btn-secondary { background: transparent; color: var(--color-text); border: 1px solid var(--color-border); }
     .btn-secondary:hover { border-color: var(--color-accent); color: var(--color-accent); }
+    .btn-secondary.active, .filter-btn.active { background: var(--color-accent); color: var(--color-bg); border-color: var(--color-accent); }
     .btn-primary { background: var(--color-accent); color: var(--color-bg); }
     .btn-primary:hover { background: var(--color-accent-hover); }
     .btn-success { background: rgba(81, 207, 102, 0.2); color: var(--color-success); border: 1px solid rgba(81, 207, 102, 0.3); }
@@ -308,6 +309,11 @@
       </form>
 
       <h3 class="section-title">Vidéos enregistrées</h3>
+      <div class="video-filters" style="display: flex; gap: 0.5rem; margin-bottom: 1rem;">
+        <button class="btn btn-secondary filter-btn active" data-filter="all">Toutes</button>
+        <button class="btn btn-secondary filter-btn" data-filter="private">🔒 Privées</button>
+        <button class="btn btn-secondary filter-btn" data-filter="public">🌐 Publiques</button>
+      </div>
       <div class="video-list" id="videoList">
         <div class="empty-state" id="videosEmpty"><div class="empty-state-icon">&#127909;</div><p>Aucune vidéo</p></div>
       </div>
@@ -455,20 +461,41 @@
       return m ? m[1] : null;
     }
 
-    function renderVideos(videos) {
+    let allVideos = [];
+    let currentFilter = 'all';
+
+    function renderVideos(videos, filter = currentFilter) {
+      allVideos = videos;
+      currentFilter = filter;
       videoList.innerHTML = '';
-      if (videos.length === 0) { videosEmpty.style.display = 'block'; return; }
+
+      // Apply filter
+      let filtered = videos;
+      if (filter === 'private') filtered = videos.filter(v => v.visibility !== 'public');
+      if (filter === 'public') filtered = videos.filter(v => v.visibility === 'public');
+
+      if (filtered.length === 0) {
+        videosEmpty.style.display = 'block';
+        videosEmpty.querySelector('p').textContent = filter === 'all' ? 'Aucune vidéo' : `Aucune vidéo ${filter === 'private' ? 'privée' : 'publique'}`;
+        return;
+      }
       videosEmpty.style.display = 'none';
+
       // Sort: private first, then by date
-      videos.sort((a, b) => {
+      filtered.sort((a, b) => {
         if (a.visibility !== b.visibility) return a.visibility === 'private' ? -1 : 1;
         return (b.createdAt || '').localeCompare(a.createdAt || '');
       });
-      videos.forEach(v => {
+
+      filtered.forEach(v => {
         const ytId = getYouTubeId(v.url);
-        const visibilityBadge = v.visibility === 'public'
+        const isPublic = v.visibility === 'public';
+        const visibilityBadge = isPublic
           ? '<span style="background:#51cf66;color:#000;padding:2px 6px;border-radius:4px;font-size:0.7rem;margin-left:0.5rem;">🌐 Public</span>'
           : '<span style="background:#ffa94d;color:#000;padding:2px 6px;border-radius:4px;font-size:0.7rem;margin-left:0.5rem;">🔒 Privé</span>';
+        const toggleBtn = isPublic
+          ? `<button class="btn btn-secondary" onclick="toggleVisibility('${v.id}', 'private')" title="Rendre privée">🔒</button>`
+          : `<button class="btn btn-secondary" onclick="toggleVisibility('${v.id}', 'public')" title="Rendre publique">🌐</button>`;
         const item = document.createElement('div');
         item.className = 'video-item';
         item.innerHTML = `
@@ -476,13 +503,56 @@
           <div class="video-details">
             <h4><span class="category-badge">${v.category}</span>${v.title}${visibilityBadge}</h4>
             <p>${v.meta || ''} ${v.year ? `(${v.year})` : ''}</p>
+            <p style="font-size:0.75rem;color:var(--color-text-subtle);margin-top:0.25rem;">${v.url}</p>
           </div>
           <div class="action-btns">
+            ${toggleBtn}
+            <button class="btn btn-secondary" onclick="editVideoUrl('${v.id}', '${v.url.replace(/'/g, "\\'")}')">✏️ URL</button>
+            <button class="btn btn-secondary" onclick="editVideoMeta('${v.id}', '${(v.meta || '').replace(/'/g, "\\'")}')">✏️ Desc</button>
             <button class="btn btn-danger" onclick="deleteVideo('${v.id}')">Supprimer</button>
           </div>`;
         videoList.appendChild(item);
       });
     }
+
+    // Filter buttons
+    document.querySelectorAll('.filter-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        renderVideos(allVideos, btn.dataset.filter);
+      });
+    });
+
+    // Toggle visibility
+    window.toggleVisibility = async (id, newVisibility) => {
+      try {
+        await updateDoc(doc(db, 'videos', id), { visibility: newVisibility });
+        loadVideos();
+      } catch (e) { console.error('Error updating visibility:', e); alert('Erreur'); }
+    };
+
+    // Edit video URL
+    window.editVideoUrl = async (id, currentUrl) => {
+      const newUrl = prompt('Nouvelle URL YouTube:', currentUrl);
+      if (newUrl && newUrl !== currentUrl) {
+        try {
+          await updateDoc(doc(db, 'videos', id), { url: newUrl });
+          loadVideos();
+        } catch (e) { console.error('Error updating URL:', e); alert('Erreur'); }
+      }
+    };
+
+    // Edit video description
+    window.editVideoMeta = async (id, currentMeta) => {
+      const newMeta = prompt('Nouvelle description:', currentMeta);
+      if (newMeta !== null && newMeta !== currentMeta) {
+        try {
+          await updateDoc(doc(db, 'videos', id), { meta: newMeta });
+          loadVideos();
+        } catch (e) { console.error('Error updating description:', e); alert('Erreur'); }
+      }
+    };
 
     addVideoForm.addEventListener('submit', async (e) => {
       e.preventDefault();
