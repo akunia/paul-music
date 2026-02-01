@@ -1422,21 +1422,24 @@
       margin-left: var(--space-sm);
     }
 
-    /* Checkmark indicator for viewed videos */
-    .video-viewed-indicator {
-      display: inline-flex;
+    /* Eye icon overlay for viewed videos */
+    .video-viewed-overlay {
+      position: absolute;
+      top: 8px;
+      right: 8px;
+      display: flex;
       align-items: center;
       justify-content: center;
-      width: 18px;
-      height: 18px;
-      background: rgba(76, 175, 80, 0.2);
-      color: #4caf50;
-      font-size: 0.75rem;
-      font-weight: 700;
+      width: 28px;
+      height: 28px;
+      background: rgba(0, 0, 0, 0.7);
       border-radius: 50%;
-      margin-left: var(--space-sm);
-      vertical-align: middle;
-      border: 1px solid rgba(76, 175, 80, 0.4);
+      z-index: 2;
+    }
+    .video-viewed-overlay svg {
+      width: 16px;
+      height: 16px;
+      fill: #4caf50;
     }
 
     /* Notification badge in header */
@@ -2701,15 +2704,15 @@
         // Update UI
         updateUnviewedNotification();
 
-        // Add checkmark indicator to viewed video
+        // Add eye overlay to viewed video thumbnail
         const card = document.querySelector(`[data-video-id="${videoId}"]`);
-        if (card && !card.querySelector('.video-viewed-indicator')) {
-          const title = card.querySelector('.video-title');
-          if (title) {
-            const checkmark = document.createElement('span');
-            checkmark.className = 'video-viewed-indicator';
-            checkmark.innerHTML = '✓';
-            title.appendChild(checkmark);
+        if (card && !card.querySelector('.video-viewed-overlay')) {
+          const thumbnail = card.querySelector('.video-thumbnail');
+          if (thumbnail) {
+            const overlay = document.createElement('div');
+            overlay.className = 'video-viewed-overlay';
+            overlay.innerHTML = '<svg viewBox="0 0 24 24"><path d="M12 4.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5c-1.73-4.39-6-7.5-11-7.5zM12 17c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5zm0-8c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3z"/></svg>';
+            thumbnail.appendChild(overlay);
           }
         }
       }
@@ -2755,18 +2758,19 @@
           <span class="inline-lang" data-lang-text="ru">Приватное</span>
         </span>
       ` : '';
-      // Checkmark indicator for viewed videos
-      const viewedIndicator = isVideoViewed(video.id) ? '<span class="video-viewed-indicator">✓</span>' : '';
+      // Eye overlay for viewed videos (on thumbnail)
+      const viewedOverlay = isVideoViewed(video.id) ? '<div class="video-viewed-overlay"><svg viewBox="0 0 24 24"><path d="M12 4.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5c-1.73-4.39-6-7.5-11-7.5zM12 17c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5zm0-8c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3z"/></svg></div>' : '';
 
       if (restricted) {
         // Mode restreint: titre visible, miniature verrouillée
         article.innerHTML = `
           <div class="video-info">
-            <h3 class="video-title">${video.title} ${privateBadge} ${viewedIndicator}</h3>
+            <h3 class="video-title">${video.title} ${privateBadge}</h3>
             <p class="video-meta">${video.meta || ''}${video.year ? '<br>' + video.year : ''}</p>
           </div>
           <div class="video-thumbnail video-locked" onclick="openAuthModal()">
             ${thumb ? `<img src="${thumb}" alt="${video.title}" onerror="this.onerror=null; this.src='${thumbFallback}'">` : ''}
+            ${viewedOverlay}
             <div class="video-lock-overlay">
               <span class="video-lock-icon">🔒</span>
               <span class="video-lock-text">
@@ -2782,11 +2786,12 @@
         // Mode normal: tout visible
         article.innerHTML = `
           <a href="${video.url}" target="_blank" rel="noopener" class="video-info" onclick="markVideoAsViewed('${video.id}')">
-            <h3 class="video-title">${video.title} ${privateBadge} ${viewedIndicator}</h3>
+            <h3 class="video-title">${video.title} ${privateBadge}</h3>
             <p class="video-meta">${video.meta || ''}${video.year ? '<br>' + video.year : ''}</p>
           </a>
           <a href="${video.url}" target="_blank" rel="noopener" class="video-thumbnail" onclick="markVideoAsViewed('${video.id}')">
             ${thumb ? `<img src="${thumb}" alt="${video.title}" onerror="this.onerror=null; this.src='${thumbFallback}'">` : ''}
+            ${viewedOverlay}
             <div class="video-play">
               <span class="video-play-btn">▶</span>
             </div>
