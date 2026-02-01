@@ -987,6 +987,62 @@
         --header-height: 70px;
       }
 
+      .header .container {
+        gap: var(--space-sm);
+      }
+
+      .logo {
+        font-size: 1.1rem;
+        gap: 8px;
+        min-width: 0;
+        max-width: 60%;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+
+      .logo-img {
+        height: 40px;
+      }
+
+      .logo span {
+        display: none;
+      }
+
+      .nav {
+        gap: var(--space-sm);
+      }
+
+      .lang-current {
+        padding: 6px 8px;
+        font-size: 0.75rem;
+      }
+
+      .login-btn {
+        padding: 6px 8px;
+      }
+
+      .login-btn .inline-lang {
+        display: none;
+      }
+
+      .user-btn {
+        padding: 6px 8px;
+        font-size: 0.75rem;
+        max-width: 140px;
+      }
+
+      #userDisplayName {
+        max-width: 80px;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+      }
+
+      .hero-logo-overlay {
+        width: 180px;
+      }
+
       .nav-links {
         display: none;
         position: absolute;
@@ -1521,7 +1577,7 @@
         </div>
 
         <!-- Auth: Login Button (shown when not logged in) -->
-        <button class="login-btn" id="loginBtn">
+        <button class="login-btn" id="loginBtn" aria-label="Connexion" data-lang-attr="aria-label" data-lang-attr-fr="Connexion" data-lang-attr-en="Login" data-lang-attr-pl="Zaloguj" data-lang-attr-ru="Вход">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
             <path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"/>
             <polyline points="10 17 15 12 10 7"/>
