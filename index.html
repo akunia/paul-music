@@ -2619,14 +2619,29 @@
 
       if (result.success) {
         const successMessages = {
-          fr: 'Compte créé ! En attente de validation par l\'administrateur.',
-          en: 'Account created! Waiting for admin approval.',
-          pl: 'Konto utworzone! Oczekiwanie na zatwierdzenie administratora.',
-          ru: 'Аккаунт создан! Ожидание подтверждения администратором.'
+          fr: 'Compte créé avec succès !<br>En attente de validation par l\'administrateur.<br><small>Vous recevrez un email dès que votre accès sera activé.</small>',
+          en: 'Account created successfully!<br>Waiting for admin approval.<br><small>You\'ll receive an email once your access is activated.</small>',
+          pl: 'Konto utworzone pomyślnie!<br>Oczekiwanie na zatwierdzenie administratora.<br><small>Otrzymasz email, gdy Twój dostęp zostanie aktywowany.</small>',
+          ru: 'Аккаунт успешно создан!<br>Ожидание подтверждения администратором.<br><small>Вы получите email, когда ваш доступ будет активирован.</small>'
         };
+        const okLabels = { fr: 'Compris', en: 'Got it', pl: 'Rozumiem', ru: 'Понятно' };
         const currentLang = localStorage.getItem('preferredLang') || 'fr';
-        registerMessage.textContent = successMessages[currentLang];
-        registerMessage.className = 'auth-message info';
+        registerMessage.innerHTML = `
+          <div style="text-align: center;">
+            <div style="font-size: 2.5rem; margin-bottom: 0.5rem;">🎉</div>
+            <div style="margin-bottom: 1rem;">${successMessages[currentLang]}</div>
+            <button type="button" onclick="document.getElementById('authModal').classList.remove('active'); document.body.style.overflow = '';" style="
+              padding: 0.75rem 2rem;
+              background: var(--color-accent);
+              color: var(--color-bg);
+              border: none;
+              border-radius: 2rem;
+              font-weight: 600;
+              cursor: pointer;
+            ">${okLabels[currentLang]}</button>
+          </div>
+        `;
+        registerMessage.className = 'auth-message success';
       } else {
         const errorMessages = {
           'auth/email-already-in-use': {
@@ -2830,7 +2845,7 @@
         // Refresh user data
         const userData = await getUserStatus(user.uid);
         updateUI(user, userData);
-        closeAuthModal();
+        // Don't close modal - let user see the confirmation message
         return true;
       } catch (error) {
         console.error('Re-request error:', error);
@@ -2897,12 +2912,27 @@
             const success = await reRequestAccess(user);
             if (success) {
               const successMsgs = {
-                fr: 'Demande envoyée ! Votre statut est en attente.',
-                en: 'Request sent! Your status is pending.',
-                pl: 'Prośba wysłana! Twój status oczekuje.',
-                ru: 'Запрос отправлен! Ваш статус: ожидание.'
+                fr: 'Demande envoyée !<br>Votre statut est en attente de validation.',
+                en: 'Request sent!<br>Your status is pending approval.',
+                pl: 'Prośba wysłana!<br>Twój status oczekuje na zatwierdzenie.',
+                ru: 'Запрос отправлен!<br>Ваш статус ожидает подтверждения.'
               };
-              loginMessage.textContent = successMsgs[currentLang];
+              const okLabels = { fr: 'Compris', en: 'Got it', pl: 'Rozumiem', ru: 'Понятно' };
+              loginMessage.innerHTML = `
+                <div style="text-align: center;">
+                  <div style="font-size: 2.5rem; margin-bottom: 0.5rem;">✅</div>
+                  <div style="margin-bottom: 1rem;">${successMsgs[currentLang]}</div>
+                  <button type="button" onclick="document.getElementById('authModal').classList.remove('active'); document.body.style.overflow = '';" style="
+                    padding: 0.75rem 2rem;
+                    background: var(--color-accent);
+                    color: var(--color-bg);
+                    border: none;
+                    border-radius: 2rem;
+                    font-weight: 600;
+                    cursor: pointer;
+                  ">${okLabels[currentLang]}</button>
+                </div>
+              `;
               loginMessage.className = 'auth-message success';
             } else {
               btn.disabled = false;
@@ -2914,7 +2944,10 @@
 
         updateUI(user, userData);
         updatePrivateVideosAccess();
-        closeAuthModal();
+        // Don't close modal if user status is 'pending' - let them see the confirmation message
+        if (userData?.status !== 'pending') {
+          closeAuthModal();
+        }
       } else {
         updateUI(null, null);
         updatePrivateVideosAccess();
