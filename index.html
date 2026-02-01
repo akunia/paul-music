@@ -1498,6 +1498,12 @@
               <span class="inline-lang" data-lang-text="ru">Статус: </span>
               <strong id="userStatusText">-</strong>
             </div>
+            <a href="admin.html" class="user-dropdown-item" id="adminLink" style="display: none; text-decoration: none;">
+              <span class="inline-lang active" data-lang-text="fr">Admin Panel</span>
+              <span class="inline-lang" data-lang-text="en">Admin Panel</span>
+              <span class="inline-lang" data-lang-text="pl">Panel Admin</span>
+              <span class="inline-lang" data-lang-text="ru">Админ панель</span>
+            </a>
             <button class="user-dropdown-item" id="logoutBtn">
               <span class="inline-lang active" data-lang-text="fr">Déconnexion</span>
               <span class="inline-lang" data-lang-text="en">Logout</span>
@@ -2402,28 +2408,40 @@
 
     // ===== UI UPDATE =====
     function updateUI(user, userData) {
-      if (user && userData) {
+      const adminLink = document.getElementById('adminLink');
+
+      if (user && (userData || isAdminUser)) {
         loginBtn.style.display = 'none';
         userMenu.style.display = 'block';
-        userDisplayName.textContent = userData.name || user.email.split('@')[0];
+        userDisplayName.textContent = userData?.name || user.email.split('@')[0];
 
         const statusLabels = {
           pending: { fr: 'En attente', en: 'Pending', pl: 'Oczekuje', ru: 'Ожидание' },
-          approved: { fr: 'Approuvé', en: 'Approved', pl: 'Zatwierdzony', ru: 'Одобрено' }
+          approved: { fr: 'Approuvé', en: 'Approved', pl: 'Zatwierdzony', ru: 'Одобрено' },
+          admin: { fr: 'Admin', en: 'Admin', pl: 'Admin', ru: 'Админ' }
         };
 
         const currentLang = localStorage.getItem('preferredLang') || 'fr';
-        const statusLabel = statusLabels[userData.status]?.[currentLang] || userData.status;
-        userStatusText.textContent = statusLabel;
 
-        userStatusDiv.classList.remove('pending', 'approved');
-        userStatusDiv.classList.add(userData.status);
-
-        userStatus = userData.status;
+        if (isAdminUser) {
+          userStatusText.textContent = statusLabels.admin[currentLang];
+          userStatusDiv.classList.remove('pending', 'approved');
+          userStatusDiv.classList.add('approved');
+          userStatus = 'approved'; // Admin has full access
+          if (adminLink) adminLink.style.display = 'block';
+        } else {
+          const statusLabel = statusLabels[userData.status]?.[currentLang] || userData.status;
+          userStatusText.textContent = statusLabel;
+          userStatusDiv.classList.remove('pending', 'approved');
+          userStatusDiv.classList.add(userData.status);
+          userStatus = userData.status;
+          if (adminLink) adminLink.style.display = 'none';
+        }
       } else {
         loginBtn.style.display = 'flex';
         userMenu.style.display = 'none';
         userStatus = null;
+        if (adminLink) adminLink.style.display = 'none';
       }
     }
 
