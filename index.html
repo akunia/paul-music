@@ -2745,7 +2745,9 @@
     function createVideoCard(video, isPrivate, restricted = false) {
       const ytMatch = video.url.match(/(?:youtube\.com\/watch\?v=|youtu\.be\/)([^&\s]+)/);
       const ytId = ytMatch ? ytMatch[1] : null;
-      const thumb = ytId ? `https://img.youtube.com/vi/${ytId}/maxresdefault.jpg` : '';
+      // Use hqdefault (always available) with fallback to mqdefault
+      const thumb = ytId ? `https://img.youtube.com/vi/${ytId}/hqdefault.jpg` : '';
+      const thumbFallback = ytId ? `https://img.youtube.com/vi/${ytId}/mqdefault.jpg` : '';
 
       const article = document.createElement('article');
       article.className = 'video-card' + (restricted ? ' video-restricted' : '');
@@ -2777,7 +2779,7 @@
             <p class="video-meta">${video.meta || ''}${video.year ? '<br>' + video.year : ''}</p>
           </div>
           <div class="video-thumbnail video-locked" onclick="openAuthModal()">
-            ${thumb ? `<img src="${thumb}" alt="${video.title}">` : ''}
+            ${thumb ? `<img src="${thumb}" alt="${video.title}" onerror="this.onerror=null; this.src='${thumbFallback}'">` : ''}
             <div class="video-lock-overlay">
               <span class="video-lock-icon">🔒</span>
               <span class="video-lock-text">
@@ -2797,7 +2799,7 @@
             <p class="video-meta">${video.meta || ''}${video.year ? '<br>' + video.year : ''}</p>
           </a>
           <a href="${video.url}" target="_blank" rel="noopener" class="video-thumbnail" onclick="markVideoAsViewed('${video.id}')">
-            ${thumb ? `<img src="${thumb}" alt="${video.title}">` : ''}
+            ${thumb ? `<img src="${thumb}" alt="${video.title}" onerror="this.onerror=null; this.src='${thumbFallback}'">` : ''}
             <div class="video-play">
               <span class="video-play-btn">▶</span>
             </div>
