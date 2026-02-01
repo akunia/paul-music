@@ -1439,17 +1439,14 @@
       background: var(--color-accent-hover);
     }
 
-    /* Hide placeholder when user is approved */
-    body.user-approved .private-videos-placeholder {
-      display: none;
+    /* Hide placeholder - videos now always shown with locked thumbnails for non-approved users */
+    .private-videos-placeholder {
+      display: none !important;
     }
 
     /* Private videos container (for dynamically loaded videos) */
+    /* Toujours visible - les vidéos privées montrent des miniatures verrouillées pour les non-approuvés */
     .private-videos-container {
-      display: none;
-    }
-
-    body.user-approved .private-videos-container {
       display: contents;
     }
 
