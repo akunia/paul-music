@@ -26,7 +26,7 @@ service cloud.firestore {
     // IMPORTANT: Remplacez par votre email admin
     function isAdmin() {
       return isAuthenticated() &&
-             request.auth.token.email in ['admin@example.com'];
+             request.auth.token.email in ['gbedna@gmail.com', 'paulbed210@gmail.com'];
     }
 
     // Check if user is approved
