@@ -1979,23 +1979,9 @@
           </button>
         </div>
 
-        <!-- Violin Videos -->
+        <!-- Violin Videos - Chargées dynamiquement depuis Firestore -->
         <div class="video-grid active" id="violin">
-          <div class="video-year-separator"><span>2025</span></div>
-          <article class="video-card">
-            <a href="https://www.youtube.com/watch?v=4rrl7aUl_24" target="_blank" rel="noopener" class="video-info">
-              <h3 class="video-title">Concerto n°3, 1er mouvement</h3>
-              <p class="video-meta">C. Saint-Saëns, Op. 61 en si mineur<br>Académies de Flaine, 15 août 2025</p>
-            </a>
-            <a href="https://www.youtube.com/watch?v=4rrl7aUl_24" target="_blank" rel="noopener" class="video-thumbnail">
-              <img src="https://img.youtube.com/vi/4rrl7aUl_24/maxresdefault.jpg" alt="Saint-Saëns Concerto n°3">
-              <div class="video-play">
-                <span class="video-play-btn">▶</span>
-              </div>
-            </a>
-          </article>
-          <!-- Placeholder vidéos privées (URLs stockées dans Firestore, pas dans le HTML) -->
-          <div class="private-videos-placeholder" id="privateVideosPlaceholder-violin">
+          <div class="private-videos-placeholder" id="privateVideosPlaceholder-violin" style="display: none;">
             <div class="private-placeholder-icon">&#128274;</div>
             <div class="private-placeholder-text">
               <span class="inline-lang active" data-lang-text="fr">Vidéos privées disponibles</span>
@@ -2010,150 +1996,12 @@
               <span class="inline-lang" data-lang-text="ru">Войти для просмотра</span>
             </button>
           </div>
-          <!-- Container pour vidéos privées chargées depuis Firestore -->
           <div class="private-videos-container" id="privateVideosContainer-violin"></div>
-          <article class="video-card">
-            <a href="https://www.youtube.com/watch?v=8gkHY_myJFQ" target="_blank" rel="noopener" class="video-info">
-              <h3 class="video-title">Concerto pour violon, 1er mouvement</h3>
-              <p class="video-meta">A. Dvořák, Op. 53<br>CRR Nice, 13 mars 2025</p>
-            </a>
-            <a href="https://www.youtube.com/watch?v=8gkHY_myJFQ" target="_blank" rel="noopener" class="video-thumbnail">
-              <img src="https://img.youtube.com/vi/8gkHY_myJFQ/maxresdefault.jpg" alt="Dvořák Concerto pour violon">
-              <div class="video-play">
-                <span class="video-play-btn">▶</span>
-              </div>
-            </a>
-          </article>
-          <div class="video-year-separator"><span>2024</span></div>
-          <article class="video-card">
-            <a href="https://www.youtube.com/watch?v=y6uy_GkQde8" target="_blank" rel="noopener" class="video-info">
-              <h3 class="video-title">Romance en Fa majeur</h3>
-              <p class="video-meta">L. van Beethoven, Op. 50<br>CRR Nice, 18 décembre 2024</p>
-            </a>
-            <a href="https://www.youtube.com/watch?v=y6uy_GkQde8" target="_blank" rel="noopener" class="video-thumbnail">
-              <img src="https://img.youtube.com/vi/y6uy_GkQde8/maxresdefault.jpg" alt="Beethoven Romance en Fa majeur">
-              <div class="video-play">
-                <span class="video-play-btn">▶</span>
-              </div>
-            </a>
-          </article>
-          <article class="video-card">
-            <a href="https://www.youtube.com/watch?v=EFQrKEqsMh4" target="_blank" rel="noopener" class="video-info">
-              <h3 class="video-title">Symphonie espagnole</h3>
-              <p class="video-meta">É. Lalo, Op. 21<br>19 octobre 2024</p>
-            </a>
-            <a href="https://www.youtube.com/watch?v=EFQrKEqsMh4" target="_blank" rel="noopener" class="video-thumbnail">
-              <img src="https://img.youtube.com/vi/EFQrKEqsMh4/maxresdefault.jpg" alt="Lalo Symphonie espagnole">
-              <div class="video-play">
-                <span class="video-play-btn">▶</span>
-              </div>
-            </a>
-          </article>
-          <article class="video-card">
-            <a href="https://www.youtube.com/watch?v=tXjyAbX0N0Q" target="_blank" rel="noopener" class="video-info">
-              <h3 class="video-title">Concerto n°2, 1er mouvement</h3>
-              <p class="video-meta">H. Wieniawski, Op. 22<br>Académies de Flaine, août 2024</p>
-            </a>
-            <a href="https://www.youtube.com/watch?v=tXjyAbX0N0Q" target="_blank" rel="noopener" class="video-thumbnail">
-              <img src="https://img.youtube.com/vi/tXjyAbX0N0Q/maxresdefault.jpg" alt="Wieniawski Concerto n°2 Flaine">
-              <div class="video-play">
-                <span class="video-play-btn">▶</span>
-              </div>
-            </a>
-          </article>
-          <!-- Divertimento & Quatuor pour flûte supprimés - vidéos privées -->
-          <article class="video-card">
-            <a href="https://www.youtube.com/watch?v=1P_S_cI8cG0" target="_blank" rel="noopener" class="video-info">
-              <h3 class="video-title">Concerto n°2, 1er mouvement</h3>
-              <p class="video-meta">H. Wieniawski, Op. 22<br>Liszt Ferenc Academy of Music, Budapest, août 2024</p>
-            </a>
-            <a href="https://www.youtube.com/watch?v=1P_S_cI8cG0" target="_blank" rel="noopener" class="video-thumbnail">
-              <img src="https://img.youtube.com/vi/1P_S_cI8cG0/maxresdefault.jpg" alt="Wieniawski Concerto n°2">
-              <div class="video-play">
-                <span class="video-play-btn">▶</span>
-              </div>
-            </a>
-          </article>
-          <article class="video-card">
-            <a href="https://www.youtube.com/watch?v=DDsHAZ7EI2o" target="_blank" rel="noopener" class="video-info">
-              <h3 class="video-title">Partita n°1 (Double) / Concerto en Do Majeur, 1er mvt</h3>
-              <p class="video-meta">J.S. Bach / J. Haydn<br>Piano : Sylvie Gisquet<br>avril 2024</p>
-            </a>
-            <a href="https://www.youtube.com/watch?v=DDsHAZ7EI2o" target="_blank" rel="noopener" class="video-thumbnail">
-              <img src="https://img.youtube.com/vi/DDsHAZ7EI2o/maxresdefault.jpg" alt="Bach Partita / Haydn Concerto">
-              <div class="video-play">
-                <span class="video-play-btn">▶</span>
-              </div>
-            </a>
-          </article>
-          <article class="video-card">
-            <a href="https://www.youtube.com/watch?v=tZjK4qWf-Dc" target="_blank" rel="noopener" class="video-info">
-              <h3 class="video-title">Violin Concerto in D, Op. 30</h3>
-              <p class="video-meta">W. ten Have<br>2024</p>
-            </a>
-            <a href="https://www.youtube.com/watch?v=tZjK4qWf-Dc" target="_blank" rel="noopener" class="video-thumbnail">
-              <img src="https://img.youtube.com/vi/tZjK4qWf-Dc/maxresdefault.jpg" alt="Willem ten Have Violin Concerto">
-              <div class="video-play">
-                <span class="video-play-btn">▶</span>
-              </div>
-            </a>
-          </article>
-          <article class="video-card">
-            <a href="https://www.youtube.com/watch?v=4TvWspDm41w" target="_blank" rel="noopener" class="video-info">
-              <h3 class="video-title">Scènes de Ballet, Op. 100</h3>
-              <p class="video-meta">Ch. de Bériot<br>CRR Nice, 2024</p>
-            </a>
-            <a href="https://www.youtube.com/watch?v=4TvWspDm41w" target="_blank" rel="noopener" class="video-thumbnail">
-              <img src="https://img.youtube.com/vi/4TvWspDm41w/maxresdefault.jpg" alt="Bériot Scènes de Ballet">
-              <div class="video-play">
-                <span class="video-play-btn">▶</span>
-              </div>
-            </a>
-          </article>
-          <div class="video-year-separator"><span>2023</span></div>
-          <article class="video-card">
-            <a href="https://www.youtube.com/watch?v=dWRGnHnFdEw" target="_blank" rel="noopener" class="video-info">
-              <h3 class="video-title">Légende, Op. 17</h3>
-              <p class="video-meta">H. Wieniawski<br>Piano : Angelo Balducci<br>Nice, octobre 2023</p>
-            </a>
-            <a href="https://www.youtube.com/watch?v=dWRGnHnFdEw" target="_blank" rel="noopener" class="video-thumbnail">
-              <img src="https://img.youtube.com/vi/dWRGnHnFdEw/maxresdefault.jpg" alt="Wieniawski Légende">
-              <div class="video-play">
-                <span class="video-play-btn">▶</span>
-              </div>
-            </a>
-          </article>
-          <article class="video-card">
-            <a href="https://www.youtube.com/watch?v=vshL67KIQA4" target="_blank" rel="noopener" class="video-info">
-              <h3 class="video-title">Légende, Op. 17</h3>
-              <p class="video-meta">H. Wieniawski<br>Piano : Angelo Balducci<br>Carte Blanche, Nice, octobre 2023</p>
-            </a>
-            <a href="https://www.youtube.com/watch?v=vshL67KIQA4" target="_blank" rel="noopener" class="video-thumbnail">
-              <img src="https://img.youtube.com/vi/vshL67KIQA4/maxresdefault.jpg" alt="Wieniawski Légende">
-              <div class="video-play">
-                <span class="video-play-btn">▶</span>
-              </div>
-            </a>
-          </article>
-          <!-- Rondo from "Musik für drei Violinen" supprimé - vidéo privée -->
-          <article class="video-card">
-            <a href="https://www.youtube.com/watch?v=KACb0g5_9HI" target="_blank" rel="noopener" class="video-info">
-              <h3 class="video-title">Romanian Folk Dances</h3>
-              <p class="video-meta">B. Bartók<br>Nice, avril 2023</p>
-            </a>
-            <a href="https://www.youtube.com/watch?v=KACb0g5_9HI" target="_blank" rel="noopener" class="video-thumbnail">
-              <img src="https://img.youtube.com/vi/KACb0g5_9HI/maxresdefault.jpg" alt="Bartók Romanian Folk Dances">
-              <div class="video-play">
-                <span class="video-play-btn">▶</span>
-              </div>
-            </a>
-          </article>
         </div>
 
-        <!-- Piano Videos -->
+        <!-- Piano Videos - Chargées dynamiquement depuis Firestore -->
         <div class="video-grid" id="piano">
-          <!-- Placeholder vidéos privées Piano -->
-          <div class="private-videos-placeholder" id="privateVideosPlaceholder-piano">
+          <div class="private-videos-placeholder" id="privateVideosPlaceholder-piano" style="display: none;">
             <div class="private-placeholder-icon">&#128274;</div>
             <div class="private-placeholder-text">
               <span class="inline-lang active" data-lang-text="fr">Vidéos privées disponibles</span>
@@ -2169,75 +2017,11 @@
             </button>
           </div>
           <div class="private-videos-container" id="privateVideosContainer-piano"></div>
-          <div class="video-year-separator"><span>2025</span></div>
-          <article class="video-card">
-            <a href="https://www.youtube.com/watch?v=R3vW0QxFjc0" target="_blank" rel="noopener" class="video-info">
-              <h3 class="video-title">Récital piano</h3>
-              <p class="video-meta">Sonate pathétique (Beethoven) • La plus que lente (Debussy)<br>Partita Op. 34 III (Rautavaara) • Prélude Op. 3 n°2 (Rachmaninoff)<br>CRR Nice, mai 2025</p>
-            </a>
-            <a href="https://www.youtube.com/watch?v=R3vW0QxFjc0" target="_blank" rel="noopener" class="video-thumbnail">
-              <img src="https://img.youtube.com/vi/R3vW0QxFjc0/maxresdefault.jpg" alt="Récital piano">
-              <div class="video-play">
-                <span class="video-play-btn">▶</span>
-              </div>
-            </a>
-          </article>
-          <article class="video-card">
-            <a href="https://www.youtube.com/watch?v=HGOSBBPnsM4" target="_blank" rel="noopener" class="video-info">
-              <h3 class="video-title">Sonate n°8 "Pathétique"</h3>
-              <p class="video-meta">L. van Beethoven, Op. 13<br>CRR Nice, mars 2025</p>
-            </a>
-            <a href="https://www.youtube.com/watch?v=HGOSBBPnsM4" target="_blank" rel="noopener" class="video-thumbnail">
-              <img src="https://img.youtube.com/vi/HGOSBBPnsM4/maxresdefault.jpg" alt="Beethoven Sonate Pathétique">
-              <div class="video-play">
-                <span class="video-play-btn">▶</span>
-              </div>
-            </a>
-          </article>
-          <article class="video-card">
-            <a href="https://www.youtube.com/watch?v=3dc_JOuBaWk" target="_blank" rel="noopener" class="video-info">
-              <h3 class="video-title">La plus que lente</h3>
-              <p class="video-meta">C. Debussy<br>CRR Nice, mars 2025</p>
-            </a>
-            <a href="https://www.youtube.com/watch?v=3dc_JOuBaWk" target="_blank" rel="noopener" class="video-thumbnail">
-              <img src="https://img.youtube.com/vi/3dc_JOuBaWk/maxresdefault.jpg" alt="Debussy La plus que lente">
-              <div class="video-play">
-                <span class="video-play-btn">▶</span>
-              </div>
-            </a>
-          </article>
-          <div class="video-year-separator"><span>2024</span></div>
-          <article class="video-card">
-            <a href="https://www.youtube.com/watch?v=xszMAnxZZm0" target="_blank" rel="noopener" class="video-info">
-              <h3 class="video-title">Sonate n°8 "Pathétique"</h3>
-              <p class="video-meta">L. van Beethoven, Op. 13<br>CRR Nice, 12 décembre 2024</p>
-            </a>
-            <a href="https://www.youtube.com/watch?v=xszMAnxZZm0" target="_blank" rel="noopener" class="video-thumbnail">
-              <img src="https://img.youtube.com/vi/xszMAnxZZm0/maxresdefault.jpg" alt="Beethoven Sonate Pathétique">
-              <div class="video-play">
-                <span class="video-play-btn">▶</span>
-              </div>
-            </a>
-          </article>
-          <article class="video-card">
-            <a href="https://www.youtube.com/watch?v=m7Ohqt5WinI" target="_blank" rel="noopener" class="video-info">
-              <h3 class="video-title">Sonate n°9 / La plus que lente</h3>
-              <p class="video-meta">L. van Beethoven, Op. 14 n°1 / C. Debussy<br>CRR Nice, 24 mai 2024</p>
-            </a>
-            <a href="https://www.youtube.com/watch?v=m7Ohqt5WinI" target="_blank" rel="noopener" class="video-thumbnail">
-              <img src="https://img.youtube.com/vi/m7Ohqt5WinI/maxresdefault.jpg" alt="Beethoven Sonate n°9">
-              <div class="video-play">
-                <span class="video-play-btn">▶</span>
-              </div>
-            </a>
-          </article>
-          <!-- Sonatine Op. 24 supprimée - vidéo privée -->
         </div>
 
-        <!-- Conducting Videos -->
+        <!-- Conducting Videos - Chargées dynamiquement depuis Firestore -->
         <div class="video-grid" id="conducting">
-          <!-- Placeholder vidéos privées Direction -->
-          <div class="private-videos-placeholder" id="privateVideosPlaceholder-conducting">
+          <div class="private-videos-placeholder" id="privateVideosPlaceholder-conducting" style="display: none;">
             <div class="private-placeholder-icon">&#128274;</div>
             <div class="private-placeholder-text">
               <span class="inline-lang active" data-lang-text="fr">Vidéos privées disponibles</span>
@@ -2253,7 +2037,6 @@
             </button>
           </div>
           <div class="private-videos-container" id="privateVideosContainer-conducting"></div>
-          <!-- La Flûte enchantée & Concerto pour piano n°1 supprimés - vidéos privées -->
         </div>
       </div>
     </section>
@@ -2848,31 +2631,38 @@
 
         // Filter videos for this category
         const categoryVideos = allFirestoreVideos.filter(v => v.category === category);
-        const publicVideos = categoryVideos.filter(v => v.visibility === 'public');
-        const privateVideos = categoryVideos.filter(v => v.visibility !== 'public');
 
         // Sort by year descending
-        const sortByYear = (a, b) => (b.year || '0').localeCompare(a.year || '0');
-        publicVideos.sort(sortByYear);
-        privateVideos.sort(sortByYear);
+        categoryVideos.sort((a, b) => (b.year || '0').localeCompare(a.year || '0'));
 
         // Hide placeholder - we now show all videos with locked thumbnails
         if (placeholder) {
           placeholder.style.display = 'none';
         }
 
-        // Render public videos (visible to everyone)
-        publicVideos.forEach(video => {
-          const videoCard = createVideoCard(video, false);
-          container.appendChild(videoCard);
-        });
+        // Render videos with year separators
+        let currentYear = null;
+        categoryVideos.forEach(video => {
+          // Add year separator if year changes
+          if (video.year && video.year !== currentYear) {
+            currentYear = video.year;
+            const separator = document.createElement('div');
+            separator.className = 'video-year-separator';
+            separator.innerHTML = `<span>${currentYear}</span>`;
+            container.appendChild(separator);
+          }
 
-        // Render private videos (always shown, but restricted if not approved)
-        privateVideos.forEach(video => {
-          const restricted = !canSeePrivate;
-          const videoCard = createVideoCard(video, true, restricted);
+          const isPrivate = video.visibility !== 'public';
+          const restricted = isPrivate && !canSeePrivate;
+          const videoCard = createVideoCard(video, isPrivate, restricted);
           container.appendChild(videoCard);
         });
+      });
+
+      // Apply current language to new elements
+      const savedLang = localStorage.getItem('preferredLang') || 'fr';
+      document.querySelectorAll('[data-lang-text]').forEach(el => {
+        el.classList.toggle('active', el.getAttribute('data-lang-text') === savedLang);
       });
     }
 
