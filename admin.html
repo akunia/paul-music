@@ -475,6 +475,14 @@
     };
     const ADMIN_EMAILS = ['gbedna@gmail.com', 'paulbed210@gmail.com'];
 
+    // EmailJS Configuration (configurer sur https://www.emailjs.com)
+    const emailJsConfig = {
+      publicKey: "YOUR_PUBLIC_KEY",           // Dashboard > Account > Public Key
+      serviceId: "YOUR_SERVICE_ID",           // Email Services > Service ID
+      templateUserStatus: "YOUR_TEMPLATE_ID_2" // Template pour notifier utilisateur
+    };
+    const siteUrl = "https://akunia.github.io/paul-music";
+
     const app = initializeApp(firebaseConfig);
     const auth = getAuth(app);
     const db = getFirestore(app);
@@ -548,8 +556,10 @@
       try {
         const snapshot = await getDocs(collection(db, 'users'));
         const pending = [], approved = [];
+        usersData = {}; // Reset users data
         snapshot.forEach(d => {
           const data = { id: d.id, ...d.data() };
+          usersData[d.id] = data; // Store for email notifications
           if (data.status === 'pending') pending.push(data);
           else if (data.status === 'approved') approved.push(data);
         });
@@ -580,9 +590,64 @@
       });
     }
 
-    window.approveUser = async (uid) => { await updateDoc(doc(db, 'users', uid), { status: 'approved' }); loadUsers(); };
-    window.rejectUser = async (uid) => { if (confirm('Supprimer cet utilisateur ?')) { await deleteDoc(doc(db, 'users', uid)); loadUsers(); } };
-    window.revokeUser = async (uid) => { if (confirm('Révoquer l\'accès ?')) { await updateDoc(doc(db, 'users', uid), { status: 'pending' }); loadUsers(); } };
+    // Send notification email to user when status changes
+    async function sendUserStatusEmail(userName, userEmail, status) {
+      if (emailJsConfig.publicKey === "YOUR_PUBLIC_KEY") {
+        console.log('EmailJS not configured, skipping notification');
+        return;
+      }
+
+      const statusMessages = {
+        approved: 'Votre compte a été approuvé ! Vous pouvez maintenant accéder aux vidéos privées.',
+        rejected: 'Votre demande d\'accès a été refusée.',
+        revoked: 'Votre accès a été révoqué.'
+      };
+
+      try {
+        await emailjs.send(
+          emailJsConfig.serviceId,
+          emailJsConfig.templateUserStatus,
+          {
+            to_email: userEmail,
+            user_name: userName,
+            status: statusMessages[status] || status,
+            site_url: siteUrl
+          },
+          emailJsConfig.publicKey
+        );
+        console.log('User notification email sent');
+      } catch (error) {
+        console.error('Failed to send user notification email:', error);
+      }
+    }
+
+    // Store user data for notifications
+    let usersData = {};
+
+    window.approveUser = async (uid) => {
+      const user = usersData[uid];
+      await updateDoc(doc(db, 'users', uid), { status: 'approved' });
+      if (user) await sendUserStatusEmail(user.name, user.email, 'approved');
+      loadUsers();
+    };
+
+    window.rejectUser = async (uid) => {
+      if (confirm('Supprimer cet utilisateur ?')) {
+        const user = usersData[uid];
+        if (user) await sendUserStatusEmail(user.name, user.email, 'rejected');
+        await deleteDoc(doc(db, 'users', uid));
+        loadUsers();
+      }
+    };
+
+    window.revokeUser = async (uid) => {
+      if (confirm('Révoquer l\'accès ?')) {
+        const user = usersData[uid];
+        await updateDoc(doc(db, 'users', uid), { status: 'pending' });
+        if (user) await sendUserStatusEmail(user.name, user.email, 'revoked');
+        loadUsers();
+      }
+    };
 
     // ===== VIDEOS =====
     async function loadVideos() {
@@ -846,5 +911,8 @@
     // Bouton pour initialiser manuellement si besoin
     window.initVideos = initializePrivateVideos;
   </script>
+
+  <!-- EmailJS SDK for notifications -->
+  <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
 </body>
 </html>

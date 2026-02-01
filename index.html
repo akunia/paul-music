@@ -2278,14 +2278,16 @@
       appId: "1:999789613606:web:21d76299d7eb9713364ce7"
     };
 
-    // EmailJS Configuration
+    // EmailJS Configuration (configurer sur https://www.emailjs.com)
     const emailJsConfig = {
-      serviceId: "YOUR_SERVICE_ID",
-      templateId: "YOUR_TEMPLATE_ID",
-      publicKey: "YOUR_PUBLIC_KEY"
+      publicKey: "YOUR_PUBLIC_KEY",           // Dashboard > Account > Public Key
+      serviceId: "YOUR_SERVICE_ID",           // Email Services > Service ID
+      templateNewUser: "YOUR_TEMPLATE_ID_1",  // Template pour notifier admin
+      templateUserStatus: "YOUR_TEMPLATE_ID_2" // Template pour notifier utilisateur
     };
 
-    const adminEmail = "admin@example.com";
+    const adminEmails = ["gbedna@gmail.com", "paulbed210@gmail.com"];
+    const siteUrl = "https://akunia.github.io/paul-music";
     const ADMIN_EMAILS = ['gbedna@gmail.com', 'paulbed210@gmail.com'];
 
     // ===== INITIALIZE FIREBASE =====
@@ -2364,7 +2366,7 @@
 
     // ===== AUTH FUNCTIONS =====
 
-    // Send notification email via EmailJS
+    // Send notification email to admin when new user registers
     async function sendNotificationEmail(userName, userEmail) {
       // Only send if EmailJS is configured
       if (emailJsConfig.publicKey === "YOUR_PUBLIC_KEY") {
@@ -2373,18 +2375,21 @@
       }
 
       try {
-        await emailjs.send(
-          emailJsConfig.serviceId,
-          emailJsConfig.templateId,
-          {
-            to_email: adminEmail,
-            user_name: userName,
-            user_email: userEmail,
-            message: `New user registration: ${userName} (${userEmail}) is waiting for approval.`
-          },
-          emailJsConfig.publicKey
-        );
-        console.log('Notification email sent');
+        // Send to all admin emails
+        for (const adminEmail of adminEmails) {
+          await emailjs.send(
+            emailJsConfig.serviceId,
+            emailJsConfig.templateNewUser,
+            {
+              to_email: adminEmail,
+              user_name: userName,
+              user_email: userEmail,
+              admin_url: siteUrl + '/admin.html'
+            },
+            emailJsConfig.publicKey
+          );
+        }
+        console.log('Admin notification emails sent');
       } catch (error) {
         console.error('Failed to send notification email:', error);
       }
