@@ -2862,7 +2862,11 @@
           };
 
           // Show error message with re-request button
-          openAuthModal();
+          // Only open modal if not already open (avoid clearing the message)
+          if (!authModal.classList.contains('active')) {
+            authModal.classList.add('active');
+            document.body.style.overflow = 'hidden';
+          }
           loginMessage.innerHTML = `
             ${orphanMessages[currentLang]}<br><br>
             <button type="button" class="auth-btn" id="reRequestBtn" style="margin-top: 0.5rem;">
