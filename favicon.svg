@@ -1,4 +1,9 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
-  <rect width="64" height="64" fill="#ffffff"/>
-  <text x="32" y="52" font-family="Georgia, serif" font-size="52" text-anchor="middle" fill="#000000">𝄞</text>
+  <style>
+    .clef { fill: #000000; }
+    @media (prefers-color-scheme: dark) {
+      .clef { fill: #ffffff; }
+    }
+  </style>
+  <text x="32" y="52" font-family="Georgia, serif" font-size="52" text-anchor="middle" class="clef">&#119070;</text>
 </svg>
