@@ -65,10 +65,11 @@ service cloud.firestore {
 
     // ===== VIDEOS COLLECTION =====
     match /videos/{videoId} {
-      // Anyone can read videos (public videos visible to all, private filtered client-side)
-      // Note: Private video URLs are YouTube "unlisted" - not truly secret
-      // The privacy is about which videos are featured, not URL protection
-      allow read: if true;
+      // Public videos: readable by everyone
+      // Private videos: only readable by approved users or admins
+      allow read: if resource.data.visibility == 'public'
+                  || isApproved()
+                  || isAdmin();
 
       // Only admin can create/update/delete videos
       allow create, update, delete: if isAdmin();
