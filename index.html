@@ -2595,51 +2595,81 @@
       });
     });
 
-    // ===== PRIVATE VIDEOS FROM FIRESTORE =====
-    async function loadPrivateVideos() {
-      if (userStatus !== 'approved' && !isAdminUser) {
-        clearPrivateVideos();
-        return;
-      }
+    // ===== VIDEOS FROM FIRESTORE =====
+    let allFirestoreVideos = [];
 
+    async function loadVideosFromFirestore() {
       try {
         const videosRef = collection(db, 'videos');
         const snapshot = await getDocs(videosRef);
-        const videos = [];
+        allFirestoreVideos = [];
         snapshot.forEach(doc => {
-          videos.push({ id: doc.id, ...doc.data() });
+          allFirestoreVideos.push({ id: doc.id, ...doc.data() });
         });
-
-        // Group videos by category
-        const categories = ['violin', 'piano', 'conducting'];
-        categories.forEach(category => {
-          const container = document.getElementById(`privateVideosContainer-${category}`);
-          if (!container) return;
-
-          const categoryVideos = videos.filter(v => v.category === category);
-          container.innerHTML = '';
-
-          categoryVideos.forEach(video => {
-            const videoCard = createPrivateVideoCard(video);
-            container.appendChild(videoCard);
-          });
-        });
-
+        console.log('Loaded', allFirestoreVideos.length, 'videos from Firestore');
+        renderVideos();
       } catch (error) {
-        console.error('Error loading private videos:', error);
+        console.error('Error loading videos:', error);
       }
     }
 
-    function createPrivateVideoCard(video) {
+    function renderVideos() {
+      const canSeePrivate = userStatus === 'approved' || isAdminUser;
+      const categories = ['violin', 'piano', 'conducting'];
+
+      categories.forEach(category => {
+        const container = document.getElementById(`privateVideosContainer-${category}`);
+        const placeholder = document.getElementById(`privateVideosPlaceholder-${category}`);
+        if (!container) return;
+
+        container.innerHTML = '';
+
+        // Filter videos for this category
+        const categoryVideos = allFirestoreVideos.filter(v => v.category === category);
+        const publicVideos = categoryVideos.filter(v => v.visibility === 'public');
+        const privateVideos = categoryVideos.filter(v => v.visibility !== 'public');
+
+        // Sort by year descending
+        const sortByYear = (a, b) => (b.year || '0').localeCompare(a.year || '0');
+        publicVideos.sort(sortByYear);
+        privateVideos.sort(sortByYear);
+
+        // Show/hide placeholder based on private videos and access
+        if (placeholder) {
+          if (privateVideos.length > 0 && !canSeePrivate) {
+            placeholder.style.display = 'block';
+          } else {
+            placeholder.style.display = 'none';
+          }
+        }
+
+        // Render public videos (visible to everyone)
+        publicVideos.forEach(video => {
+          const videoCard = createVideoCard(video, false);
+          container.appendChild(videoCard);
+        });
+
+        // Render private videos (only for approved users)
+        if (canSeePrivate) {
+          privateVideos.forEach(video => {
+            const videoCard = createVideoCard(video, true);
+            container.appendChild(videoCard);
+          });
+        }
+      });
+    }
+
+    function createVideoCard(video, isPrivate) {
       const ytMatch = video.url.match(/(?:youtube\.com\/watch\?v=|youtu\.be\/)([^&\s]+)/);
       const ytId = ytMatch ? ytMatch[1] : null;
       const thumb = ytId ? `https://img.youtube.com/vi/${ytId}/maxresdefault.jpg` : '';
 
       const article = document.createElement('article');
       article.className = 'video-card';
+      const privateBadge = isPrivate ? '<span class="video-private-badge">Privé</span>' : '';
       article.innerHTML = `
         <a href="${video.url}" target="_blank" rel="noopener" class="video-info">
-          <h3 class="video-title">${video.title} <span class="video-private-badge">Privé</span></h3>
+          <h3 class="video-title">${video.title} ${privateBadge}</h3>
           <p class="video-meta">${video.meta || ''}${video.year ? '<br>' + video.year : ''}</p>
         </a>
         <a href="${video.url}" target="_blank" rel="noopener" class="video-thumbnail">
@@ -2652,9 +2682,8 @@
       return article;
     }
 
-    function clearPrivateVideos() {
-      document.querySelectorAll('.private-videos-container').forEach(c => c.innerHTML = '');
-    }
+    // Load videos on page load (for everyone)
+    loadVideosFromFirestore();
 
     // Auth state change handler
     onAuthStateChanged(auth, async (user) => {
@@ -2665,15 +2694,12 @@
         updateUI(user, userData);
         updatePrivateVideosAccess();
         closeAuthModal();
-        // Load private videos from Firestore if approved or admin
-        if (userStatus === 'approved' || isAdminUser) {
-          loadPrivateVideos();
-        }
       } else {
         updateUI(null, null);
         updatePrivateVideosAccess();
-        clearPrivateVideos();
       }
+      // Re-render videos based on new auth state
+      renderVideos();
     });
   </script>
 

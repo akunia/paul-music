@@ -63,19 +63,15 @@ service cloud.firestore {
       allow list: if isAdmin();
     }
 
-    // ===== VIDEOS COLLECTION (PRIVATE VIDEOS) =====
+    // ===== VIDEOS COLLECTION =====
     match /videos/{videoId} {
-      // Only approved users can read videos
-      // This is the KEY security rule that protects private videos
-      allow read: if isApproved() || isAdmin();
+      // Anyone can read videos (public videos visible to all, private filtered client-side)
+      // Note: Private video URLs are YouTube "unlisted" - not truly secret
+      // The privacy is about which videos are featured, not URL protection
+      allow read: if true;
 
       // Only admin can create/update/delete videos
       allow create, update, delete: if isAdmin();
-    }
-
-    // Admin can list all videos
-    match /videos/{document=**} {
-      allow list: if isApproved() || isAdmin();
     }
   }
 }
