@@ -51,8 +51,10 @@ service cloud.firestore {
       // Users can read their own document
       allow read: if isOwner(userId) || isAdmin();
 
-      // Only admin can update user status
-      allow update: if isAdmin();
+      // Admin can update anything, users can only update their viewedVideos
+      allow update: if isAdmin() ||
+                       (isOwner(userId) &&
+                        request.resource.data.diff(resource.data).affectedKeys().hasOnly(['viewedVideos']));
 
       // Only admin can delete users
       allow delete: if isAdmin();
