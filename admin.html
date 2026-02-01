@@ -1198,6 +1198,33 @@
 
     // Bouton pour initialiser manuellement si besoin
     window.initVideos = initializePrivateVideos;
+
+    // Fix videos missing createdAt field
+    async function fixVideosCreatedAt() {
+      try {
+        const snapshot = await getDocs(collection(db, 'videos'));
+        let fixed = 0;
+        for (const docSnap of snapshot.docs) {
+          const data = docSnap.data();
+          if (!data.createdAt) {
+            await updateDoc(doc(db, 'videos', docSnap.id), {
+              createdAt: new Date().toISOString()
+            });
+            fixed++;
+            console.log(`Fixed: ${data.title}`);
+          }
+        }
+        if (fixed > 0) {
+          alert(`${fixed} vidéo(s) mise(s) à jour avec createdAt`);
+          loadVideos();
+        } else {
+          alert('Toutes les vidéos ont déjà createdAt');
+        }
+      } catch (e) {
+        console.error('Error fixing videos:', e);
+      }
+    }
+    window.fixVideosCreatedAt = fixVideosCreatedAt;
   </script>
 
   <!-- EmailJS SDK for notifications -->
