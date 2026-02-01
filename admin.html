@@ -584,7 +584,7 @@
           <td><span class="user-date">${u.createdAt ? new Date(u.createdAt).toLocaleDateString('fr-FR') : '-'}</span></td>
           <td><span class="status-badge ${u.status}">${u.status}</span></td>
           <td><div class="action-btns">
-            ${!isApproved ? `<button class="btn btn-success" onclick="approveUser('${u.id}')">Approuver</button><button class="btn btn-danger" onclick="rejectUser('${u.id}')">Rejeter</button>` : `<button class="btn btn-danger" onclick="revokeUser('${u.id}')">Révoquer</button>`}
+            ${!isApproved ? `<button class="btn btn-success" onclick="approveUser('${u.id}')">Approuver</button><button class="btn btn-danger" onclick="rejectUser('${u.id}')">Rejeter</button><button class="btn btn-secondary" onclick="deleteUser('${u.id}')" title="Supprimer sans notification">🗑️</button>` : `<button class="btn btn-danger" onclick="revokeUser('${u.id}')">Révoquer</button><button class="btn btn-secondary" onclick="deleteUser('${u.id}')" title="Supprimer sans notification">🗑️</button>`}
           </div></td>`;
         tbody.appendChild(tr);
       });
@@ -667,6 +667,14 @@
         const user = usersData[uid];
         await updateDoc(doc(db, 'users', uid), { status: 'pending' });
         if (user) await sendUserStatusEmail(user.name, user.email, 'revoked');
+        loadUsers();
+      }
+    };
+
+    // Delete user without sending notification email
+    window.deleteUser = async (uid) => {
+      if (confirm('Supprimer cet utilisateur ? (sans notification email)')) {
+        await deleteDoc(doc(db, 'users', uid));
         loadUsers();
       }
     };
