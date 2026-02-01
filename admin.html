@@ -352,6 +352,78 @@
       background: var(--color-bg);
       border-radius: var(--radius-sm);
     }
+
+    /* Users toolbar */
+    .users-toolbar {
+      display: flex;
+      gap: 1rem;
+      margin-bottom: 1.5rem;
+      flex-wrap: wrap;
+      align-items: center;
+    }
+    .search-box {
+      position: relative;
+      flex: 1;
+      min-width: 200px;
+      max-width: 300px;
+    }
+    .search-box input {
+      width: 100%;
+      padding: 0.625rem 1rem 0.625rem 2.5rem;
+      background: var(--color-surface);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-md);
+      color: var(--color-text);
+      font-size: 0.875rem;
+    }
+    .search-box input:focus {
+      outline: none;
+      border-color: var(--color-accent);
+    }
+    .search-box::before {
+      content: '🔍';
+      position: absolute;
+      left: 0.75rem;
+      top: 50%;
+      transform: translateY(-50%);
+      font-size: 0.875rem;
+      opacity: 0.6;
+    }
+    .sort-controls {
+      display: flex;
+      gap: 0.5rem;
+      align-items: center;
+    }
+    .sort-controls label {
+      font-size: 0.8rem;
+      color: var(--color-text-muted);
+    }
+    .sort-btn {
+      padding: 0.5rem 0.75rem;
+      background: var(--color-surface);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-sm);
+      color: var(--color-text-muted);
+      font-size: 0.8rem;
+      cursor: pointer;
+      transition: all var(--transition-fast);
+      display: flex;
+      align-items: center;
+      gap: 0.25rem;
+    }
+    .sort-btn:hover {
+      border-color: var(--color-accent);
+      color: var(--color-text);
+    }
+    .sort-btn.active {
+      background: var(--color-accent);
+      border-color: var(--color-accent);
+      color: var(--color-bg);
+    }
+    .sort-btn .sort-icon {
+      font-size: 0.7rem;
+      opacity: 0.7;
+    }
   </style>
 </head>
 <body>
@@ -392,6 +464,17 @@
     <div class="panel active" id="usersPanel">
       <div class="loading" id="usersLoading"><span class="spinner"></span>Chargement...</div>
       <div id="usersContent" style="display: none;">
+        <div class="users-toolbar">
+          <div class="search-box">
+            <input type="text" id="userSearch" placeholder="Rechercher par nom...">
+          </div>
+          <div class="sort-controls">
+            <label>Trier par :</label>
+            <button class="sort-btn active" data-sort="date" data-order="desc">Date <span class="sort-icon">▼</span></button>
+            <button class="sort-btn" data-sort="name" data-order="asc">Nom <span class="sort-icon">▲</span></button>
+            <button class="sort-btn" data-sort="status" data-order="asc">Statut <span class="sort-icon">▲</span></button>
+          </div>
+        </div>
         <h3 class="section-title">En attente de validation</h3>
         <table class="users-table" id="pendingTable">
           <thead><tr><th>Nom</th><th>Email</th><th>Date</th><th>Statut</th><th>Actions</th></tr></thead>
@@ -627,26 +710,68 @@
     });
 
     // ===== USERS =====
+    let allUsers = [];
+    let currentSort = { field: 'date', order: 'desc' };
+    let searchQuery = '';
+
     async function loadUsers() {
       usersLoading.style.display = 'flex';
       usersContent.style.display = 'none';
       try {
         const snapshot = await getDocs(collection(db, 'users'));
-        const pending = [], approved = [];
+        allUsers = [];
         usersData = {}; // Reset users data
         snapshot.forEach(d => {
           const data = { id: d.id, ...d.data() };
           usersData[d.id] = data; // Store for email notifications
-          if (data.status === 'pending') pending.push(data);
-          else if (data.status === 'approved') approved.push(data);
+          allUsers.push(data);
         });
-        renderUsers(pending, pendingUsers, pendingEmpty, pendingTable, false);
-        renderUsers(approved, approvedUsers, approvedEmpty, approvedTable, true);
-        pendingCount.textContent = pending.length;
-        approvedCount.textContent = approved.length;
+        displayUsers();
       } catch (e) { console.error('Error loading users:', e); }
       usersLoading.style.display = 'none';
       usersContent.style.display = 'block';
+    }
+
+    function displayUsers() {
+      // Filter by search
+      let filtered = allUsers;
+      if (searchQuery) {
+        const q = searchQuery.toLowerCase();
+        filtered = allUsers.filter(u =>
+          (u.name && u.name.toLowerCase().includes(q)) ||
+          (u.email && u.email.toLowerCase().includes(q))
+        );
+      }
+
+      // Sort
+      filtered.sort((a, b) => {
+        let valA, valB;
+        if (currentSort.field === 'date') {
+          valA = a.createdAt || '';
+          valB = b.createdAt || '';
+        } else if (currentSort.field === 'name') {
+          valA = (a.name || '').toLowerCase();
+          valB = (b.name || '').toLowerCase();
+        } else if (currentSort.field === 'status') {
+          valA = a.status || '';
+          valB = b.status || '';
+        }
+        let cmp = valA < valB ? -1 : valA > valB ? 1 : 0;
+        return currentSort.order === 'desc' ? -cmp : cmp;
+      });
+
+      // Split by status
+      const pending = filtered.filter(u => u.status === 'pending');
+      const approved = filtered.filter(u => u.status === 'approved');
+
+      renderUsers(pending, pendingUsers, pendingEmpty, pendingTable, false);
+      renderUsers(approved, approvedUsers, approvedEmpty, approvedTable, true);
+
+      // Update counts (always show total, not filtered)
+      const totalPending = allUsers.filter(u => u.status === 'pending').length;
+      const totalApproved = allUsers.filter(u => u.status === 'approved').length;
+      pendingCount.textContent = totalPending;
+      approvedCount.textContent = totalApproved;
     }
 
     function renderUsers(users, tbody, emptyEl, tableEl, isApproved) {
@@ -667,6 +792,35 @@
         tbody.appendChild(tr);
       });
     }
+
+    // Search handler
+    document.getElementById('userSearch').addEventListener('input', (e) => {
+      searchQuery = e.target.value;
+      displayUsers();
+    });
+
+    // Sort handlers
+    document.querySelectorAll('.sort-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const field = btn.dataset.sort;
+        if (currentSort.field === field) {
+          // Toggle order
+          currentSort.order = currentSort.order === 'asc' ? 'desc' : 'asc';
+        } else {
+          currentSort.field = field;
+          currentSort.order = btn.dataset.order;
+        }
+        // Update button states and icons
+        document.querySelectorAll('.sort-btn').forEach(b => {
+          b.classList.remove('active');
+          b.querySelector('.sort-icon').textContent = b.dataset.order === 'asc' ? '▲' : '▼';
+        });
+        btn.classList.add('active');
+        btn.querySelector('.sort-icon').textContent = currentSort.order === 'asc' ? '▲' : '▼';
+        btn.dataset.order = currentSort.order;
+        displayUsers();
+      });
+    });
 
     // Send notification email to user when status changes
     async function sendUserStatusEmail(userName, userEmail, status) {
