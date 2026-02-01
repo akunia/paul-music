@@ -215,7 +215,7 @@
     <div class="header-actions">
       <span class="admin-email" id="adminEmail"></span>
       <a href="index.html" class="btn btn-secondary">Retour au site</a>
-      <button class="btn btn-secondary" id="logoutBtn">Deconnexion</button>
+      <button class="btn btn-secondary" id="logoutBtn">Déconnexion</button>
     </div>
   </header>
 
@@ -233,14 +233,14 @@
         </div>
         <button type="submit" class="btn btn-primary" style="width: 100%; margin-top: 1rem;">Connexion</button>
       </form>
-      <p class="login-error" id="loginError">Acces refuse. Seuls les administrateurs peuvent se connecter.</p>
+      <p class="login-error" id="loginError">Accès refusé. Seuls les administrateurs peuvent se connecter.</p>
     </div>
   </div>
 
   <main class="main" id="mainContent" style="display: none;">
     <div class="tabs">
       <button class="tab active" data-tab="users">Utilisateurs<span class="tab-count" id="pendingCount">0</span></button>
-      <button class="tab" data-tab="videos">Videos privees<span class="tab-count" id="videoCount">0</span></button>
+      <button class="tab" data-tab="videos">Vidéos privées<span class="tab-count" id="videoCount">0</span></button>
     </div>
 
     <!-- Users Panel -->
@@ -254,18 +254,18 @@
         </table>
         <div class="empty-state" id="pendingEmpty" style="display: none;"><div class="empty-state-icon">&#10003;</div><p>Aucun utilisateur en attente</p></div>
 
-        <h3 class="section-title" style="margin-top: 2rem;">Utilisateurs approuves</h3>
+        <h3 class="section-title" style="margin-top: 2rem;">Utilisateurs approuvés</h3>
         <table class="users-table" id="approvedTable">
           <thead><tr><th>Nom</th><th>Email</th><th>Date</th><th>Statut</th><th>Actions</th></tr></thead>
           <tbody id="approvedUsers"></tbody>
         </table>
-        <div class="empty-state" id="approvedEmpty" style="display: none;"><div class="empty-state-icon">&#128100;</div><p>Aucun utilisateur approuve</p></div>
+        <div class="empty-state" id="approvedEmpty" style="display: none;"><div class="empty-state-icon">&#128100;</div><p>Aucun utilisateur approuvé</p></div>
       </div>
     </div>
 
     <!-- Videos Panel -->
     <div class="panel" id="videosPanel">
-      <h3 class="section-title">Ajouter une video privee</h3>
+      <h3 class="section-title">Ajouter une vidéo privée</h3>
       <form class="video-form" id="addVideoForm">
         <div class="form-row">
           <div class="form-field">
@@ -273,7 +273,7 @@
             <input type="text" id="videoTitle" placeholder="Ex: Concerto n3, 1er mouvement" required>
           </div>
           <div class="form-field">
-            <label for="videoCategory">Categorie</label>
+            <label for="videoCategory">Catégorie</label>
             <select id="videoCategory" required>
               <option value="violin">Violon</option>
               <option value="piano">Piano</option>
@@ -287,7 +287,7 @@
             <input type="url" id="videoUrl" placeholder="https://www.youtube.com/watch?v=..." required>
           </div>
           <div class="form-field">
-            <label for="videoYear">Annee</label>
+            <label for="videoYear">Année</label>
             <input type="number" id="videoYear" placeholder="2025" min="2000" max="2099">
           </div>
         </div>
@@ -297,12 +297,12 @@
             <input type="text" id="videoMeta" placeholder="Ex: Compositeur, lieu, date...">
           </div>
         </div>
-        <button type="submit" class="btn btn-primary">Ajouter la video</button>
+        <button type="submit" class="btn btn-primary">Ajouter la vidéo</button>
       </form>
 
-      <h3 class="section-title">Videos privees enregistrees</h3>
+      <h3 class="section-title">Vidéos privées enregistrées</h3>
       <div class="video-list" id="videoList">
-        <div class="empty-state" id="videosEmpty"><div class="empty-state-icon">&#127909;</div><p>Aucune video privee</p></div>
+        <div class="empty-state" id="videosEmpty"><div class="empty-state-icon">&#127909;</div><p>Aucune vidéo privée</p></div>
       </div>
     </div>
   </main>
@@ -422,7 +422,7 @@
           <td><span class="user-date">${u.createdAt ? new Date(u.createdAt).toLocaleDateString('fr-FR') : '-'}</span></td>
           <td><span class="status-badge ${u.status}">${u.status}</span></td>
           <td><div class="action-btns">
-            ${!isApproved ? `<button class="btn btn-success" onclick="approveUser('${u.id}')">Approuver</button><button class="btn btn-danger" onclick="rejectUser('${u.id}')">Rejeter</button>` : `<button class="btn btn-danger" onclick="revokeUser('${u.id}')">Revoquer</button>`}
+            ${!isApproved ? `<button class="btn btn-success" onclick="approveUser('${u.id}')">Approuver</button><button class="btn btn-danger" onclick="rejectUser('${u.id}')">Rejeter</button>` : `<button class="btn btn-danger" onclick="revokeUser('${u.id}')">Révoquer</button>`}
           </div></td>`;
         tbody.appendChild(tr);
       });
@@ -430,7 +430,7 @@
 
     window.approveUser = async (uid) => { await updateDoc(doc(db, 'users', uid), { status: 'approved' }); loadUsers(); };
     window.rejectUser = async (uid) => { if (confirm('Supprimer cet utilisateur ?')) { await deleteDoc(doc(db, 'users', uid)); loadUsers(); } };
-    window.revokeUser = async (uid) => { if (confirm('Revoquer l\'acces ?')) { await updateDoc(doc(db, 'users', uid), { status: 'pending' }); loadUsers(); } };
+    window.revokeUser = async (uid) => { if (confirm('Révoquer l\'accès ?')) { await updateDoc(doc(db, 'users', uid), { status: 'pending' }); loadUsers(); } };
 
     // ===== VIDEOS =====
     async function loadVideos() {
@@ -485,7 +485,7 @@
       } catch (e) { console.error('Error adding video:', e); alert('Erreur'); }
     });
 
-    window.deleteVideo = async (id) => { if (confirm('Supprimer cette video ?')) { await deleteDoc(doc(db, 'videos', id)); loadVideos(); } };
+    window.deleteVideo = async (id) => { if (confirm('Supprimer cette vidéo ?')) { await deleteDoc(doc(db, 'videos', id)); loadVideos(); } };
 
     // ===== INITIALISATION AUTOMATIQUE DES VIDEOS PRIVEES =====
     const PRIVATE_VIDEOS_INIT = [
