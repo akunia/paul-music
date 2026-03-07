@@ -1597,6 +1597,13 @@
     @keyframes spin {
       to { transform: rotate(360deg); }
     }
+      .video-highlight {
+        animation: highlightPulse 2s ease;
+      }
+      @keyframes highlightPulse {
+        0%, 100% { box-shadow: var(--shadow-sm); }
+        30%, 70% { box-shadow: 0 0 0 3px var(--color-accent), var(--shadow-md); }
+      }
   </style>
 </head>
 <body>
@@ -1636,7 +1643,7 @@
             <span class="inline-lang" data-lang-text="ru">События</span>
           </a></li>
           <li><a href="#contact" class="nav-link">
-            <span class="inline-lang active" data-lang-text="fr">Contact</span>
+            <span class="inline-lang active" databout:blank#blockeda-lang-text="fr">Contact</span>
             <span class="inline-lang" data-lang-text="en">Contact</span>
             <span class="inline-lang" data-lang-text="pl">Kontakt</span>
             <span class="inline-lang" data-lang-text="ru">Контакт</span>
@@ -1644,7 +1651,7 @@
         </ul>
 
         <!-- Notification badge for new videos -->
-        <span class="unviewed-badge" id="unviewedBadge" style="display: none;" title="Nouvelles vidéos">
+        <span class="unviewed-badge" id="unviewedBadge" style="display: none;" title="Vidéos non vues">
           <span id="unviewedCount">0</span>
         </span>
 
@@ -2224,7 +2231,8 @@
       collection,
       query,
       where,
-      getDocs
+      getDocs,
+      arrayUnion
     } from 'https://www.gstatic.com/firebasejs/11.2.0/firebase-firestore.js';
 
     // ===== CONFIGURATION =====
@@ -2759,13 +2767,13 @@
         }
 
         // Save to Firestore in background (non-blocking)
-        // Try updateDoc first (faster), fallback to setDoc if doc doesn't exist
+        // Use arrayUnion for safe multi-device sync (no overwrite race condition)
         const userDocRef = doc(db, 'users', currentUser.uid);
-        updateDoc(userDocRef, { viewedVideos: viewedVideosCache })
+        updateDoc(userDocRef, { viewedVideos: arrayUnion(videoId) })
           .catch(err => {
             // Document doesn't exist (admin without user doc) - create it
             if (err.code === 'not-found') {
-              return setDoc(userDocRef, { viewedVideos: viewedVideosCache }, { merge: true });
+              return setDoc(userDocRef, { viewedVideos: [videoId] }, { merge: true });
             }
             console.error('Error saving viewed video:', err);
           });
@@ -2773,24 +2781,59 @@
     }
     window.markVideoAsViewed = markVideoAsViewed;
 
+    // Badge click: navigate to oldest unviewed video
+    document.getElementById('unviewedBadge').addEventListener('click', () => {
+      const unviewed = allLoadedVideos
+        .filter(v => !isVideoViewed(v.id))
+        .sort((a, b) => (a.year || '0').localeCompare(b.year || '0'));
+
+      if (unviewed.length === 0) return;
+
+      const oldest = unviewed[0];
+      const category = oldest.category || 'violin';
+
+      // Switch to correct tab
+      if (window.activateVideoTab) window.activateVideoTab(category);
+
+      // Scroll to videos section first
+      const videosSection = document.getElementById('videos');
+      if (videosSection) videosSection.scrollIntoView({ behavior: 'smooth' });
+
+      // Then scroll to and highlight the card
+      setTimeout(() => {
+        const card = document.querySelector(`[data-video-id="${oldest.id}"]`);
+        if (card) {
+          card.scrollIntoView({ behavior: 'smooth', block: 'center' });
+          card.classList.add('video-highlight');
+          setTimeout(() => card.classList.remove('video-highlight'), 2000);
+        }
+      }, 400);
+    });
+
+
     function isVideoViewed(videoId) {
       return viewedVideosCache.includes(videoId);
     }
 
     function updateUnviewedNotification() {
-      // Count ALL unviewed videos (not just recent ones)
-      const unviewed = allLoadedVideos.filter(v => !isVideoViewed(v.id)).length;
-
       const badge = document.getElementById('unviewedBadge');
       const count = document.getElementById('unviewedCount');
+      if (!badge || !count) return;
 
-      if (badge && count) {
-        if (unviewed > 0) {
-          badge.style.display = 'inline-flex';
-          count.textContent = unviewed;
-        } else {
-          badge.style.display = 'none';
-        }
+      // Only show badge for logged-in users with approved access
+      if (!currentUser || !(userStatus === 'approved' || isAdminUser)) {
+        badge.style.display = 'none';
+        return;
+      }
+
+      // Count only accessible unviewed videos
+      const unviewed = allLoadedVideos.filter(v => !isVideoViewed(v.id)).length;
+
+      if (unviewed > 0) {
+        badge.style.display = 'inline-flex';
+        count.textContent = unviewed;
+      } else {
+        badge.style.display = 'none';
       }
     }
 
@@ -3213,6 +3256,8 @@
         grid.classList.toggle('active', grid.id === targetTab);
       });
     }
+
+    window.activateVideoTab = activateVideoTab;
 
     videoTabs.forEach(tab => {
       tab.addEventListener('click', () => {
