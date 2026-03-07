@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="Paul Bednarczyk - Jeune violoniste, pianiste et chef d'orchestre franco-polonais. Étudiant au CPES du CRR de Paris.">
+  <meta name="description" content="Paul Bednarczyk - Jeune violoniste, pianiste et chef d'orchestre franco-polonais. Admis au CNSM de Paris, classe de Stéphanie Marie Degan.">
   <meta property="og:title" content="Paul Bednarczyk - Violoniste & Pianiste">
   <meta property="og:description" content="Jeune musicien franco-polonais - Violon, Piano, Direction d'orchestre">
   <meta property="og:type" content="website">
@@ -715,6 +715,32 @@
       flex: 1;
       padding: var(--space-xs) 0;
       text-decoration: none;
+    }
+
+    .video-action {
+      appearance: none;
+      background: none;
+      border: 0;
+      color: inherit;
+      cursor: pointer;
+      font: inherit;
+      margin: 0;
+      padding: 0;
+      text-align: left;
+    }
+
+    .video-action.video-info {
+      flex: 1;
+      padding: var(--space-xs) 0;
+    }
+
+    .video-action.video-thumbnail {
+      display: block;
+    }
+
+    .video-action:focus-visible {
+      outline: 2px solid var(--color-accent);
+      outline-offset: 2px;
     }
 
     .video-title {
@@ -1485,6 +1511,19 @@
       color: var(--color-accent);
     }
 
+    .video-thumbnail-fallback {
+      width: 100%;
+      height: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background:
+        radial-gradient(circle at 20% 20%, rgba(201, 169, 98, 0.28), transparent 42%),
+        linear-gradient(135deg, rgba(11, 31, 57, 0.92), rgba(25, 20, 41, 0.95));
+      color: var(--color-accent);
+      font-size: 2rem;
+    }
+
     /* Private videos placeholder (shown when not logged in) */
     .private-videos-placeholder {
       display: flex;
@@ -1865,26 +1904,26 @@
           <div class="bio-text">
             <!-- French -->
             <div data-lang="fr" class="active">
-              <p>Né le 9 février 2010, Paul Bednarczyk est un jeune musicien de double nationalité franco-polonaise. Quadrilingue de naissance — russe avec sa mère Ekaterina, polonais avec son père Grzegorz, français à l'école et anglais grâce aux médias — il baigne dans un environnement multiculturel. Passionné par la musique classique dès son plus jeune âge, il débute le piano à 4 ans, puis le violon à 5 ans. Très proche de sa sœur Alice, de cinq ans sa cadette et également pianiste, il l'a beaucoup accompagnée dans son apprentissage avant de quitter Nice pour Paris.</p>
-              <p>Après avoir étudié au Conservatoire à Rayonnement Régional (CRR) de Nice, Paul poursuit actuellement sa formation en violon au sein du Cycle Préparatoire à l'Enseignement Supérieur (CPES) du CRR de Paris, l'une des formations les plus prestigieuses pour les jeunes musiciens en France, avec l'objectif d'intégrer le Conservatoire National Supérieur de Musique (CNSM).</p>
+              <p>Né le 9 février 2010, Paul Bednarczyk est un jeune musicien de double nationalité franco-polonaise. Quadrilingue de naissance — russe avec sa mère Ekaterina, polonais avec son père Grzegorz, français à l'école et anglais grâce aux médias — il baigne dans un environnement multiculturel. Passionné par la musique classique dès son plus jeune âge, il débute le piano à 4 ans, puis le violon à 5 ans. Très proche de sa sœur Alice, de cinq ans sa cadette qui joue également du piano, il l'a beaucoup accompagnée dans son apprentissage avant de quitter Nice pour Paris.</p>
+              <p>Après avoir étudié au Conservatoire à Rayonnement Régional (CRR) de Nice, Paul a poursuivi sa formation en violon au sein du Cycle Préparatoire à l'Enseignement Supérieur (CPES) du CRR de Paris. Il a été admis au Conservatoire National Supérieur de Musique (CNSM), où il intégrera la classe de Stéphanie Marie Degan en 2026/2027.</p>
               <p>En parallèle de ses études de violon et de piano, Paul se forme à la direction d'orchestre depuis l'âge de 13 ans, développant ainsi une vision complète de l'art musical.</p>
             </div>
             <!-- English -->
             <div data-lang="en">
-              <p>Born on February 9, 2010, Paul Bednarczyk is a young musician with dual French-Polish nationality. Quadrilingual from birth — Russian with his mother Ekaterina, Polish with his father Grzegorz, French at school and English through media — he grew up in a multicultural environment. Passionate about classical music from an early age, he began studying piano at age 4, then violin at age 5. Very close to his sister Alice, five years his junior and also a pianist, he supported her greatly in her musical journey before leaving Nice for Paris.</p>
-              <p>After studying at the Regional Conservatory (CRR) of Nice, Paul is currently pursuing his violin training at the Pre-Higher Education Cycle (CPES) of the Paris CRR, one of the most prestigious programs for young musicians in France, with the goal of entering the Conservatoire National Supérieur de Musique (CNSM).</p>
+              <p>Born on February 9, 2010, Paul Bednarczyk is a young musician with dual French-Polish nationality. Quadrilingual from birth — Russian with his mother Ekaterina, Polish with his father Grzegorz, French at school and English through media — he grew up in a multicultural environment. Passionate about classical music from an early age, he began studying piano at age 4, then violin at age 5. Very close to his sister Alice, five years his junior who also plays piano, he supported her greatly in her musical journey before leaving Nice for Paris.</p>
+              <p>After studying at the Regional Conservatory (CRR) of Nice, Paul completed his violin training at the Pre-Higher Education Cycle (CPES) of the Paris CRR. He has been admitted to the Conservatoire National Supérieur de Musique (CNSM), where he will join Stéphanie Marie Degan's class in 2026/2027.</p>
               <p>Alongside his violin and piano studies, Paul has been training in orchestra conducting since age 13, developing a comprehensive vision of musical art.</p>
             </div>
             <!-- Polish -->
             <div data-lang="pl">
-              <p>Urodzony 9 lutego 2010 roku, Paul Bednarczyk to młody muzyk o podwójnym obywatelstwie polsko-francuskim. Czterojęzyczny od urodzenia — rosyjski z mamą Ekateriną, polski z tatą Grzegorzem, francuski w szkole i angielski dzięki mediom — dorastał w wielokulturowym środowisku. Zafascynowany muzyką klasyczną od najmłodszych lat, zaczął grać na fortepianie w wieku 4 lat, a następnie na skrzypcach w wieku 5 lat. Bardzo bliski ze swoją siostrą Alice, młodszą o pięć lat i również pianistką, wspierał ją w nauce muzyki przed wyjazdem z Nicei do Paryża.</p>
-              <p>Po nauce w Konserwatorium Regionalnym (CRR) w Nicei, Paul kontynuuje obecnie kształcenie skrzypcowe w Cyklu Przygotowawczym do Szkolnictwa Wyższego (CPES) paryskiego CRR, jednego z najbardziej prestiżowych programów dla młodych muzyków we Francji, z celem dostania się do Conservatoire National Supérieur de Musique (CNSM).</p>
+              <p>Urodzony 9 lutego 2010 roku, Paul Bednarczyk to młody muzyk o podwójnym obywatelstwie polsko-francuskim. Czterojęzyczny od urodzenia — rosyjski z mamą Ekateriną, polski z tatą Grzegorzem, francuski w szkole i angielski dzięki mediom — dorastał w wielokulturowym środowisku. Zafascynowany muzyką klasyczną od najmłodszych lat, zaczął grać na fortepianie w wieku 4 lat, a następnie na skrzypcach w wieku 5 lat. Bardzo bliski ze swoją siostrą Alice, młodszą o pięć lat, która również gra na fortepianie, wspierał ją w nauce muzyki przed wyjazdem z Nicei do Paryża.</p>
+              <p>Po nauce w Konserwatorium Regionalnym (CRR) w Nicei, Paul ukończył kształcenie skrzypcowe w Cyklu Przygotowawczym do Szkolnictwa Wyższego (CPES) paryskiego CRR. Został przyjęty do Conservatoire National Supérieur de Musique (CNSM), gdzie dołączy do klasy Stéphanie Marie Degan w 2026/2027.</p>
               <p>Równolegle do nauki gry na skrzypcach i fortepianie, Paul kształci się w dziedzinie dyrygentury od 13 roku życia, rozwijając pełną wizję sztuki muzycznej.</p>
             </div>
             <!-- Russian -->
             <div data-lang="ru">
-              <p>Поль Беднарчик родился 9 февраля 2010 года. Он молодой музыкант с двойным франко-польским гражданством. С рождения владеет четырьмя языками — русским с мамой Екатериной, польским с папой Гжегожем, французским в школе и английским благодаря медиа — он вырос в мультикультурной среде. Увлечённый классической музыкой с раннего возраста, он начал играть на фортепиано в 4 года, а затем на скрипке в 5 лет. Очень близок со своей сестрой Алисой, младше его на пять лет и тоже пианисткой, он много помогал ей в обучении до переезда из Ниццы в Париж.</p>
-              <p>После обучения в Региональной консерватории (CRR) Ниццы, Поль продолжает скрипичное образование в Подготовительном цикле высшего образования (CPES) парижской CRR, одной из самых престижных программ для молодых музыкантов во Франции, с целью поступления в Национальную высшую консерваторию музыки (CNSM).</p>
+              <p>Поль Беднарчик родился 9 февраля 2010 года. Он молодой музыкант с двойным франко-польским гражданством. С рождения владеет четырьмя языками — русским с мамой Екатериной, польским с папой Гжегожем, французским в школе и английским благодаря медиа — он вырос в мультикультурной среде. Увлечённый классической музыкой с раннего возраста, он начал играть на фортепиано в 4 года, а затем на скрипке в 5 лет. Очень близок со своей сестрой Алисой, младше его на пять лет, которая тоже играет на фортепиано, он много помогал ей в обучении до переезда из Ниццы в Париж.</p>
+              <p>После обучения в Региональной консерватории (CRR) Ниццы, Поль завершил скрипичное образование в Подготовительном цикле высшего образования (CPES) парижской CRR. Он был принят в Национальную высшую консерваторию музыки (CNSM), где присоединится к классу Стефани Мари Деган в 2026/2027 году.</p>
               <p>Параллельно с изучением скрипки и фортепиано, Поль обучается дирижированию с 13 лет, развивая полное видение музыкального искусства.</p>
             </div>
           </div>
@@ -2755,12 +2794,56 @@
       }
     }
 
+    async function openVideoById(videoId) {
+      const video = allFirestoreVideos.find(v => v.id === videoId);
+      if (!video) return;
+
+      const isPrivate = video.visibility !== 'public';
+      if (!isPrivate) {
+        if (video.url) {
+          markVideoAsViewed(videoId);
+          window.open(video.url, '_blank', 'noopener');
+        }
+        return;
+      }
+
+      if (!(userStatus === 'approved' || isAdminUser)) {
+        openAuthModal();
+        return;
+      }
+
+      try {
+        const privateVideoSnap = await getDoc(doc(db, 'privateVideoLinks', videoId));
+        const url = privateVideoSnap.exists()
+          ? privateVideoSnap.data()?.url
+          : video.url;
+        if (!url) {
+          throw new Error('Private URL missing');
+        }
+
+        markVideoAsViewed(videoId);
+        window.open(url, '_blank', 'noopener');
+      } catch (error) {
+        console.error('Error opening private video:', error);
+        if (error?.code === 'permission-denied') {
+          openAuthModal();
+          return;
+        }
+        alert('Impossible d’ouvrir cette vidéo pour le moment.');
+      }
+    }
+    window.openVideoById = openVideoById;
+
     function createVideoCard(video, isPrivate, restricted = false) {
-      const ytMatch = video.url.match(/(?:youtube\.com\/watch\?v=|youtu\.be\/)([^&\s]+)/);
+      const videoUrl = typeof video.url === 'string' ? video.url : '';
+      const ytMatch = videoUrl.match(/(?:youtube\.com\/watch\?v=|youtu\.be\/)([^&\s]+)/);
       const ytId = ytMatch ? ytMatch[1] : null;
       // Use hqdefault (always available) with fallback to mqdefault
       const thumb = ytId ? `https://img.youtube.com/vi/${ytId}/hqdefault.jpg` : '';
       const thumbFallback = ytId ? `https://img.youtube.com/vi/${ytId}/mqdefault.jpg` : '';
+      const thumbnailContent = thumb
+        ? `<img src="${thumb}" alt="${video.title}" onerror="this.onerror=null; this.src='${thumbFallback}'">`
+        : `<div class="video-thumbnail-fallback">${isPrivate ? '🔒' : '▶'}</div>`;
 
       const article = document.createElement('article');
       article.className = 'video-card' + (restricted ? ' video-restricted' : '');
@@ -2784,7 +2867,7 @@
             <p class="video-meta">${video.meta || ''}${video.year ? '<br>' + video.year : ''}</p>
           </div>
           <div class="video-thumbnail video-locked" onclick="openAuthModal()">
-            ${thumb ? `<img src="${thumb}" alt="${video.title}" onerror="this.onerror=null; this.src='${thumbFallback}'">` : ''}
+            ${thumbnailContent}
             ${viewedOverlay}
             <div class="video-lock-overlay">
               <span class="video-lock-icon">🔒</span>
@@ -2797,6 +2880,20 @@
             </div>
           </div>
         `;
+      } else if (isPrivate) {
+        article.innerHTML = `
+          <button type="button" class="video-info video-action" onclick="openVideoById('${video.id}')">
+            <h3 class="video-title">${video.title} ${privateBadge}</h3>
+            <p class="video-meta">${video.meta || ''}${video.year ? '<br>' + video.year : ''}</p>
+          </button>
+          <button type="button" class="video-thumbnail video-action" onclick="openVideoById('${video.id}')">
+            ${thumbnailContent}
+            ${viewedOverlay}
+            <div class="video-play">
+              <span class="video-play-btn">▶</span>
+            </div>
+          </button>
+        `;
       } else {
         // Mode normal: tout visible
         article.innerHTML = `
@@ -2805,7 +2902,7 @@
             <p class="video-meta">${video.meta || ''}${video.year ? '<br>' + video.year : ''}</p>
           </a>
           <a href="${video.url}" target="_blank" rel="noopener" class="video-thumbnail" onclick="markVideoAsViewed('${video.id}')">
-            ${thumb ? `<img src="${thumb}" alt="${video.title}" onerror="this.onerror=null; this.src='${thumbFallback}'">` : ''}
+            ${thumbnailContent}
             ${viewedOverlay}
             <div class="video-play">
               <span class="video-play-btn">▶</span>
@@ -2972,7 +3069,7 @@
     const pageMeta = {
       fr: {
         title: "Paul Bednarczyk | Violoniste • Pianiste • Chef d'orchestre",
-        description: "Paul Bednarczyk - Jeune violoniste, pianiste et chef d'orchestre franco-polonais. Étudiant au CPES du CRR de Paris.",
+        description: "Paul Bednarczyk - Jeune violoniste, pianiste et chef d'orchestre franco-polonais. Admis au CNSM de Paris, classe de Stéphanie Marie Degan.",
         ogTitle: "Paul Bednarczyk - Violoniste & Pianiste",
         ogDescription: "Jeune musicien franco-polonais - Violon, Piano, Direction d'orchestre"
       },
