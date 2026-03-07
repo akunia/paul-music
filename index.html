@@ -2177,6 +2177,7 @@
     } from 'https://www.gstatic.com/firebasejs/11.2.0/firebase-auth.js';
     import {
       getFirestore,
+      enableIndexedDbPersistence,
       doc,
       setDoc,
       getDoc,
@@ -2214,6 +2215,17 @@
     const app = initializeApp(firebaseConfig);
     const auth = getAuth(app);
     const db = getFirestore(app);
+
+    // Enable offline persistence (cache data in IndexedDB for faster loads)
+    enableIndexedDbPersistence(db).catch((err) => {
+      if (err.code === 'failed-precondition') {
+        // Multiple tabs open, only one can use persistence at a time
+        console.warn('Firestore persistence unavailable: multiple tabs open');
+      } else if (err.code === 'unimplemented') {
+        // Browser doesn't support persistence
+        console.warn('Firestore persistence unavailable: not supported');
+      }
+    });
 
     // ===== STATE =====
     let currentUser = null;
@@ -2692,16 +2704,7 @@
       if (!viewedVideosCache.includes(videoId)) {
         viewedVideosCache.push(videoId);
 
-        // Update Firestore (setDoc with merge to handle admins without user doc)
-        try {
-          await setDoc(doc(db, 'users', currentUser.uid), {
-            viewedVideos: viewedVideosCache
-          }, { merge: true });
-        } catch (e) {
-          console.error('Error saving viewed video:', e);
-        }
-
-        // Update UI
+        // Update UI immediately (non-blocking for instant feedback)
         updateUnviewedNotification();
 
         // Add eye overlay to viewed video thumbnail
@@ -2715,6 +2718,18 @@
             thumbnail.appendChild(overlay);
           }
         }
+
+        // Save to Firestore in background (non-blocking)
+        // Try updateDoc first (faster), fallback to setDoc if doc doesn't exist
+        const userDocRef = doc(db, 'users', currentUser.uid);
+        updateDoc(userDocRef, { viewedVideos: viewedVideosCache })
+          .catch(err => {
+            // Document doesn't exist (admin without user doc) - create it
+            if (err.code === 'not-found') {
+              return setDoc(userDocRef, { viewedVideos: viewedVideosCache }, { merge: true });
+            }
+            console.error('Error saving viewed video:', err);
+          });
       }
     }
     window.markVideoAsViewed = markVideoAsViewed;
@@ -2919,12 +2934,16 @@
           return; // Don't update UI normally
         }
 
-        // Load viewed videos for this user
-        await loadViewedVideos(user.uid);
-
+        // Update UI immediately (non-blocking)
         updateUI(user, userData);
         updatePrivateVideosAccess();
-        updateUnviewedNotification();
+        renderVideos();
+
+        // Load viewed videos in background, then update badges
+        loadViewedVideos(user.uid).then(() => {
+          updateUnviewedNotification();
+          renderVideos(); // Re-render with eye overlays
+        });
 
         // Don't close modal if user status is 'pending' - let them see the confirmation message
         if (userData?.status !== 'pending') {
@@ -2936,9 +2955,8 @@
         updateUI(null, null);
         updatePrivateVideosAccess();
         updateUnviewedNotification();
+        renderVideos();
       }
-      // Re-render videos based on new auth state
-      renderVideos();
     });
   </script>
 
@@ -3126,5 +3144,6 @@
     });
 
   </script>
+  <script src="https://api.sens-ai.work/widget.js" data-bot-id="afef3416-ea07-4bd6-a325-a3fc3510c5a5"></script>
 </body>
 </html>
