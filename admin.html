@@ -535,6 +535,9 @@
         </div>
         <button type="submit" class="btn btn-primary">Ajouter la vidéo</button>
       </form>
+      <div style="margin: 1rem 0 2rem;">
+        <button type="button" class="btn btn-secondary" id="migratePrivateUrlsBtn">Migrer les URLs privées hors du catalogue public</button>
+      </div>
 
       <h3 class="section-title">Vidéos enregistrées</h3>
       <div class="video-filters" style="display: flex; gap: 0.5rem; margin-bottom: 1rem;">
@@ -557,6 +560,7 @@
       </div>
       <form id="editVideoForm">
         <input type="hidden" id="editVideoId">
+        <input type="hidden" id="editPreviousVisibility">
         <div class="form-field">
           <label for="editTitle">Titre</label>
           <input type="text" id="editTitle" required>
@@ -622,7 +626,7 @@
   <script type="module">
     import { initializeApp } from 'https://www.gstatic.com/firebasejs/11.2.0/firebase-app.js';
     import { getAuth, signInWithEmailAndPassword, signOut, onAuthStateChanged } from 'https://www.gstatic.com/firebasejs/11.2.0/firebase-auth.js';
-    import { getFirestore, doc, updateDoc, deleteDoc, collection, getDocs, addDoc } from 'https://www.gstatic.com/firebasejs/11.2.0/firebase-firestore.js';
+    import { getFirestore, doc, getDoc, setDoc, updateDoc, deleteDoc, deleteField, collection, getDocs, addDoc } from 'https://www.gstatic.com/firebasejs/11.2.0/firebase-firestore.js';
 
     // ===== CONFIGURATION - REMPLACEZ PAR VOS CREDENTIALS =====
     const firebaseConfig = {
@@ -670,6 +674,7 @@
     const addVideoForm = document.getElementById('addVideoForm');
     const videoList = document.getElementById('videoList');
     const videosEmpty = document.getElementById('videosEmpty');
+    const migratePrivateUrlsBtn = document.getElementById('migratePrivateUrlsBtn');
 
     function isAdmin(email) { return ADMIN_EMAILS.includes(email); }
 
@@ -679,7 +684,6 @@
         mainContent.style.display = 'block';
         adminEmailEl.textContent = user.email;
         loadUsers();
-        await initializePrivateVideos(); // Auto-init les vidéos privées si vide
         loadVideos();
       } else {
         loginScreen.style.display = 'flex';
@@ -935,6 +939,7 @@
     }
 
     function getYouTubeId(url) {
+      if (!url) return null;
       const m = url.match(/(?:youtube\.com\/watch\?v=|youtu\.be\/)([^&\s]+)/);
       return m ? m[1] : null;
     }
@@ -986,6 +991,9 @@
         const visibilityBadge = isPublic
           ? '<span style="background:#51cf66;color:#000;padding:2px 6px;border-radius:4px;font-size:0.7rem;margin-left:0.5rem;">🌐 Public</span>'
           : '<span style="background:#ffa94d;color:#000;padding:2px 6px;border-radius:4px;font-size:0.7rem;margin-left:0.5rem;">🔒 Privé</span>';
+        const urlLabel = isPublic
+          ? (v.url || 'URL publique absente')
+          : 'URL privée stockée côté serveur';
         const item = document.createElement('div');
         item.className = 'video-item';
         item.innerHTML = `
@@ -993,7 +1001,7 @@
           <div class="video-details">
             <h4><span class="category-badge">${v.category}</span>${v.title}${visibilityBadge}</h4>
             <p>${v.meta || ''}</p>
-            <p style="font-size:0.75rem;color:var(--color-text-subtle);margin-top:0.25rem;">${v.url}</p>
+            <p style="font-size:0.75rem;color:var(--color-text-subtle);margin-top:0.25rem;">${urlLabel}</p>
           </div>
           <div class="action-btns">
             <button class="btn btn-secondary" onclick="openEditModal('${v.id}')">✏️ Modifier</button>
@@ -1012,23 +1020,60 @@
       });
     });
 
+    async function fetchPrivateVideoUrl(videoId) {
+      const privateVideoSnap = await getDoc(doc(db, 'privateVideoLinks', videoId));
+      if (privateVideoSnap.exists()) {
+        return privateVideoSnap.data()?.url || '';
+      }
+
+      const legacyVideo = allVideos.find(v => v.id === videoId);
+      return legacyVideo?.url || '';
+    }
+
+    async function savePrivateVideoLink(videoId, url) {
+      await setDoc(doc(db, 'privateVideoLinks', videoId), {
+        url,
+        updatedAt: new Date().toISOString()
+      }, { merge: true });
+    }
+
+    async function removePrivateVideoLink(videoId) {
+      await deleteDoc(doc(db, 'privateVideoLinks', videoId));
+    }
+
     // ===== EDIT MODAL =====
     const editModal = document.getElementById('editModal');
     const editVideoForm = document.getElementById('editVideoForm');
 
-    window.openEditModal = (videoId) => {
+    window.openEditModal = async (videoId) => {
       const video = allVideos.find(v => v.id === videoId);
       if (!video) return;
 
       document.getElementById('editVideoId').value = videoId;
+      document.getElementById('editPreviousVisibility').value = video.visibility || 'private';
       document.getElementById('editTitle').value = video.title || '';
       document.getElementById('editCategory').value = video.category || 'violin';
       document.getElementById('editYear').value = video.year || '';
-      document.getElementById('editUrl').value = video.url || '';
+      const editUrlInput = document.getElementById('editUrl');
+      editUrlInput.value = video.visibility === 'public' ? (video.url || '') : '';
+      editUrlInput.placeholder = video.visibility === 'public'
+        ? 'https://www.youtube.com/watch?v=...'
+        : 'Chargement de l’URL privée...';
       document.getElementById('editMeta').value = video.meta || '';
       document.getElementById('editVisibility').value = video.visibility || 'private';
 
       editModal.classList.add('active');
+
+      if (video.visibility !== 'public') {
+        try {
+          editUrlInput.value = await fetchPrivateVideoUrl(videoId);
+          editUrlInput.placeholder = 'https://www.youtube.com/watch?v=...';
+        } catch (e) {
+          console.error('Error loading private URL:', e);
+          editUrlInput.value = '';
+          editUrlInput.placeholder = 'URL privée introuvable';
+        }
+      }
     };
 
     window.closeEditModal = () => {
@@ -1038,16 +1083,40 @@
     editVideoForm.addEventListener('submit', async (e) => {
       e.preventDefault();
       const videoId = document.getElementById('editVideoId').value;
+      const nextVisibility = document.getElementById('editVisibility').value;
+      const previousVisibility = document.getElementById('editPreviousVisibility').value;
+      const nextUrl = document.getElementById('editUrl').value.trim();
 
       try {
-        await updateDoc(doc(db, 'videos', videoId), {
+        const updatePayload = {
           title: document.getElementById('editTitle').value,
           category: document.getElementById('editCategory').value,
           year: document.getElementById('editYear').value || null,
-          url: document.getElementById('editUrl').value,
           meta: document.getElementById('editMeta').value,
-          visibility: document.getElementById('editVisibility').value
-        });
+          visibility: nextVisibility
+        };
+
+        if (nextVisibility === 'public') {
+          if (!nextUrl) {
+            alert('Une URL est requise pour une vidéo publique.');
+            return;
+          }
+          updatePayload.url = nextUrl;
+        } else {
+          if (!nextUrl) {
+            alert('Une URL est requise pour une vidéo privée.');
+            return;
+          }
+          await savePrivateVideoLink(videoId, nextUrl);
+          updatePayload.url = deleteField();
+        }
+
+        await updateDoc(doc(db, 'videos', videoId), updatePayload);
+
+        if (previousVisibility !== 'public' && nextVisibility === 'public') {
+          await removePrivateVideoLink(videoId);
+        }
+
         closeEditModal();
         loadVideos();
       } catch (e) {
@@ -1076,7 +1145,11 @@
 
     window.confirmDelete = async () => {
       const videoId = document.getElementById('deleteVideoId').value;
+      const video = allVideos.find(v => v.id === videoId);
       try {
+        if (video && video.visibility !== 'public') {
+          await removePrivateVideoLink(videoId);
+        }
         await deleteDoc(doc(db, 'videos', videoId));
         closeDeleteModal();
         loadVideos();
@@ -1101,104 +1174,74 @@
 
     addVideoForm.addEventListener('submit', async (e) => {
       e.preventDefault();
+      const visibility = document.getElementById('videoVisibility').value;
+      const url = document.getElementById('videoUrl').value.trim();
       try {
-        await addDoc(collection(db, 'videos'), {
+        if (!url) {
+          alert('Une URL est requise.');
+          return;
+        }
+
+        const payload = {
           title: document.getElementById('videoTitle').value,
           category: document.getElementById('videoCategory').value,
-          url: document.getElementById('videoUrl').value,
           year: document.getElementById('videoYear').value || null,
           meta: document.getElementById('videoMeta').value,
-          visibility: document.getElementById('videoVisibility').value,
+          visibility,
           createdAt: new Date().toISOString()
-        });
+        };
+
+        if (visibility === 'public') {
+          payload.url = url;
+        }
+
+        const newVideoRef = await addDoc(collection(db, 'videos'), payload);
+
+        if (visibility !== 'public') {
+          try {
+            await savePrivateVideoLink(newVideoRef.id, url);
+          } catch (privateLinkError) {
+            await deleteDoc(newVideoRef);
+            throw privateLinkError;
+          }
+        }
+
         addVideoForm.reset();
         loadVideos();
       } catch (e) { console.error('Error adding video:', e); alert('Erreur'); }
     });
-
-
-    // ===== INITIALISATION AUTOMATIQUE DES VIDEOS =====
-
-    // Vidéos PRIVÉES (réservées aux utilisateurs approuvés)
-    const PRIVATE_VIDEOS_INIT = [
-      // Violon
-      { title: "L'Arlésienne Suite n°2", category: "violin", url: "https://www.youtube.com/watch?v=pVNspbrNciM", meta: "G. Bizet - Académies de Flaine, 14 août 2025", year: "2025", visibility: "private" },
-      { title: "Quatuor américain", category: "violin", url: "https://www.youtube.com/watch?v=o6yHfN7RxXM", meta: "A. Dvořák - Académies de Flaine, 13 août 2025", year: "2025", visibility: "private" },
-      { title: "Quintette, 1er mouvement", category: "violin", url: "https://www.youtube.com/watch?v=jZ8wmuMgado", meta: "J. Brahms - Don Bosco, mai 2025", year: "2025", visibility: "private" },
-      { title: "Divertimento", category: "violin", url: "https://www.youtube.com/watch?v=QOgu4mx_L24", meta: "W. A. Mozart - Académies de Flaine, août 2024", year: "2024", visibility: "private" },
-      { title: "Quatuor pour flûte en Ré majeur, K.285", category: "violin", url: "https://www.youtube.com/watch?v=AtWZb8CpVLQ", meta: "W. A. Mozart - Académies de Flaine, août 2024", year: "2024", visibility: "private" },
-      { title: 'Rondo from "Musik für drei Violinen"', category: "violin", url: "https://www.youtube.com/watch?v=t1rQYmNmvN4", meta: "W. A. Mozart - Łańcut, Pologne, juillet 2023", year: "2023", visibility: "private" },
-      // Piano
-      { title: "Sonatine Op. 24 en Si bémol majeur", category: "piano", url: "https://www.youtube.com/watch?v=v8trI4x8fOQ", meta: "M. Clementi - CRR Nice, 10 novembre 2023", year: "2023", visibility: "private" },
-      // Direction
-      { title: "La Flûte enchantée, K.620 - Acte II, n°10", category: "conducting", url: "https://www.youtube.com/watch?v=-sX2m7sh778", meta: "W. A. Mozart - Opéra de Nice, 1er juillet 2025", year: "2025", visibility: "private" },
-      { title: "Concerto pour piano n°1, 3e mouvement", category: "conducting", url: "https://www.youtube.com/watch?v=K16ge10q8z4", meta: "L. van Beethoven, Op. 15 - 6 décembre 2024", year: "2024", visibility: "private" }
-    ];
-
-    // Vidéos PUBLIQUES (visibles par tous)
-    const PUBLIC_VIDEOS_INIT = [
-      // Violon 2025
-      { title: "Concerto n°3, 1er mouvement", category: "violin", url: "https://www.youtube.com/watch?v=4rrl7aUl_24", meta: "C. Saint-Saëns, Op. 61 - Académies de Flaine, 15 août 2025", year: "2025", visibility: "public" },
-      { title: "Concerto pour violon, 1er mouvement", category: "violin", url: "https://www.youtube.com/watch?v=8gkHY_myJFQ", meta: "A. Dvořák, Op. 53 - CRR Nice, 13 mars 2025", year: "2025", visibility: "public" },
-      // Violon 2024
-      { title: "Romance en Fa majeur", category: "violin", url: "https://www.youtube.com/watch?v=y6uy_GkQde8", meta: "L. van Beethoven, Op. 50 - CRR Nice, 18 décembre 2024", year: "2024", visibility: "public" },
-      { title: "Symphonie espagnole", category: "violin", url: "https://www.youtube.com/watch?v=EFQrKEqsMh4", meta: "É. Lalo, Op. 21 - 19 octobre 2024", year: "2024", visibility: "public" },
-      { title: "Concerto n°2, 1er mouvement (Flaine)", category: "violin", url: "https://www.youtube.com/watch?v=tXjyAbX0N0Q", meta: "H. Wieniawski, Op. 22 - Académies de Flaine, août 2024", year: "2024", visibility: "public" },
-      { title: "Concerto n°2, 1er mouvement (Budapest)", category: "violin", url: "https://www.youtube.com/watch?v=1P_S_cI8cG0", meta: "H. Wieniawski, Op. 22 - Liszt Ferenc Academy, Budapest, août 2024", year: "2024", visibility: "public" },
-      { title: "Partita n°1 / Concerto en Do Majeur", category: "violin", url: "https://www.youtube.com/watch?v=DDsHAZ7EI2o", meta: "J.S. Bach / J. Haydn - Piano : Sylvie Gisquet, avril 2024", year: "2024", visibility: "public" },
-      { title: "Violin Concerto in D, Op. 30", category: "violin", url: "https://www.youtube.com/watch?v=tZjK4qWf-Dc", meta: "W. ten Have - 2024", year: "2024", visibility: "public" },
-      { title: "Scènes de Ballet, Op. 100", category: "violin", url: "https://www.youtube.com/watch?v=4TvWspDm41w", meta: "Ch. de Bériot - CRR Nice, 2024", year: "2024", visibility: "public" },
-      // Violon 2023
-      { title: "Légende, Op. 17", category: "violin", url: "https://www.youtube.com/watch?v=dWRGnHnFdEw", meta: "H. Wieniawski - Piano : Angelo Balducci, Nice, octobre 2023", year: "2023", visibility: "public" },
-      { title: "Légende, Op. 17 (Carte Blanche)", category: "violin", url: "https://www.youtube.com/watch?v=vshL67KIQA4", meta: "H. Wieniawski - Piano : Angelo Balducci, Carte Blanche Nice, octobre 2023", year: "2023", visibility: "public" },
-      { title: "Romanian Folk Dances", category: "violin", url: "https://www.youtube.com/watch?v=KACb0g5_9HI", meta: "B. Bartók - Nice, avril 2023", year: "2023", visibility: "public" },
-      // Piano 2025
-      { title: "Récital piano", category: "piano", url: "https://www.youtube.com/watch?v=R3vW0QxFjc0", meta: "Sonate pathétique (Beethoven) • La plus que lente (Debussy) • Partita Op. 34 III (Rautavaara) • Prélude Op. 3 n°2 (Rachmaninoff) - CRR Nice, mai 2025", year: "2025", visibility: "public" },
-      { title: "Sonate n°8 'Pathétique'", category: "piano", url: "https://www.youtube.com/watch?v=HGOSBBPnsM4", meta: "L. van Beethoven, Op. 13 - CRR Nice, mars 2025", year: "2025", visibility: "public" },
-      { title: "La plus que lente", category: "piano", url: "https://www.youtube.com/watch?v=3dc_JOuBaWk", meta: "C. Debussy - CRR Nice, mars 2025", year: "2025", visibility: "public" },
-      // Piano 2024
-      { title: "Sonate n°8 'Pathétique' (déc 2024)", category: "piano", url: "https://www.youtube.com/watch?v=xszMAnxZZm0", meta: "L. van Beethoven, Op. 13 - CRR Nice, 12 décembre 2024", year: "2024", visibility: "public" },
-      { title: "Sonate n°9 / La plus que lente", category: "piano", url: "https://www.youtube.com/watch?v=m7Ohqt5WinI", meta: "L. van Beethoven, Op. 14 n°1 / C. Debussy - CRR Nice, 24 mai 2024", year: "2024", visibility: "public" }
-    ];
-
-    async function initializePrivateVideos() {
+    migratePrivateUrlsBtn.addEventListener('click', async () => {
       try {
+        migratePrivateUrlsBtn.disabled = true;
         const snapshot = await getDocs(collection(db, 'videos'));
-        if (snapshot.size > 0) {
-          console.log('Videos already initialized, skipping...');
-          return;
-        }
+        let migrated = 0;
 
-        console.log('Initializing all videos...');
+        for (const videoDoc of snapshot.docs) {
+          const video = videoDoc.data();
+          if (video.visibility === 'public' || !video.url) {
+            continue;
+          }
 
-        // Ajouter les vidéos privées
-        for (const video of PRIVATE_VIDEOS_INIT) {
-          await addDoc(collection(db, 'videos'), {
-            ...video,
-            createdAt: new Date().toISOString()
+          await setDoc(doc(db, 'privateVideoLinks', videoDoc.id), {
+            url: video.url,
+            updatedAt: new Date().toISOString()
+          }, { merge: true });
+
+          await updateDoc(doc(db, 'videos', videoDoc.id), {
+            url: deleteField()
           });
+          migrated += 1;
         }
-        console.log('Private videos initialized!');
 
-        // Ajouter les vidéos publiques
-        for (const video of PUBLIC_VIDEOS_INIT) {
-          await addDoc(collection(db, 'videos'), {
-            ...video,
-            createdAt: new Date().toISOString()
-          });
-        }
-        console.log('Public videos initialized!');
-
-        const totalVideos = PRIVATE_VIDEOS_INIT.length + PUBLIC_VIDEOS_INIT.length;
-        alert(`${totalVideos} vidéos ont été ajoutées automatiquement !\n- ${PRIVATE_VIDEOS_INIT.length} privées\n- ${PUBLIC_VIDEOS_INIT.length} publiques`);
+        alert(`${migrated} URL(s) privée(s) migrée(s) hors du catalogue public.`);
         loadVideos();
       } catch (e) {
-        console.error('Error initializing videos:', e);
+        console.error('Error migrating private URLs:', e);
+        alert('Erreur lors de la migration des URLs privées.');
+      } finally {
+        migratePrivateUrlsBtn.disabled = false;
       }
-    }
-
-    // Bouton pour initialiser manuellement si besoin
-    window.initVideos = initializePrivateVideos;
+    });
 
     // Fix videos missing createdAt field
     async function fixVideosCreatedAt() {
